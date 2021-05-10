@@ -21,10 +21,9 @@ interface SComponent {
      *
      * @param what The identifier to use for finding the relevant element.
      * @param T The type of the element to retrieve.
-     * @param S The type of this component.
      * @return A read-only property which, on `get`, returns the relevant object.
      */
-    fun <S : SComponent, T : Any> inject(what: Identifier<T>): ReadOnlyProperty<S, T>
+    fun <T : Any> inject(what: Identifier<T>): Injector<T>
 }
 
 /**

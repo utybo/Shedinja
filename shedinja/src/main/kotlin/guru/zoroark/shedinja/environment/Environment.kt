@@ -45,8 +45,13 @@ interface InjectionEnvironment {
      * Creates an [Injector] that can be used as a property delegator, bound against the given identifier.
      *
      * Using this function directly is not recommended. Use [inject] from within a [SComponent] instead
+     *
+     * @param T The injected component's type
+     * @param identifier The identifier to create an injector for
+     * @param onInjection Callback that must be called whenever the injection occurs. This is used for debugging and
+     * testing purposes.
      */
-    fun <S : SComponent, T : Any> createInjector(identifier: Identifier<T>): Injector<S, T>
+    fun <T : Any> createInjector(identifier: Identifier<T>, onInjection: (T) -> Unit = {}): Injector<T>
 }
 
 /**

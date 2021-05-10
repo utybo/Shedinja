@@ -17,7 +17,7 @@ class Declaration<T : Any>(val identifier: Identifier<T>, val supplier: ScopedSu
  * The general contract is:
  *
  * - For any key-value pair, key == value.identifier
- * - For any key-value pair, key: Identifier<T> => value: Declaration<T>
+ * - For any key-value pair, key: Identifier of T => value: Declaration of T
  */
 typealias Declarations = Map<Identifier<*>, Declaration<*>>
 
