@@ -34,7 +34,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distrubition: adopt
+          distribution: adopt
           java-version: 16
       - name: Run tests
         run: |
