@@ -1,7 +1,6 @@
 package guru.zoroark.shedinja.environment
 
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
 
 /**
  * Type for types that serve as injection components and injection sites.

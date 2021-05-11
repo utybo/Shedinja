@@ -4,7 +4,8 @@ import guru.zoroark.shedinja.environment.ScopedSupplier
 import kotlin.reflect.KClass
 
 /**
- * A builder for declarations. This is a simple class that is only responsible for holding a [KClass] and a [ScopedSupplier].
+ * A builder for declarations. This is a simple class that is only responsible for holding a [KClass] and a
+ * [ScopedSupplier].
  *
  * @param T The type of the object creation wrapped by this builder
  *

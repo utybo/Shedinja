@@ -56,9 +56,12 @@ class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironm
 }
 
 private fun <T : Any> ensureInstance(kclass: KClass<*>, result: Any): T {
-    if (!kclass.isInstance(result))
-        error("Internal error: injected component does not correspond to type expected by injector. " +
-                "Expected an injection of ${kclass.qualifiedName} but actually got ${result.javaClass.name}}")
+    if (!kclass.isInstance(result)) {
+        error(
+            "Internal error: injected component does not correspond to type expected by injector. " +
+                    "Expected an injection of ${kclass.qualifiedName} but actually got ${result.javaClass.name}}"
+        )
+    }
     @Suppress("UNCHECKED_CAST") // The isInstance check is effectively the cast check
     return result as T
 }

@@ -13,11 +13,12 @@ interface ScopedContext {
     val scope: SComponent
 }
 
-private class SimpleScopedContext(override val scope: SComponent): ScopedContext
+private class SimpleScopedContext(override val scope: SComponent) : ScopedContext
 
 /**
  * Creates a `ScopedContext` that contains the given scope as-is as a property.
  */
+@Suppress("FunctionNaming")
 fun ScopedContext(scope: SComponent): ScopedContext = SimpleScopedContext(scope)
 
 /**

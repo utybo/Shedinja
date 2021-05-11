@@ -8,10 +8,7 @@ import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
 import guru.zoroark.shedinja.environment.SComponent
 import guru.zoroark.shedinja.environment.ScopedSupplier
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.inject
-import javax.swing.text.Element
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertSame
@@ -35,7 +32,6 @@ class TestMixedEnvironment {
         Declaration(Identifier(T::class), supplier).let {
             it.identifier to it
         }
-
 
     @Test
     fun `Test with single element`() {

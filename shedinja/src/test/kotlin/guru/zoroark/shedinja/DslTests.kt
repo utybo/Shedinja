@@ -1,6 +1,5 @@
 package guru.zoroark.shedinja
 
-import com.sun.source.tree.Scope
 import guru.zoroark.shedinja.dsl.BuildResult
 import guru.zoroark.shedinja.dsl.EnvironmentBuilderDsl
 import guru.zoroark.shedinja.dsl.put
@@ -8,7 +7,10 @@ import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.SComponent
 import guru.zoroark.shedinja.environment.ScopedContext
 import guru.zoroark.shedinja.environment.get
-import kotlin.test.*
+import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.fail
 
 interface ExampleInterface
 class ExampleClass(scope: SComponent) : ExampleInterface
@@ -25,7 +27,6 @@ class ShedinjaDslTests {
         val built = env.build().assertSuccess()
         assertEquals(1, built.declarations.size)
         assertEquals(Identifier(ExampleClass::class), built.declarations.get<ExampleClass>().identifier)
-
     }
 
     @Test
@@ -42,9 +43,51 @@ class ShedinjaDslTests {
         assertEquals(Identifier(ExampleClass2::class), built.declarations.get<ExampleClass2>().identifier)
     }
 
-    private fun <T> BuildResult<T>.assertSuccess(): T = when (this) {
-        is BuildResult.Success -> this.result
-        is BuildResult.SuccessWithWarnings -> fail("Expected a success, but got warnings:\n${warnings.joinToString("\n")}")
-        is BuildResult.Failure -> fail("Expected a success, but failed with errors:\n${errors.joinToString("\n")}")
+    @Test
+    fun `Duplicate via inferred type put should throw error`() {
+        val ex = assertThrows<ShedinjaException> {
+            EnvironmentBuilderDsl().apply {
+                put { ExampleClass(scope) }
+                put { ExampleClass(scope) }
+            }
+        }
+        assertEquals(
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            ex.message
+        )
     }
+
+    @Test
+    fun `Duplicate via class put should throw error`() {
+        val ex = assertThrows<ShedinjaException> {
+            EnvironmentBuilderDsl().apply {
+                put(ExampleClass::class) { ExampleClass(scope) }
+                put(ExampleClass::class) { ExampleClass(scope) }
+            }
+        }
+        assertEquals(
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            ex.message
+        )
+    }
+
+    @Test
+    fun `Duplicate via class and inferred type put should throw error`() {
+        val ex = assertThrows<ShedinjaException> {
+            EnvironmentBuilderDsl().apply {
+                put(ExampleClass::class) { ExampleClass(scope) }
+                put { ExampleClass(scope) }
+            }
+        }
+        assertEquals(
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            ex.message
+        )
+    }
+}
+
+private fun <T> BuildResult<T>.assertSuccess(): T = when (this) {
+    is BuildResult.Success -> this.result
+    is BuildResult.SuccessWithWarnings -> fail("Expected a success, but got warnings:\n${warnings.joinToString("\n")}")
+    is BuildResult.Failure -> fail("Expected a success, but failed with errors:\n${errors.joinToString("\n")}")
 }

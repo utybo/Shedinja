@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.dsl
 
+import guru.zoroark.shedinja.ShedinjaException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
@@ -21,6 +22,11 @@ class EnvironmentBuilderDsl : Buildable<EnvironmentContext> {
      * @param supplier The supplier of the object
      */
     fun <T : Any> put(kclass: KClass<T>, supplier: ScopedSupplier<T>) {
+        if (declaredComponents.any { it.kclass == kclass }) {
+            throw ShedinjaException(
+                "Duplicate identifier: Tried to put '${kclass.qualifiedName}', but one was already present"
+            )
+        }
         declaredComponents.add(DeclarationBuilder(kclass, supplier))
     }
 

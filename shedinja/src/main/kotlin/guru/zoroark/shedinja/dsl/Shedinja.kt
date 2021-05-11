@@ -2,9 +2,6 @@
 
 package guru.zoroark.shedinja.dsl
 
-import guru.zoroark.shedinja.dsl.BuildResult
-import guru.zoroark.shedinja.dsl.EnvironmentBuilderDsl
-import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.environment.InjectionEnvironment
 import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
 
