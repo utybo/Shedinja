@@ -21,6 +21,7 @@ class EnvironmentBuilderDsl : Buildable<EnvironmentContext> {
      * @param kclass The class of the object
      * @param supplier The supplier of the object
      */
+    @ShedinjaDsl
     fun <T : Any> put(kclass: KClass<T>, supplier: ScopedSupplier<T>) {
         if (declaredComponents.any { it.kclass == kclass }) {
             throw ShedinjaException(
@@ -56,6 +57,7 @@ private fun TypelessDeclaration(identifier: Identifier<*>, supplier: ScopedSuppl
  * @param supplier The lambda that will be executed to create an object
  * @param T The type of the component to add
  */
+@ShedinjaDsl
 inline fun <reified T : Any> EnvironmentBuilderDsl.put(noinline supplier: ScopedSupplier<T>) {
     put(T::class, supplier)
 }

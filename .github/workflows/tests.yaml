@@ -1,0 +1,58 @@
+name: Tests
+
+on:
+  push:
+    branches: [dev, master]
+  pull_request:
+
+jobs:
+  tests:
+    name: Run tests
+    strategy:
+      matrix:
+        jdk-version: [8, 11, 16]
+        jdk-distrib: [adopt, zulu]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: ${{matrix.jdk-distrib}}
+          java-version: ${{matrix.jdk-version}}
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+  detekt:
+    name: Run Detekt
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distrubition: adopt
+          java-version: 16
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew detekt
+  docs-generation:
+    name: Generate documentation
+    runs-on: ubuntu-20.04
+    needs: [detekt, tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 16
+      - name: Generate documentation
+        run: |
+          chmod +x gradlew
+          ./gradlew dokkaHtmlMultiModule
