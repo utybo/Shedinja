@@ -24,7 +24,7 @@ private class EnvironmentBasedComponent(private val env: MixedImmutableEnvironme
  *
  * - **Eager object creation**. Objects are created upon construction of this environment.
  * - **Lazy object injection**. Objects are injected upon first use, and are only computed once.
- * - **Idempotent/Immutable**. Objects cannot replaced, injection methods will always return the same thing.
+ * - **Idempotent/Immutable**. Objects cannot be replaced, injection methods will always return the same thing.
  */
 class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironment {
     private val components = context.declarations.mapValues { (_, decl) ->

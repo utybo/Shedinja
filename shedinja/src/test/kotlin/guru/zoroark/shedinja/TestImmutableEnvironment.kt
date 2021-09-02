@@ -14,18 +14,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
-class ElementClass
-class OtherElementClass
-class AnotherElementClass
-
-object FakeComponent : SComponent {
-    override fun <T : Any> inject(what: Identifier<T>): Injector<T> {
-        error("Cannot inject on fake component")
-    }
-
-    val fakeProperty: Any? = null
-}
-
 class TestMixedEnvironment {
 
     private inline fun <reified T : Any> entryOf(noinline supplier: ScopedSupplier<T>) =
@@ -79,7 +67,6 @@ class TestMixedEnvironment {
 
     @Test
     fun `Test object injection is lazy`() {
-        // Laziness can only really be tested by using a cyclic dependency.
         val context = EnvironmentContext(mapOf(
             entryOf { ElementClass() },
             entryOf { OtherElementClass() }

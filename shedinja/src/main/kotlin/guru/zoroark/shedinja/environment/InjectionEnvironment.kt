@@ -30,7 +30,7 @@ package guru.zoroark.shedinja.environment
  *      - **Lazy object injection**. Objects are injected upon first use, and are only computed once.
  *      - **Active object injection**. Objects are re-injected at every use.
  * - **Mutability**
- *      - **Idempotent/Immutable**. Objects cannot replaced, injection methods will always return the same thing.
+ *      - **Idempotent/Immutable**. Objects cannot be replaced, injection methods will always return the same thing.
  *      - **NI/Immutable**. Objects cannot be replaced, injection methods will not always return the same thing.
  *      - **NI/Mutable**. Objects can be replaced, injection methods will not always return the same thing.
  */

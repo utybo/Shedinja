@@ -10,6 +10,7 @@ interface ScopedContext {
     /**
      * A scope, represented as an [SComponent]. This scope can be used to perform injection.
      */
+    @ShedinjaDsl
     val scope: SComponent
 }
 

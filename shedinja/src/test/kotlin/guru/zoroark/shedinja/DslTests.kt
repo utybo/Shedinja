@@ -1,7 +1,7 @@
 package guru.zoroark.shedinja
 
 import guru.zoroark.shedinja.dsl.BuildResult
-import guru.zoroark.shedinja.dsl.EnvironmentBuilderDsl
+import guru.zoroark.shedinja.dsl.EnvironmentContextBuilderDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.SComponent
@@ -12,16 +12,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-interface ExampleInterface
-class ExampleClass(scope: SComponent) : ExampleInterface
-class ExampleClass2(scope: SComponent)
-
 class ShedinjaDslTests {
-
     @Test
     fun `Building from single-element builder works (without warnings)`() {
         val supplier: ScopedContext.() -> ExampleClass = { ExampleClass(scope) }
-        val env = EnvironmentBuilderDsl().apply {
+        val env = EnvironmentContextBuilderDsl().apply {
             put(supplier)
         }
         val built = env.build().assertSuccess()
@@ -33,7 +28,7 @@ class ShedinjaDslTests {
     fun `Building from multi-elements builder works`() {
         val supplier: ScopedContext.() -> ExampleClass = { ExampleClass(scope) }
         val supplier2: ScopedContext.() -> ExampleClass2 = { ExampleClass2(scope) }
-        val env = EnvironmentBuilderDsl().apply {
+        val env = EnvironmentContextBuilderDsl().apply {
             put(supplier)
             put(supplier2)
         }
@@ -44,9 +39,20 @@ class ShedinjaDslTests {
     }
 
     @Test
+    fun `Building from constructor references works`() {
+        class NoConstructor
+        class GoodConstructor(val scope: SComponent)
+        val built = EnvironmentContextBuilderDsl().apply {
+            put(::NoConstructor)
+            put(::GoodConstructor)
+        }.build().assertSuccess()
+
+    }
+
+    @Test
     fun `Duplicate via inferred type put should throw error`() {
         val ex = assertThrows<ShedinjaException> {
-            EnvironmentBuilderDsl().apply {
+            EnvironmentContextBuilderDsl().apply {
                 put { ExampleClass(scope) }
                 put { ExampleClass(scope) }
             }
@@ -60,7 +66,7 @@ class ShedinjaDslTests {
     @Test
     fun `Duplicate via class put should throw error`() {
         val ex = assertThrows<ShedinjaException> {
-            EnvironmentBuilderDsl().apply {
+            EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass(scope) }
                 put(ExampleClass::class) { ExampleClass(scope) }
             }
@@ -74,7 +80,7 @@ class ShedinjaDslTests {
     @Test
     fun `Duplicate via class and inferred type put should throw error`() {
         val ex = assertThrows<ShedinjaException> {
-            EnvironmentBuilderDsl().apply {
+            EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass(scope) }
                 put { ExampleClass(scope) }
             }

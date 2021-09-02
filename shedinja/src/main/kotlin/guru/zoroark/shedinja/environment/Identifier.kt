@@ -3,8 +3,12 @@ package guru.zoroark.shedinja.environment
 import kotlin.reflect.KClass
 
 /**
- * Identifies a injectable component via its type and optionally via other elements.
+ * Identifies an injectable component via its type and optionally via other elements.
  *
- * @property kclass Thee class this identifier wraps
+ * @property kclass The class this identifier wraps
  */
-data class Identifier<T : Any>(val kclass: KClass<T>)
+data class Identifier<T : Any>(val kclass: KClass<T>) {
+    override fun toString(): String {
+        return kclass.qualifiedName ?: "<anonymous>"
+    }
+}
