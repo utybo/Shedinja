@@ -6,3 +6,5 @@ build
 
 # Ignore IntelliJ IDEA files (for now, some of these can and should be shared)
 .idea
+
+*.hprof

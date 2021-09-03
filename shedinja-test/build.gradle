@@ -1,0 +1,11 @@
+plugins {
+    id 'shedinja.kotlin-lib-conventions'
+}
+
+dependencies {
+    api project(":shedinja")
+    implementation libs.kotlin.reflect
+    implementation libs.kotlin.test.common
+
+    testImplementation libs.mockk
+}

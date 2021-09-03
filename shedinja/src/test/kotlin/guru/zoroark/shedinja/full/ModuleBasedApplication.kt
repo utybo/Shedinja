@@ -3,9 +3,9 @@ package guru.zoroark.shedinja.full
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.dsl.shedinjaModule
-import guru.zoroark.shedinja.environment.SComponent
+import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.inject
+import guru.zoroark.shedinja.environment.invoke
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,22 +15,21 @@ class ModuleBasedApplication {
             "Response to $url"
     }
 
-    class HttpRepository(scope: SComponent) : SComponent by scope {
-        private val facade: HttpLibFacade by inject()
+    class HttpRepository(scope: InjectionScope) {
+        private val facade: HttpLibFacade by scope()
 
         fun sendRequest(url: String): String =
             facade.makeRequest(url)
-
     }
 
-    class HttpService(scope: SComponent) : SComponent by scope {
-        private val repo: HttpRepository by inject()
+    class HttpService(scope: InjectionScope) {
+        private val repo: HttpRepository by scope()
 
         fun sendThatRequest(url: String) = repo.sendRequest(url)
     }
 
-    class HttpController(scope: SComponent) : SComponent by scope {
-        private val service: HttpService by inject()
+    class HttpController(scope: InjectionScope) {
+        private val service: HttpService by scope()
 
         fun sendTheRequest(url: String) = service.sendThatRequest(url)
     }
@@ -40,22 +39,22 @@ class ModuleBasedApplication {
             "SQL Response to $url"
     }
 
-    class SqlRepository(scope: SComponent) : SComponent by scope {
-        private val facade: SqlLibFacade by inject()
+    class SqlRepository(scope: InjectionScope) {
+        private val facade: SqlLibFacade by scope()
 
         fun sendSqlRequest(url: String): String =
             facade.makeSqlRequest(url)
     }
 
-    class SqlService(scope: SComponent) : SComponent by scope {
-        private val repo: SqlRepository by inject()
+    class SqlService(scope: InjectionScope) {
+        private val repo: SqlRepository by scope()
 
         fun reallySendSqlRequest(url: String): String =
             repo.sendSqlRequest(url)
     }
 
-    class SqlController(scope: SComponent) : SComponent by scope {
-        private val service: SqlService by inject()
+    class SqlController(scope: InjectionScope) {
+        private val service: SqlService by scope()
 
         fun reallyForRealSendSqlRequest(url: String): String =
             service.reallySendSqlRequest(url)

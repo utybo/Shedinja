@@ -2,8 +2,14 @@
 
 Main Shedinja module for use in main source code.
 
+# Package guru.zoroark.shedinja
+
+General-purpose utility classes and functions.
+
 # Package guru.zoroark.shedinja.dsl
 
-DSL related utilities for Shedinja.
+Shedinja's DSL utilities. Provides a simple way of creating injection environments and injectable modules.
 
-The Shedinja DSL provides a simple way of creating injection environments.
+# Package guru.zoroark.shedinja.environment
+
+Environment classes and functions. Environments manage pools of inter-dependent and injectable components using different heuristics.

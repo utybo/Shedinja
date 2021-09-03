@@ -4,15 +4,14 @@ import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.Identifier
 import org.junit.jupiter.api.Test
-import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class ModuleDslTests {
     @Test
     fun `Test creating unnamed module`() {
         val module = shedinjaModule {
-            put { ExampleClass(scope) }
-            put { ExampleClass2(scope) }
+            put { ExampleClass() }
+            put { ExampleClass2() }
         }
         assertEquals("<unnamed module>", module.name)
         assertEquals(2, module.declarations.size)
@@ -23,8 +22,8 @@ class ModuleDslTests {
     @Test
     fun `Test creating named module`() {
         val module = shedinjaModule("Hello") {
-            put { ExampleClass(scope) }
-            put { ExampleClass2(scope) }
+            put { ExampleClass() }
+            put { ExampleClass2() }
         }
         assertEquals("Hello", module.name)
         assertEquals(2, module.declarations.size)

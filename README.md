@@ -1,37 +1,36 @@
-# Shedinja
+# [![Shedinja](https://img.pokemondb.net/sprites/black-white/anim/normal/shedinja.gif)](http://pokemondb.net/pokedex/shedinja) Shedinja
 
 > Dependency injection doesn't have to be a mess
 
-Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library that features:
-
-* Lazily injection and object creation, the way it's meant to be
-* Strongly scoped elements. Two different instances of your app in a single Java process? No problem.
-* Easily testable components. Life is too short to fight with your DI library. 
+Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library that is easy to use and has extremely flexible internals.
 
 ## Getting Started
 
 Using Shedinja is simple:
 
-* Define your injectable elements.
-* Define your modules. Each module is just a set of elements.
+* Add a `scope: InjectionScope` parameter to your constructor.
+* Define your injectable elements, either one-by-one or grouped in modules.
 * Create an environment.
 * Profit!
 
 ```kotlin
-class Repository(scope: SComponent) : SComponent by scope
-
-class Service(scope: SComponent) : SComponent by scope {
-    private val repo: Repository by inject()
+class Repository {
+    // ...
 }
 
-data class Configuration(val someUrl: String) : SComponent by scopeless
+class Service(scope: InjectionScope) {
+    private val repo: Repository by scope()
+    // ...
+}
+
+data class Configuration(val someUrl: String)
 
 val appModule = module {
-    put { Repository(s) }
-    put { Service(s) }
+    put(::Repository)
+    put(::Service)
     put { Configuration("https://example.com") }
 }
 
-val env = shedinja(appModule)
+val env = shedinja { put(appModule) }
 ```
 

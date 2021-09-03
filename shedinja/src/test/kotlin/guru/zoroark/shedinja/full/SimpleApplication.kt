@@ -2,16 +2,15 @@ package guru.zoroark.shedinja.full
 
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
-import guru.zoroark.shedinja.environment.SComponent
+import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.inject
-import kotlin.reflect.KFunction
+import guru.zoroark.shedinja.environment.invoke
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 // This is an example of a simple Controller <--> Service <--> Repository setup
 
-class Repository(scope: SComponent) : SComponent by scope {
+class Repository {
     private var storage: String = "Unset"
     fun record(value: String) {
         storage = value
@@ -22,8 +21,8 @@ class Repository(scope: SComponent) : SComponent by scope {
     }
 }
 
-class Service(scope: SComponent) : SComponent by scope {
-    private val repo: Repository by inject()
+class Service(scope: InjectionScope) {
+    private val repo: Repository by scope()
     fun getElement(): String {
         return repo.retrieve()
     }
@@ -33,8 +32,8 @@ class Service(scope: SComponent) : SComponent by scope {
     }
 }
 
-class Controller(scope: SComponent) : SComponent by scope {
-    private val service: Service by inject()
+class Controller(scope: InjectionScope) {
+    private val service: Service by scope()
 
     fun makeElementHtml(): String {
         return "<p>${service.getElement()}</p>"

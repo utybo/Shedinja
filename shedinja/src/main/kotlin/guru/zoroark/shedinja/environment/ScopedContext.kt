@@ -8,19 +8,19 @@ import guru.zoroark.shedinja.dsl.ShedinjaDsl
 @ShedinjaDsl
 interface ScopedContext {
     /**
-     * A scope, represented as an [SComponent]. This scope can be used to perform injection.
+     * A scope, represented as an [InjectionScope]. This scope can be used to perform injection.
      */
     @ShedinjaDsl
-    val scope: SComponent
+    val scope: InjectionScope
 }
 
-private class SimpleScopedContext(override val scope: SComponent) : ScopedContext
+private class SimpleScopedContext(override val scope: InjectionScope) : ScopedContext
 
 /**
  * Creates a `ScopedContext` that contains the given scope as-is as a property.
  */
 @Suppress("FunctionNaming")
-fun ScopedContext(scope: SComponent): ScopedContext = SimpleScopedContext(scope)
+fun ScopedContext(scope: InjectionScope): ScopedContext = SimpleScopedContext(scope)
 
 /**
  * A supplier of T that takes a [ScopedContext] as a receiver.

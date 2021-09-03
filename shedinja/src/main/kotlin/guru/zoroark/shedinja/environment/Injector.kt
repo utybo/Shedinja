@@ -10,4 +10,4 @@ import kotlin.properties.ReadOnlyProperty
  *
  * @param T The object type to inject
  */
-interface Injector<out T : Any> : ReadOnlyProperty<SComponent, T>
+interface Injector<out T : Any> : ReadOnlyProperty<Any?, T>

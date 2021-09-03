@@ -3,9 +3,7 @@ package guru.zoroark.shedinja
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
-import guru.zoroark.shedinja.environment.Injector
 import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
-import guru.zoroark.shedinja.environment.SComponent
 import guru.zoroark.shedinja.environment.ScopedSupplier
 import guru.zoroark.shedinja.environment.get
 import kotlin.test.Test
@@ -60,7 +58,7 @@ class TestMixedEnvironment {
             entryOf { ElementClass().also { wasFirstBuilt = true } },
             entryOf { OtherElementClass().also { wasSecondBuilt = true } }
         ))
-        val env = MixedImmutableEnvironment(context)
+        MixedImmutableEnvironment(context)
         assertTrue(wasFirstBuilt)
         assertTrue(wasSecondBuilt)
     }

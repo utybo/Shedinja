@@ -2,7 +2,8 @@
 kotlin = "1.5.30"
 detekt = "1.18.1"
 junit = "5.7.2"
-dokka = "1.4.30"
+dokka = "1.5.0"
+mockk = "1.12.0"
 
 [libraries]
 # Plugins
@@ -20,6 +21,7 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }

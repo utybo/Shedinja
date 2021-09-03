@@ -1,3 +1,8 @@
 package guru.zoroark.shedinja
 
-class ShedinjaException(message: String) : Exception(message)
+/**
+ * Type for exceptions directly emitted by Shedinja.
+ *
+ * @param message The message for this exception.
+ */
+open class ShedinjaException(message: String) : Exception(message)

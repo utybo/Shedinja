@@ -33,13 +33,43 @@ package guru.zoroark.shedinja.environment
  *      - **Idempotent/Immutable**. Objects cannot be replaced, injection methods will always return the same thing.
  *      - **NI/Immutable**. Objects cannot be replaced, injection methods will not always return the same thing.
  *      - **NI/Mutable**. Objects can be replaced, injection methods will not always return the same thing.
+ *
+ * ### Companion object
+ *
+ * The bridge between the DSL and environments is made via a [InjectionEnvironmentKind] object. This object can be
+ * passed to the [guru.zoroark.shedinja.dsl.shedinja] function to determine the environment that should be built.
+ *
+ * Implementors should have a companion object that implements [InjectionEnvironmentKind], allowing for easy usage
+ * within the DSL. For example:
+ *
+ * ```
+ * class MyInjectionEnvironment : InjectionEnvironment {
+ *     companion object : InjectionEnvironmentKind {
+ *         fun build(context: EnvironmentContext): MyInjectionEnvironment {
+ *             // ...
+ *         }
+ *     }
+ *     // ...
+ * }
+ *
+ * shedinja(MyInjectionEnvironment) {
+ *     // ...
+ * }
+ * ```
  */
 interface InjectionEnvironment {
     /**
      * Gets the component identified by the given identifier. No guarantees are given on this function - it may not be
      * idempotent, depending on the actual implementation.
      */
-    fun <T : Any> get(identifier: Identifier<T>): T
+    fun <T : Any> get(identifier: Identifier<T>): T =
+        getOrNull(identifier) ?: error("No component found for ${identifier.kclass.qualifiedName}")
+
+    /**
+     * Gets the component identified by the given identifier, or null if no such component exists. No guarantees are
+     * given on this function - it may not be idempotent, depending on the actual implementation.
+     */
+    fun <T : Any> getOrNull(identifier: Identifier<T>): T?
 
     /**
      * Creates an [Injector] that can be used as a property delegator, bound against the given identifier.
@@ -49,7 +79,9 @@ interface InjectionEnvironment {
      * @param T The injected component's type
      * @param identifier The identifier to create an injector for
      * @param onInjection Callback that must be called whenever the injection occurs. This is used for debugging and
-     * testing purposes.
+     * testing purposes. Note that an *injection* only happens when the environment is actually queried for an object.
+     * Because of this, eager and lazy injection only actually perform the injection once, while active injection always
+     * performs an injection.
      */
     fun <T : Any> createInjector(identifier: Identifier<T>, onInjection: (T) -> Unit = {}): Injector<T>
 }

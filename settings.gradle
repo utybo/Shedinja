@@ -1,4 +1,4 @@
 enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = 'Shedinja'
-include('shedinja')
+include('shedinja', 'shedinja-test')

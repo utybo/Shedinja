@@ -1,2 +1,10 @@
+plugins {
+    id 'org.jetbrains.dokka'
+}
+
+repositories {
+    mavenCentral()
+}
+
 version = "0.0.1"
 group = "guru.zoroark.shedinja"

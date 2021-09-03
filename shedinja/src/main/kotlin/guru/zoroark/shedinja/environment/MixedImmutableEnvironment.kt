@@ -3,12 +3,6 @@ package guru.zoroark.shedinja.environment
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-private class EnvironmentBasedComponent(private val env: MixedImmutableEnvironment) : SComponent {
-    override fun <T : Any> inject(what: Identifier<T>): Injector<T> {
-        return env.createInjector(what)
-    }
-}
-
 /**
  * An injection environment implementation with a *mixed evaluation strategy*.
  *
@@ -27,8 +21,9 @@ private class EnvironmentBasedComponent(private val env: MixedImmutableEnvironme
  * - **Idempotent/Immutable**. Objects cannot be replaced, injection methods will always return the same thing.
  */
 class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironment {
-    private val components = context.declarations.mapValues { (_, decl) ->
-        decl.supplier(ScopedContext(EnvironmentBasedComponent(this)))
+
+    companion object : InjectionEnvironmentKind<MixedImmutableEnvironment> {
+        override fun build(context: EnvironmentContext) = MixedImmutableEnvironment(context)
     }
 
     private inner class MIEInjector<T : Any>(
@@ -37,16 +32,18 @@ class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironm
     ) : Injector<T> {
         private val value by lazy {
             val result = components[identifier] ?: error("Component not found: ${identifier.kclass.qualifiedName}.")
-            ensureInstance<T>(identifier.kclass, result).also { onInjection(it) }
+            ensureInstance(identifier.kclass, result).also(onInjection)
         }
 
-        override fun getValue(thisRef: SComponent, property: KProperty<*>): T = value
+        override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
     }
 
-    override fun <T : Any> get(identifier: Identifier<T>): T {
-        val found = components[identifier] ?: error("No component found for ${identifier.kclass.qualifiedName}")
-        return ensureInstance(identifier.kclass, found)
+    private val components = context.declarations.mapValues { (_, decl) ->
+        decl.supplier(ScopedContext(EnvironmentBasedScope(this)))
     }
+
+    override fun <T : Any> getOrNull(identifier: Identifier<T>): T? =
+        components[identifier]?.let { ensureInstance(identifier.kclass, it) }
 
     override fun <T : Any> createInjector(
         identifier: Identifier<T>,
@@ -55,12 +52,11 @@ class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironm
         MIEInjector(identifier, onInjection)
 }
 
-private fun <T : Any> ensureInstance(kclass: KClass<*>, result: Any): T {
-    if (!kclass.isInstance(result)) {
-        error(
-            "Internal error: injected component does not correspond to type expected by injector. " +
-                    "Expected an injection of ${kclass.qualifiedName} but actually got ${result.javaClass.name}}"
-        )
+// TODO move out of file
+fun <T : Any> ensureInstance(kclass: KClass<T>, result: Any): T {
+    require(kclass.isInstance(result)) {
+        "Object does not correspond to expected type. " +
+                "Expected type ${kclass.qualifiedName} but got ${result.javaClass.name}."
     }
     @Suppress("UNCHECKED_CAST") // The isInstance check is effectively the cast check
     return result as T
