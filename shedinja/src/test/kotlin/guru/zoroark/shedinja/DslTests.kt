@@ -7,6 +7,7 @@ import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.ScopedContext
 import guru.zoroark.shedinja.environment.get
+import guru.zoroark.shedinja.environment.named
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -58,7 +59,8 @@ class DslTests {
             }
         }
         assertEquals(
-            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', " +
+                    "but one was already present",
             ex.message
         )
     }
@@ -72,7 +74,7 @@ class DslTests {
             }
         }
         assertEquals(
-            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but one was already present",
             ex.message
         )
     }
@@ -86,8 +88,32 @@ class DslTests {
             }
         }
         assertEquals(
-            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass', but one was already present",
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but one was already present",
             ex.message
+        )
+    }
+
+    @Test
+    fun `Named and unnamed qualifiers should not throw error`() {
+        open class TheSuperclass
+        class TheClass : TheSuperclass()
+
+        val context = EnvironmentContextBuilderDsl().apply {
+            put(::TheClass)
+            put(named("using-ctor"), ::TheClass)
+            put(named("using-lambda")) { TheClass() }
+            put(TheSuperclass::class, named("using-ctor-and-kclass"), ::TheClass)
+            put(TheSuperclass::class, named("using-lambda-and-kclass")) { TheClass() }
+        }.build().assertSuccess()
+        assertEquals(context.declarations.size, 5)
+        assertEquals(
+            context.declarations.keys, setOf(
+                Identifier(TheClass::class),
+                Identifier(TheClass::class, named("using-ctor")),
+                Identifier(TheClass::class, named("using-lambda")),
+                Identifier(TheSuperclass::class, named("using-ctor-and-kclass")),
+                Identifier(TheSuperclass::class, named("using-lambda-and-kclass"))
+            )
         )
     }
 }

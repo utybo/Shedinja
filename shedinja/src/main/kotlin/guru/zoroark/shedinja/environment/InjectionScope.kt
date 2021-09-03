@@ -2,6 +2,12 @@ package guru.zoroark.shedinja.environment
 
 import kotlin.properties.ReadOnlyProperty
 
+/**
+ * An injection scope provides an entrypoint for components to retrieve the dependencies they need.
+ *
+ * This should be passed as a constructor parameter to components that require injection. Use the
+ * [InjectionScope.invoke] operator to retrieve dependencies.
+ */
 interface InjectionScope {
     /**
      * Create an injector for the given identifier. The behavior of the injection depends on the
@@ -15,16 +21,29 @@ interface InjectionScope {
 }
 
 /**
- * Create an injector for the given class, turned to an identifier. See [InjectionScope.inject] for more information.
+ * Create an injector for the given class, turned to an identifier, and an optional [qualifier][Qualifier].
+ * See [InjectionScope.inject] for more information.
  *
  * ```
  * class Service(scope: InjectionScope) {
  *     val controller: Controller by scope()
+ *     val repository: Repository by scope(named("my-repository"))
  * }
  * ```
  */
-inline operator fun <reified T : Any> InjectionScope.invoke(): ReadOnlyProperty<Any?, T> =
-    inject(Identifier(T::class))
+inline operator fun <reified T : Any> InjectionScope.invoke(
+    qualifier: Qualifier = EmptyQualifier
+): ReadOnlyProperty<Any?, T> =
+    inject(Identifier(T::class, qualifier))
 
+/**
+ * Create an injector for the given [identifier][Identifier]. See [InjectionScope.inject] for more information.
+ *
+ * ```
+ * class Service(scope: InjectionScope) {
+ *     val controller by scope(Identifier(Controller::class))
+ * }
+ * ```
+ */
 operator fun <T : Any> InjectionScope.invoke(identifier: Identifier<T>): ReadOnlyProperty<Any?, T> =
     inject(identifier)

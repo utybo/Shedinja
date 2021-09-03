@@ -20,6 +20,12 @@ interface Buildable<T> {
  * Warnings and errors are represented by individual [BuildWarning] and [BuildError] objects
  */
 sealed class BuildResult<T> {
+    /**
+     * Subclass for build results that contain a result. The mere presence of a result is not enough to determine
+     * success, warnings or failure -- use the dedicated subtypes for this.
+     *
+     * @property result The result of this operation.
+     */
     sealed class HasResult<T>(val result: T) : BuildResult<T>()
 
     /**
@@ -65,6 +71,10 @@ private fun <T> BuildResult.HasResult<*>.withResult(newResult: T): BuildResult<T
     is BuildResult.SuccessWithWarnings -> BuildResult.SuccessWithWarnings(newResult, warnings)
 }
 
+/**
+ * Maps this build result to a new build result of type [R] if it contains a result. This keeps warnings and errors
+ * intact.
+ */
 fun <T, R> BuildResult<T>.onSuccess(transformer: (T) -> R): BuildResult<R> = when (this) {
     is BuildResult.HasResult -> {
         this.withResult(transformer(this.result))
@@ -74,6 +84,9 @@ fun <T, R> BuildResult<T>.onSuccess(transformer: (T) -> R): BuildResult<R> = whe
     }
 }
 
+/**
+ * Get this [BuildResult]'s result or throw an exception if no result was emitted (i.e. there was a fatal error).
+ */
 fun <T> BuildResult<T>.getOrThrow(): T = when (this) {
     is BuildResult.HasResult -> this.result
     is BuildResult.Failure -> error("Failed:\n" + errors.joinToString("\n") { it.message })

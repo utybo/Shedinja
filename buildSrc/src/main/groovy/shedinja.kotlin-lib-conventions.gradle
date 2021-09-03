@@ -32,3 +32,7 @@ dokkaHtmlPartial {
         }
     }
 }
+
+detekt {
+    config = files(rootProject.layout.projectDirectory.file("detekt.yaml"))
+}

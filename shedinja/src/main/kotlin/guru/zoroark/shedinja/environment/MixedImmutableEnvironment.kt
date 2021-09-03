@@ -14,6 +14,9 @@ import kotlin.reflect.KProperty
  * Mixed evaluation allows for lock-free thread safety for component creation and occasional locking thread safety on
  * injections.
  *
+ * Due to injections being made lazily, this environment supports cyclic dependencies (class A requires B, class B
+ * requires A) and self-injections (class C requires itself).
+ *
  * ### Characteristics
  *
  * - **Eager object creation**. Objects are created upon construction of this environment.
@@ -52,12 +55,19 @@ class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironm
         MIEInjector(identifier, onInjection)
 }
 
-// TODO move out of file
-fun <T : Any> ensureInstance(kclass: KClass<T>, result: Any): T {
-    require(kclass.isInstance(result)) {
+/**
+ * Utility function - asserts that [obj] is an instance of [kclass]. Throws an exception if it is not or returns
+ * [obj] cast to [T] on success.
+ *
+ * @param kclass The KClass of the expected type of [obj].
+ * @param obj The object that should be tested.
+ * @param T The expected type of [obj].
+ */
+fun <T : Any> ensureInstance(kclass: KClass<T>, obj: Any): T {
+    require(kclass.isInstance(obj)) {
         "Object does not correspond to expected type. " +
-                "Expected type ${kclass.qualifiedName} but got ${result.javaClass.name}."
+                "Expected type ${kclass.qualifiedName} but got ${obj.javaClass.name}."
     }
     @Suppress("UNCHECKED_CAST") // The isInstance check is effectively the cast check
-    return result as T
+    return obj as T
 }

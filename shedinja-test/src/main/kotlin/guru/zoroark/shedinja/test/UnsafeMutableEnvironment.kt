@@ -25,7 +25,7 @@ import kotlin.reflect.KProperty
  * ### Mutability
  *
  * You can mutate this environment (i.e. add components) by using any [put] function you are already used to. You can
- * `put` components and also modules.
+ * `put` components and modules.
  *
  * ### Characteristics
  *

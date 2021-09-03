@@ -1,0 +1,10 @@
+comments:
+  UndocumentedPublicClass:
+    active: true
+    excludes: ['**/test/**']
+  UndocumentedPublicFunction:
+    active: true
+    excludes: ['**/test/**']
+  UndocumentedPublicProperty:
+    active: true
+    excludes: ['**/test/**']

@@ -7,6 +7,7 @@ import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
 import guru.zoroark.shedinja.environment.ScopedSupplier
 import guru.zoroark.shedinja.environment.get
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertSame
@@ -75,5 +76,28 @@ class TestMixedEnvironment {
         assertFalse(wasInjected)
         inj.getValue(FakeComponent, FakeComponent::fakeProperty)
         assertTrue(wasInjected)
+    }
+
+    @Test
+    fun `Test supports cyclic dependencies`() {
+        val context = EnvironmentContext(mapOf(
+            entryOf { AtoB(scope) },
+            entryOf { BtoA(scope) }
+        ))
+        val env = MixedImmutableEnvironment(context)
+        val a = env.get<AtoB>()
+        val b = env.get<BtoA>()
+        assertEquals("BtoA", a.useB())
+        assertEquals("AtoB", b.useA())
+    }
+
+    @Test
+    fun `Test supports self injection`() {
+        val context = EnvironmentContext(mapOf(
+            entryOf { CtoC(scope) }
+        ))
+        val env = MixedImmutableEnvironment(context)
+        val c = env.get<CtoC>()
+        assertEquals("CtoC", c.useC())
     }
 }

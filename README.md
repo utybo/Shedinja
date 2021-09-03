@@ -8,7 +8,8 @@ Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-
 
 Using Shedinja is simple:
 
-* Add a `scope: InjectionScope` parameter to your constructor.
+* Add a `scope: InjectionScope` parameter to your class.
+  * This is only required if you would like to inject components into your class. If your class does not require injection, such a parameter is not necessary.
 * Define your injectable elements, either one-by-one or grouped in modules.
 * Create an environment.
 * Profit!
