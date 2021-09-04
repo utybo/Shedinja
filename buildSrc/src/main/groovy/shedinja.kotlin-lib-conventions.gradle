@@ -10,6 +10,9 @@ repositories {
     mavenCentral()
 }
 
+version = rootProject.version
+group = rootProject.group
+
 dependencies {
     implementation libs.kotlin.stdlib
 
