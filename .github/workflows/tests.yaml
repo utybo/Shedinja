@@ -25,6 +25,7 @@ jobs:
         run: |
           ./gradlew check
       - name: Publish snapshot
+        if: "github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')"
         run: |
           ./gradlew publish
   publish:
