@@ -2,7 +2,9 @@
 
 > Dependency injection doesn't have to be a mess
 
-Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library that is easy to use and has extremely flexible internals.
+Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library with extremely flexible internals.
+
+> ⚡ This framework is experimental and under heavy development. As such, it should not be considered stable and should not be used in production environments.
 
 ## Getting Started
 
