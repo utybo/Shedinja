@@ -18,7 +18,7 @@ jobs:
           distribution: "adopt"
           java-version: 16
       - name: Compile project
-        run:
+        run: |
           chmod +x gradlew
           ./gradlew jar
       - name: Run checks
