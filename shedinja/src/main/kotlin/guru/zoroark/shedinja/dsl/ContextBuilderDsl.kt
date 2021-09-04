@@ -140,7 +140,7 @@ fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, sup
         else ->
             error(
                 "Cannot 'put' the given function ($supplier). It must take either no arguments or a single argument " +
-                        "that is of type 'SComponent'."
+                        "that is of type 'InjectionScope'. Consider manually instantiating this component instead."
             )
     }
 }

@@ -12,21 +12,6 @@ package guru.zoroark.shedinja.environment
 class Declaration<T : Any>(val identifier: Identifier<T>, val supplier: ScopedSupplier<T>)
 
 /**
- * Creates a declaration from the given identifier and supplier. Only use this function if you do not have type
- * information on both the identifier and the supplier. Any other use is heavily discouraged.
- */
-// TODO document param and return
-@Suppress("FunctionName", "UNCHECKED_CAST")
-fun TypelessDeclaration(identifier: Identifier<*>, supplier: ScopedSupplier<*>): Declaration<*> {
-    fun <T : Any> fakeTypedDeclaration(): Declaration<*> {
-        // For whatever reason, using just <*> in both cases leads to a compilation error:
-        // Type mismatch: inferred type is Any but CapturedType(*) was expected
-        return Declaration(identifier as Identifier<T>, supplier as ScopedSupplier<T>)
-    }
-    return fakeTypedDeclaration<Any>()
-}
-
-/**
  * A map that maps identifiers to declarations.
  *
  * The general contract is:

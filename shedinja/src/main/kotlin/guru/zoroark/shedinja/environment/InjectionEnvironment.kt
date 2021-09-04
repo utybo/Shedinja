@@ -87,8 +87,8 @@ interface InjectionEnvironment {
 }
 
 /**
- * Gets the component identified by the given type turned into an [Identifier]. Refer to [InjectionEnvironment.get] for
- * more information.
+ * Gets the component identified by the given type turned into an [Identifier] with an optional [qualifier][Qualifier].
+ * Refer to [InjectionEnvironment.get] for more information.
  */
-inline fun <reified T : Any> InjectionEnvironment.get(): T =
-    get(Identifier(T::class))
+inline fun <reified T : Any> InjectionEnvironment.get(qualifier: Qualifier = EmptyQualifier): T =
+    get(Identifier(T::class, qualifier))

@@ -1,0 +1,21 @@
+repositories {
+    mavenCentral()
+    maven { url 'https://gitlab.com/api/v4/projects/29365238/packages/maven' }
+}
+
+configurations {
+    servine
+}
+
+dependencies {
+    servine 'guru.zoroark.servine:servine:0.0.2-SNAPSHOT'
+}
+
+def serveDocsTask = tasks.register("serveDocs", JavaExec) {
+    main = "guru.zoroark.servine.app.AppKt"
+    classpath = configurations.servine
+
+    def params = [project.layout.projectDirectory.toString()]
+    logger.warn(project.layout.projectDirectory.toString())
+    args(params)
+}
