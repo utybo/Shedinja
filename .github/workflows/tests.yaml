@@ -3,56 +3,44 @@ name: Tests
 on:
   push:
     branches: [main]
+    tags: [ "v*.*.*" ]
   pull_request:
+    branches: [main]
 
 jobs:
   tests:
-    name: Run tests
-    strategy:
-      matrix:
-        jdk-version: [8, 11, 16]
-        jdk-distrib: [adopt, zulu]
+    name: Run checks
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
         with:
-          distribution: ${{matrix.jdk-distrib}}
-          java-version: ${{matrix.jdk-version}}
-      - name: Run tests
-        run: |
-          chmod +x gradlew
-          ./gradlew test
-  detekt:
-    name: Run Detekt
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: adopt
+          distribution: "adopt"
           java-version: 16
-      - name: Run tests
-        run: |
+      - name: Compile project
+        run:
           chmod +x gradlew
-          ./gradlew detekt
-  docs-generation:
-    name: Generate documentation
+          ./gradlew jar
+      - name: Run checks
+        run: |
+          ./gradlew check
+      - name: Publish snapshot
+        run: |
+          ./gradlew publish
+  publish:
+    if: "github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')"
     runs-on: ubuntu-20.04
-    needs: [detekt, tests]
+    needs: [ tests ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
         with:
-          distribution: adopt
-          java-version: 16
-      - name: Generate documentation
-        run: |
-          chmod +x gradlew
-          ./gradlew dokkaHtmlMultiModule
+          java-version: '16'
+          distribution: 'adopt'
+      - name: Build
+        run: ./gradlew build
+      - name: Publish non-snapshot version
+        run: ./gradlew publish -PallowNonSnapshotRelease
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ github.token }}
