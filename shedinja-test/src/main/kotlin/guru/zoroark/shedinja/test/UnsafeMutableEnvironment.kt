@@ -25,7 +25,7 @@ import kotlin.reflect.KProperty
  * ### Mutability
  *
  * You can mutate this environment (i.e. add components) by using any [put] function you are already used to. You can
- * `put` components and modules.
+ * `put` components and modules. You can also use [alsoPut] to add them in a suffix-style.
  *
  * ### Characteristics
  *
@@ -62,6 +62,19 @@ class UnsafeMutableEnvironment(baseContext: EnvironmentContext) : InjectionEnvir
             declaration.supplier(ScopedContext(EnvironmentBasedScope(this)))
     }
 
+    /**
+     * Allows to add an object to the environment right after its creation, saving a separate `put` call, e.g.
+     *
+     * ```
+     * @Test
+     * fun `My Test`() = test {
+     *     SomeClass().alsoPut()
+     *     // SomeClass is now available in the environment.
+     * }
+     * ```
+     *
+     * This is strictly equivalent to calling `also { put { this } }`.
+     */
     @ShedinjaDsl
     inline fun <reified T : Any> T.alsoPut(): T =
         also { put { this@alsoPut } }

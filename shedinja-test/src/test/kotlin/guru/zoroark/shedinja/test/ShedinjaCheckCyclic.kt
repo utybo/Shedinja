@@ -26,7 +26,7 @@ class ShedinjaCheckCyclic {
         private val a: A by scope()
     }
 
-    // Cyclic C -> D -> E -> F -> C
+    // Cyclic C -> Z -> E -> F -> C
     //                    ------>
     class C(scope: InjectionScope) {
         private val d: D by scope()
@@ -54,7 +54,7 @@ class ShedinjaCheckCyclic {
         shedinjaCheck {
             modules(module)
 
-            noCycle
+            +noCycle
         }
     }
 
@@ -68,7 +68,7 @@ class ShedinjaCheckCyclic {
             shedinjaCheck {
                 modules(module)
 
-                noCycle
+                +noCycle
             }
         }
     }
@@ -85,8 +85,7 @@ class ShedinjaCheckCyclic {
             shedinjaCheck {
                 modules(module)
 
-                complete
-                noCycle
+                +noCycle
             }
         }
     }
