@@ -44,6 +44,8 @@ detekt {
 if (project.version.endsWith('-SNAPSHOT') || project.hasProperty('allowNonSnapshotRelease')) {
     publishing {
         repositories {
+            /*
+            GPR does not support anonymous access to public packages - this is disabled for now
             maven {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/utybo/Shedinja")
@@ -52,9 +54,22 @@ if (project.version.endsWith('-SNAPSHOT') || project.hasProperty('allowNonSnapsh
                     password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
                 }
             }
+            */
+
+            maven {
+                name = "GitLab"
+                url = uri("https://gitlab.com/api/v4/projects/29365238/packages/maven")
+                credentials(HttpHeaderCredentials) {
+                    name = 'Private-Token'
+                    value = System.getenv("GITLAB_DEPLOY_TOKEN")
+                }
+                authentication {
+                    header(HttpHeaderAuthentication)
+                }
+            }
         }
         publications {
-            gpr(MavenPublication) {
+            library(MavenPublication) {
                 from(components.java)
             }
         }

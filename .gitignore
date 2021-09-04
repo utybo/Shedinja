@@ -8,3 +8,6 @@ build
 .idea
 
 *.hprof
+
+.settings
+.project
