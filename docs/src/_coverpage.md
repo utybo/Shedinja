@@ -1,6 +1,6 @@
 ![Logo](logo.svg)
 
-# Shedinja
+# Shedinja <small style="font-family: var(--base-font-family);">${version}</small>
 
 > Dependency injection library for Kotlin.
 
