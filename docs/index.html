@@ -75,7 +75,7 @@
                             let element = document.querySelector('a.app-name-link')
                             observer = new MutationObserver(function (mutations) {
                                 mutations.forEach(function (mutation) {
-                                    if (mutation.type == 'attributes' && !element.endsWith("/")) {
+                                    if (mutation.type == 'attributes' && !element.href.endsWith("/")) {
                                         element.href = '/';
                                     }
                                 })
