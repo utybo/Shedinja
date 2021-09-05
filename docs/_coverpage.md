@@ -6,6 +6,6 @@
 
 Simple, safe, easy-to-use and flexible.
 
-[Documentation](/#Shedinja) [GitHub](https://github.com/utybo/Shedinja)
+[Documentation](/#shedinja-main) [GitHub](https://github.com/utybo/Shedinja)
 
 ![](bg.jpg)

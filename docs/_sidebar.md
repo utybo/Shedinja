@@ -1,4 +1,3 @@
-- [Shedinja](/)
 - [Getting Started](/GettingStarted.md)
 - [Using Shedinja](/UsingShedinja.md)
 - [Testing Shedinja code](/Testing.md)

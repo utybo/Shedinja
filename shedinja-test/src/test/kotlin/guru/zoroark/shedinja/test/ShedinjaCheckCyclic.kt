@@ -5,6 +5,7 @@ import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.invoke
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
 import kotlin.test.fail
@@ -26,7 +27,7 @@ class ShedinjaCheckCyclic {
         private val a: A by scope()
     }
 
-    // Cyclic C -> Z -> E -> F -> C
+    // Cyclic C -> D -> E -> F -> C
     //                    ------>
     class C(scope: InjectionScope) {
         private val d: D by scope()
@@ -51,11 +52,14 @@ class ShedinjaCheckCyclic {
             put(::Foo)
             put(::Bar)
         }
-        shedinjaCheck {
-            modules(module)
+        assertDoesNotThrow {
+            shedinjaCheck {
+                modules(module)
 
-            +noCycle
+                +noCycle
+            }
         }
+
     }
 
     @Test
@@ -87,6 +91,6 @@ class ShedinjaCheckCyclic {
 
                 +noCycle
             }
-        }
+        }.also { print(it.message); fail() }
     }
 }

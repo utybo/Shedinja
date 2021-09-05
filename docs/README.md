@@ -1,4 +1,4 @@
-# Shedinja
+# Shedinja :id=shedinja-main
 
 Welcome to Shedinja's documentation website!
 
