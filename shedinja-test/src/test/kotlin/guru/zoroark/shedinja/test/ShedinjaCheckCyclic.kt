@@ -91,6 +91,6 @@ class ShedinjaCheckCyclic {
 
                 +noCycle
             }
-        }.also { print(it.message); fail() }
+        }
     }
 }
