@@ -70,16 +70,17 @@
             plugins: [
                 function (hook, vm) {
                     var observer = null;
-                    let element = document.querySelector('a.app-name-link')
-                    hook.doneEach(function () {
+                    hook.ready(function () {
                         if (observer == null) {
+                            let element = document.querySelector('a.app-name-link')
                             observer = new MutationObserver(function (mutations) {
                                 mutations.forEach(function (mutation) {
-                                    if (mutation.type == 'attributes' && element.href != '/') {
+                                    if (mutation.type == 'attributes' && !element.endsWith("/")) {
                                         element.href = '/';
                                     }
                                 })
                             })
+                            element.href = '/';
                             observer.observe(element, { attributes: true })
                         }
                     });
