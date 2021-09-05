@@ -11,11 +11,26 @@ dependencies {
     servine 'guru.zoroark.servine:servine:0.0.2-SNAPSHOT'
 }
 
+def needExpansion = [ "_coverpage.md" ]
+
+def buildDocsTask = tasks.register("buildDocs", Copy) {
+    from project.layout.projectDirectory.dir("src")
+    into project.layout.buildDirectory.dir("docs")
+
+    def template = [version: project.version]
+    filesMatching(needExpansion) {
+        expand template
+    }
+}
+
 def serveDocsTask = tasks.register("serveDocs", JavaExec) {
     main = "guru.zoroark.servine.app.AppKt"
     classpath = configurations.servine
 
-    def params = [project.layout.projectDirectory.toString()]
-    logger.warn(project.layout.projectDirectory.toString())
+    def params = [project.layout.buildDirectory.dir("docs").get().toString()]
     args(params)
+
+    dependsOn buildDocsTask
 }
+
+version = rootProject.version
