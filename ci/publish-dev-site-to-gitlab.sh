@@ -1,12 +1,14 @@
 #!/bin/sh
 
 REPO_URL=gitlab.com/utybo/shedinja-snapshot-pages-deploy.git
-REPO="htpts://oauth2:${GITLAB_SITE_PUSH_TOKEN}@${REPO_URL}"
+REPO="https://oauth2:${GITLAB_SITE_PUSH_TOKEN}@${REPO_URL}"
+
+set -e
 
 echo "Publishing website to $REPO_URL"
 ./gradlew buildDocs
 mkdir /tmp/publish-site-to-gitlab
-cp docs/build/docs/* /tmp/publish-site-to-gitlab/public
+cp -r docs/build/docs /tmp/publish-site-to-gitlab/public
 cat > /tmp/publish-site-to-gitlab/.gitlab-ci.yml <<EOF
 image: alpine:latest
 
@@ -31,4 +33,4 @@ git commit -m "Publish"
 git push -u origin master --force
 
 echo "Done"
-echo "WARNING: Please rm /tmp/publish-site-to-gitlab manually."
+echo "WARNING: Please rm /tmp/publish-site-to-gitlab manually if you wish to run this script again."

@@ -1,11 +1,10 @@
 # [![Shedinja](https://img.pokemondb.net/sprites/black-white/anim/normal/shedinja.gif)](http://pokemondb.net/pokedex/shedinja) Shedinja
 
-> Dependency injection doesn't have to be a mess
+[**Documentation**](https://shedinja.zoroark.guru) | [**Packages**](https://gitlab.com/utybo/packages/-/packages?search[]=guru%2Fzoroark%2Fshedinja)
 
 Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library with extremely flexible internals.
 
 > ⚡ This framework is experimental and under heavy development. As such, it should not be considered stable and should not be used in production environments.
-
 ## Getting Started
 
 Using Shedinja is simple:
