@@ -1,0 +1,11 @@
+plugins {
+    id 'shedinja.kotlin-lib-conventions'
+}
+
+dependencies {
+    api project(":shedinja")
+    api libs.koin.v2
+    // implementation libs.kotlin.reflect
+
+
+}
