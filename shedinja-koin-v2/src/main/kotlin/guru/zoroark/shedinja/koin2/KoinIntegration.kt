@@ -2,16 +2,19 @@ package guru.zoroark.shedinja.koin2
 
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.environment.Declaration
+import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectableModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
+import guru.zoroark.shedinja.environment.NameQualifier
 import guru.zoroark.shedinja.environment.ScopedContext
 import org.koin.core.KoinApplication
 import org.koin.core.definition.BeanDefinition
 import org.koin.core.definition.Definitions
 import org.koin.core.module.Module
 import org.koin.core.qualifier.Qualifier
+import org.koin.core.qualifier.StringQualifier
 import org.koin.dsl.module
 import kotlin.reflect.KProperty
 
@@ -39,35 +42,66 @@ fun KoinApplication.shedinjaModules(vararg modules: InjectableModule) {
  * although the compiler will raise an error, thus making reflection needed.
  */
 fun InjectableModule.toKoinModule(app: KoinApplication): Module = module {
-    declarations.forEach {
-        it.applyDeclarationTo(this@module, app)
+    val definitions = this.reflectiveAccessTo<Module, HashSet<BeanDefinition<*>>>("getDefinitions")
+    val moduleRootScope = this.reflectiveAccessTo<Module, Qualifier>("getRootScope")
+    declarations.forEach { declaration ->
+        definitions.add(
+            Definitions.createSingle(
+                declaration.identifier.kclass,
+                declaration.identifier.qualifier.toKoinQualifier(),
+                { declaration.supplier(ScopedContext(KoinApplicationBackedScope(app))) },
+                makeOptions(false),
+                emptyList(),
+                moduleRootScope
+            )
+        )
     }
 }
 
-private fun <T : Any> Declaration<T>.applyDeclarationTo(module: Module, app: KoinApplication) {
-    val definitions = module.reflectiveAccessTo<Module, HashSet<BeanDefinition<*>>>("getDefinitions")
-    val moduleRootScope = module.reflectiveAccessTo<Module, Qualifier>("getRootScope")
-    definitions.add(
-        Definitions.createSingle(
-            identifier.kclass,
-            null, // TODO translate string qualifiers
-            { supplier(ScopedContext(KoinApplicationBackedScope(app))) },
-            module.makeOptions(false),
-            emptyList(),
-            moduleRootScope
-        )
-    )
+/**
+ * Interface for Shedinja qualifier that provides a way of translating them to Koin v2 qualifiers.
+ *
+ * Note that:
+ *
+ * - This should only be implemented for custom qualifiers in applications that require the Shedinja-Koin
+ * - Internally, [EmptyQualifier] and [NameQualifier] can already be converted to Koin's qualifiers.
+ * - There is a naming conflict between `guru.zoroark.shedinja.environment.Qualifier` and
+ * `org.koin.core.qualifier.Qualifier` which may cause issues. Consider using
+ * [the `as` keyword](https://kotlinlang.org/docs/packages.html#imports) when importing these classes for solving this
+ * conflict.
+ */
+interface KoinCompatibleQualifier : guru.zoroark.shedinja.environment.Qualifier {
+    /**
+     * Convert this qualifier to a Koin qualifier.
+     */
+    fun toKoinQualifier(): Qualifier
 }
+
+private fun guru.zoroark.shedinja.environment.Qualifier.toKoinQualifier(): Qualifier? =
+    when (this) {
+        is KoinCompatibleQualifier -> toKoinQualifier()
+        EmptyQualifier -> null
+        is NameQualifier -> StringQualifier(name)
+        else -> error(
+            """
+            The following Shedinja qualifier cannot be converted to Koin's qualifier type: ${this.javaClass.name}.
+            You can resolve this by making ${this.javaClass.name} implement the 'KoinCompatibleQualifier` interface.
+            """.trimIndent()
+        )
+    }
 
 private class KoinApplicationBackedScope(private val app: KoinApplication) : InjectionScope {
     override fun <T : Any> inject(what: Identifier<T>): Injector<T> =
         KoinApplicatedBackedInjector(what, app)
 }
 
-private class KoinApplicatedBackedInjector<T : Any>(private val identifier: Identifier<T>, private val app: KoinApplication) :
+private class KoinApplicatedBackedInjector<T : Any>(
+    private val identifier: Identifier<T>,
+    private val app: KoinApplication
+) :
     Injector<T> {
     private val value by lazy {
-        app.koin.get(identifier.kclass)
+        app.koin.get(identifier.kclass, identifier.qualifier.toKoinQualifier())
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
