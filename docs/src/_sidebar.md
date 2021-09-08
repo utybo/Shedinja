@@ -2,6 +2,7 @@
 - [Using Shedinja](/UsingShedinja.md)
 - [Testing Shedinja code](/Testing.md)
 - [Koin Integration](/KoinIntegration.md)
+- [Building Shedinja](/Building.md)
 - **External links**
 - [📚 GitHub Repository](https://github.com/utybo/Shedinja)
 - [📦 Packages](https://gitlab.com/utybo/packages/-/packages?search[]=guru%2Fzoroark%2Fshedinja)
