@@ -1,25 +1,22 @@
 package guru.zoroark.shedinja
 
-import guru.zoroark.shedinja.dsl.ContextBuilderDsl
-import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.Qualifier
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.extensions.factory
+import guru.zoroark.shedinja.extensions.from
+import guru.zoroark.shedinja.extensions.putFactory
 import org.junit.jupiter.api.Test
-import kotlin.properties.ReadOnlyProperty
+import kotlin.math.log
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
+import kotlin.reflect.full.findAnnotation
 import kotlin.test.assertEquals
 
-// TODO Put the interesting stuff in main, not in tests
-
-fun interface InjectableFactory<T : Any> {
-    fun make(requestor: Any): T
-}
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class LoggerName(val name: String)
 
 class PostInjectActionTest {
     interface WhatIsYourA {
@@ -36,10 +33,11 @@ class PostInjectActionTest {
         val identity = "I am $who's A"
     }
 
-    class Logger(origin: String) {
-        val identity = "I am $origin's Logger"
+    class Logger(origin: String, name: String) {
+        val identity = "I am $origin's Logger and my name is $name"
     }
 
+    @LoggerName("Banana")
     class B(scope: InjectionScope) : WhatIsYourA, WhatIsYourLogger {
         override val name = "B"
         override val loggerName = "log.B"
@@ -50,6 +48,7 @@ class PostInjectActionTest {
         override fun whatIsYourLogger(): String = "My Logger is ${logger.identity}"
     }
 
+    @LoggerName("Coconut")
     class C(scope: InjectionScope) : WhatIsYourA, WhatIsYourLogger {
         override val name = "C"
         override val loggerName = "log.C"
@@ -67,6 +66,7 @@ class PostInjectActionTest {
         override fun whatIsYourA(): String = "My A is ${a.identity}"
     }
 
+    @LoggerName("Markiplier") // Yeah, it's a dead meme, I know.
     class E(scope: InjectionScope) : WhatIsYourLogger {
         override val loggerName  = "log.E"
         private val logger: Logger by factory from scope
@@ -76,8 +76,10 @@ class PostInjectActionTest {
 
     @Test
     fun `Test factory system`() {
+        var factoryCallCount = 0
         val module = shedinjaModule {
             putFactory { requestor ->
+                factoryCallCount++
                 A((requestor as WhatIsYourA).name)
             }
             put(::B)
@@ -86,23 +88,36 @@ class PostInjectActionTest {
         }
         val env = shedinja { put(module) }
 
+        assertEquals(0, factoryCallCount)
         mapOf(
             env.get<B>() to "My A is I am B's A",
             env.get<C>() to "My A is I am C's A",
             env.get<D>() to "My A is I am D's A"
         ).forEach { (k, v) ->
-            assertEquals(k.whatIsYourA(), v)
+            repeat(3) {
+                assertEquals(k.whatIsYourA(), v)
+            }
+
         }
+        assertEquals(3, factoryCallCount, "Factory function must be called exactly three times")
     }
+
+
+    private val KClass<*>.loggerName: String
+        get() = findAnnotation<LoggerName>()?.name ?: "(no name)"
 
     @Test
     fun `Test factory with double stuff system`() {
+        var aFactoryCallCount = 0
+        var loggerFactoryCallCount = 0
         val module = shedinjaModule {
             putFactory { requestor ->
+                aFactoryCallCount++
                 A((requestor as WhatIsYourA).name)
             }
             putFactory { requestor ->
-                Logger((requestor as WhatIsYourLogger).loggerName)
+                loggerFactoryCallCount++
+                Logger((requestor as WhatIsYourLogger).loggerName, requestor::class.loggerName)
             }
 
             put(::B)
@@ -112,61 +127,26 @@ class PostInjectActionTest {
         }
         val env = shedinja { put(module) }
 
+
+        assertEquals(0, aFactoryCallCount)
+        assertEquals(0, loggerFactoryCallCount)
         mapOf(
             env.get<B>() to "My A is I am B's A",
             env.get<C>() to "My A is I am C's A",
             env.get<D>() to "My A is I am D's A"
         ).forEach { (k, v) ->
-            assertEquals(k.whatIsYourA(), v)
+            repeat(3) { assertEquals(k.whatIsYourA(), v) }
         }
 
         mapOf(
-            env.get<B>() to "My Logger is I am log.B's Logger",
-            env.get<C>() to "My Logger is I am log.C's Logger",
-            env.get<E>() to "My Logger is I am log.E's Logger"
+            env.get<B>() to "My Logger is I am log.B's Logger and my name is Banana",
+            env.get<C>() to "My Logger is I am log.C's Logger and my name is Coconut",
+            env.get<E>() to "My Logger is I am log.E's Logger and my name is Markiplier"
         ).forEach { (k, v) ->
-            assertEquals(k.whatIsYourLogger(), v)
+            repeat(3) { assertEquals(k.whatIsYourLogger(), v) }
         }
+
+        assertEquals(3, loggerFactoryCallCount, "Incorrect nb of calls to logger factory")
+        assertEquals(3, aFactoryCallCount, "Incorrect nb of calls to A factory")
     }
-}
-
-// Environment management
-
-data class InjectableFactoryOutputTypeQualifier(val outputs: KClass<*>) : Qualifier {
-    override fun toString(): String = "Factory with output $outputs"
-}
-
-@ShedinjaDsl
-fun outputs(output: KClass<*>) = InjectableFactoryOutputTypeQualifier(output)
-
-// Creation in module
-
-@ShedinjaDsl
-inline fun <reified T : Any> ContextBuilderDsl.putFactory(crossinline block: (Any) -> T) {
-    put(outputs(T::class)) { InjectableFactory { block(it) } }
-}
-
-// Injection DSL
-
-class FactoryDsl(val ofObject: Any)
-
-@ShedinjaDsl
-val Any.factory
-    get() = FactoryDsl(this)
-
-@ShedinjaDsl
-inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): ReadOnlyProperty<R, T> =
-    scope<InjectableFactory<T>>(outputs(T::class)) wrapIn { it.make(ofObject) }
-
-// Utilities
-
-infix fun <T, V, R> ReadOnlyProperty<T, V>.wrapIn(mapper: (V) -> R): WrappedReadOnlyProperty<T, V, R> =
-    WrappedReadOnlyProperty(this, mapper)
-
-class WrappedReadOnlyProperty<T, V, R>(
-    private val original: ReadOnlyProperty<T, V>,
-    private val mapper: (V) -> R
-) : ReadOnlyProperty<T, R> {
-    override fun getValue(thisRef: T, property: KProperty<*>): R =
-        mapper(original.getValue(thisRef, property))
 }
