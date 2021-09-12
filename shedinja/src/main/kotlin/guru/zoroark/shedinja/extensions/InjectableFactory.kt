@@ -17,7 +17,7 @@ fun interface InjectableFactory<T : Any> {
     /**
      * Create the component from the given requesting object (i.e. the object that asked for the injection).
      */
-    fun make(requestor: Any): T
+    fun make(requester: Any): T
 }
 
 // Environment management
@@ -71,7 +71,7 @@ val Any.factory
     get() = FactoryDsl(this)
 
 /**
- * DSL for injecting factory-made objects. Usage is `faactory from scope`.
+ * DSL for injecting factory-made objects. Usage is `factory from scope`.
  */
 @ShedinjaDsl
 inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): ReadOnlyProperty<R, T> =

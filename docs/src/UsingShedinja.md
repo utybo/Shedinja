@@ -165,8 +165,8 @@ class BanService(scope: InjectionScope) {
 
     private val banRepo: BanRepository by scope()
 
-    fun ban(userToBan: String, requestor: String) {
-        if (requestor in adminUsers && requestor !in permaBannedUsers) {
+    fun ban(userToBan: String, requester: String) {
+        if (requester in adminUsers && requester !in permaBannedUsers) {
             banRepo.ban(userToBan)
         } else {
             error("Not enough permissions!")

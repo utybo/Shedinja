@@ -1,7 +1,11 @@
+- [Home](/)
+- **About Shedinja**
 - [Getting Started](/GettingStarted.md)
 - [Using Shedinja](/UsingShedinja.md)
 - [Testing Shedinja code](/Testing.md)
+- [Extensions](/Extensions.md)
 - [Koin Integration](/KoinIntegration.md)
+- **Developing**
 - [Building Shedinja](/Building.md)
 - **External links**
 - [📚 GitHub Repository](https://github.com/utybo/Shedinja)

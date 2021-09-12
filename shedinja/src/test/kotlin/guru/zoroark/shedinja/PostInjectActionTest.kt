@@ -45,7 +45,8 @@ class PostInjectActionTest {
         private val logger: Logger by factory from scope
 
         override fun whatIsYourA(): String = "My A is ${a.identity}"
-        override fun whatIsYourLogger(): String = "My Logger is ${logger.identity}"
+        override fun whatIsYourLogger(): String =
+            "My Logger is ${logger.identity}"
     }
 
     @LoggerName("Coconut")
@@ -56,7 +57,8 @@ class PostInjectActionTest {
         private val logger: Logger by factory from scope
 
         override fun whatIsYourA(): String = "My A is ${a.identity}"
-        override fun whatIsYourLogger(): String = "My Logger is ${logger.identity}"
+        override fun whatIsYourLogger(): String =
+            "My Logger is ${logger.identity}"
     }
 
     class D(scope: InjectionScope) : WhatIsYourA {
@@ -68,19 +70,20 @@ class PostInjectActionTest {
 
     @LoggerName("Markiplier") // Yeah, it's a dead meme, I know.
     class E(scope: InjectionScope) : WhatIsYourLogger {
-        override val loggerName  = "log.E"
+        override val loggerName = "log.E"
         private val logger: Logger by factory from scope
 
-        override fun whatIsYourLogger(): String = "My Logger is ${logger.identity}"
+        override fun whatIsYourLogger(): String =
+            "My Logger is ${logger.identity}"
     }
 
     @Test
     fun `Test factory system`() {
         var factoryCallCount = 0
         val module = shedinjaModule {
-            putFactory { requestor ->
+            putFactory { requester ->
                 factoryCallCount++
-                A((requestor as WhatIsYourA).name)
+                A((requester as WhatIsYourA).name)
             }
             put(::B)
             put(::C)
@@ -99,9 +102,12 @@ class PostInjectActionTest {
             }
 
         }
-        assertEquals(3, factoryCallCount, "Factory function must be called exactly three times")
+        assertEquals(
+            3,
+            factoryCallCount,
+            "Factory function must be called exactly three times"
+        )
     }
-
 
     private val KClass<*>.loggerName: String
         get() = findAnnotation<LoggerName>()?.name ?: "(no name)"
@@ -111,13 +117,16 @@ class PostInjectActionTest {
         var aFactoryCallCount = 0
         var loggerFactoryCallCount = 0
         val module = shedinjaModule {
-            putFactory { requestor ->
+            putFactory { requester ->
                 aFactoryCallCount++
-                A((requestor as WhatIsYourA).name)
+                A((requester as WhatIsYourA).name)
             }
-            putFactory { requestor ->
+            putFactory { requester ->
                 loggerFactoryCallCount++
-                Logger((requestor as WhatIsYourLogger).loggerName, requestor::class.loggerName)
+                Logger(
+                    (requester as WhatIsYourLogger).loggerName,
+                    requester::class.loggerName
+                )
             }
 
             put(::B)
@@ -146,7 +155,11 @@ class PostInjectActionTest {
             repeat(3) { assertEquals(k.whatIsYourLogger(), v) }
         }
 
-        assertEquals(3, loggerFactoryCallCount, "Incorrect nb of calls to logger factory")
+        assertEquals(
+            3,
+            loggerFactoryCallCount,
+            "Incorrect nb of calls to logger factory"
+        )
         assertEquals(3, aFactoryCallCount, "Incorrect nb of calls to A factory")
     }
 }
