@@ -18,6 +18,7 @@ def buildDocsTask = tasks.register("buildDocs", Copy) {
     into project.layout.buildDirectory.dir("docs")
 
     def template = [version: project.version]
+    inputs.property("project.version", project.version)
     filesMatching(needExpansion) {
         expand template
     }
