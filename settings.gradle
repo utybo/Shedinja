@@ -1,4 +1,4 @@
 enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = 'Shedinja'
-include('shedinja', 'shedinja-test', 'docs')
+include('shedinja', 'shedinja-test', 'shedinja-koin-v2', 'shedinja-koin-v3', 'docs')

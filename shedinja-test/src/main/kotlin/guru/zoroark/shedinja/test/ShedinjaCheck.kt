@@ -183,7 +183,7 @@ val complete = IndividualCheck { modules ->
         .takeIf { it.isNotEmpty() }
     if (requirementToMissingDependency != null) {
         val message = requirementToMissingDependency.asSequence()
-            .flatMap { (requestor, missingDependencies) -> missingDependencies.map { it to requestor } }
+            .flatMap { (requester, missingDependencies) -> missingDependencies.map { it to requester } }
             .associateByMultiPair()
             .entries.joinToString(
                 prefix = "Some dependencies were not found. Make sure they are present within your module definitions.\n",
@@ -191,7 +191,7 @@ val complete = IndividualCheck { modules ->
             ) { (k, v) ->
                 v.joinToString(
                     prefix = "--> $k not found\n    Requested by:\n", separator = "\n"
-                ) { requestor -> "    --> $requestor" }
+                ) { requester -> "    --> $requester" }
             }
         throw ShedinjaCheckException(message)
     }
@@ -207,9 +207,9 @@ val complete = IndividualCheck { modules ->
 }
 
 private fun <K, V> Sequence<Pair<K, V>>.associateByMultiPair(): Map<K, List<V>> =
-    fold(mutableMapOf<K, MutableList<V>>()) { map, (missing, requestor) ->
+    fold(mutableMapOf<K, MutableList<V>>()) { map, (missing, requester) ->
         map.compute(missing) { _, original ->
-            (original ?: mutableListOf()).apply { add(requestor) }
+            (original ?: mutableListOf()).apply { add(requester) }
         }
         map
     }

@@ -24,6 +24,12 @@ dependencies {
     detektPlugins libs.detekt.formatting
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
 test {
     useJUnitPlatform()
 }

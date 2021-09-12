@@ -4,6 +4,8 @@ detekt = "1.18.1"
 junit = "5.7.2"
 dokka = "1.5.0"
 mockk = "1.12.0"
+koin2 = "2.2.3"
+koin3 = "3.1.2"
 
 [libraries]
 # Plugins
@@ -17,6 +19,8 @@ detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", v
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
+koin-v2 = { module = "io.insert-koin:koin-core", version.ref = "koin2" }
+koin-v3 = { module = "io.insert-koin:koin-core", version.ref = "koin3" }
 # Test dependencies
 
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
