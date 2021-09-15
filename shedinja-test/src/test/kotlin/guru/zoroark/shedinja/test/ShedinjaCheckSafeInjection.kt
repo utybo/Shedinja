@@ -4,6 +4,10 @@ import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.test.check.ShedinjaCheckException
+import guru.zoroark.shedinja.test.check.modules
+import guru.zoroark.shedinja.test.check.safeInjection
+import guru.zoroark.shedinja.test.check.shedinjaCheck
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

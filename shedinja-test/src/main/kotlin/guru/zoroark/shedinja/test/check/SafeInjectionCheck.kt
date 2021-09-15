@@ -1,4 +1,4 @@
-package guru.zoroark.shedinja.test
+package guru.zoroark.shedinja.test.check
 
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
