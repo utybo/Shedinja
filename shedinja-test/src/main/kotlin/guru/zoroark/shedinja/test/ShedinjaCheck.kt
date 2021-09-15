@@ -13,7 +13,8 @@ import guru.zoroark.shedinja.environment.InjectionEnvironmentKind
 import guru.zoroark.shedinja.environment.Injector
 import guru.zoroark.shedinja.environment.ScopedContext
 import guru.zoroark.shedinja.environment.named
-import java.util.*
+import java.util.Deque
+import java.util.LinkedList
 import kotlin.reflect.KProperty
 
 /**
@@ -144,10 +145,10 @@ val noCycle = IndividualCheck { modules ->
         if (from in trace) {
             trace.push(from)
             throw ShedinjaCheckException(
-                "Cyclic dependency found:\n" +
+                "'noCycle' check failed.\nCyclic dependency found:\n" +
                         trace.reversed().dropWhile { it != from }
                             .joinToString(prefix = "    ", separator = "\n--> ", postfix = "\n") +
-                        "Note: --> represents an injection (i.e. A --> B means 'A is injected in B')."
+                        "Note: --> represents an injection (i.e. A --> B means 'A depends on B')."
             )
         }
         trace.push(from)
@@ -186,7 +187,11 @@ val complete = IndividualCheck { modules ->
             .flatMap { (requester, missingDependencies) -> missingDependencies.map { it to requester } }
             .associateByMultiPair()
             .entries.joinToString(
-                prefix = "Some dependencies were not found. Make sure they are present within your module definitions.\n",
+                prefix =
+                """
+                    'complete' check failed.
+                    Some dependencies were not found. Make sure they are present within your module definitions.
+                """.trimIndent() + "\n",
                 separator = "\n"
             ) { (k, v) ->
                 v.joinToString(
@@ -195,15 +200,13 @@ val complete = IndividualCheck { modules ->
             }
         throw ShedinjaCheckException(message)
     }
-    val message =
-        deps.mapValues { (_, v) -> v.filter { requirement -> !deps.containsKey(requirement) } }
-            .filterValues { it.isNotEmpty() }
-            .takeIf { it.isNotEmpty() }
-            ?.entries?.joinToString(prefix = "Some dependencies were not found.\n") { (k, v) ->
-                "${v.joinToString()} not found (required by $k)"
-            }
-    if (message != null)
-        throw ShedinjaCheckException(message)
+    val message = deps.mapValues { (_, v) -> v.filter { requirement -> !deps.containsKey(requirement) } }
+        .filterValues { it.isNotEmpty() }
+        .takeIf { it.isNotEmpty() }
+        ?.entries?.joinToString(prefix = "'complete' check failed.\nSome dependencies were not found.\n") { (k, v) ->
+            "${v.joinToString()} not found (required by $k)"
+        }
+    if (message != null) throw ShedinjaCheckException(message)
 }
 
 private fun <K, V> Sequence<Pair<K, V>>.associateByMultiPair(): Map<K, List<V>> =

@@ -2,11 +2,9 @@ package guru.zoroark.shedinja.koin2
 
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinjaModule
-import guru.zoroark.shedinja.environment.InjectableModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.invoke
 import org.junit.jupiter.api.Test
-import org.koin.core.KoinApplication
 import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -15,7 +13,6 @@ import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.test.assertEquals
-
 
 @OptIn(KoinApiExtension::class)
 class TestKoinIntegration {
@@ -53,7 +50,7 @@ class TestKoinIntegration {
         val identity = "I am KoinComponentA$str"
     }
 
-    class KoinComponentB: KoinComponent, IdentityRetriever {
+    class KoinComponentB : KoinComponent, IdentityRetriever {
         private val koinGetA: KoinGetA by inject()
         private val koinGetA2: KoinGetA by inject(named("GA2"))
         private val koinComponentA: KoinComponentA by inject()
@@ -73,7 +70,7 @@ class TestKoinIntegration {
         val identity = "I am ShedinjaA$str"
     }
 
-    class ShedinjaB(scope: InjectionScope): IdentityRetriever {
+    class ShedinjaB(scope: InjectionScope) : IdentityRetriever {
         private val koinGetA: KoinGetA by scope()
         private val koinGetA2: KoinGetA by scope(guru.zoroark.shedinja.environment.named("GA2"))
         private val koinComponentA: KoinComponentA by scope()

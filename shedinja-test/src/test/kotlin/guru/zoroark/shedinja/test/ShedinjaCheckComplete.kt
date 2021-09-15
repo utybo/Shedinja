@@ -7,32 +7,35 @@ import guru.zoroark.shedinja.environment.invoke
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
-import kotlin.test.fail
 
 class ShedinjaCheckComplete {
+    @Suppress("UnusedPrivateMember", "unused")
     class A(scope: InjectionScope) {
         private val b: B by scope()
     }
 
     class B
 
+    @Suppress("UnusedPrivateMember", "unused")
     class C(scope: InjectionScope) {
         private val z: Z by scope()
     }
 
+    @Suppress("UnusedPrivateMember", "unused")
     class E(scope: InjectionScope) {
         private val b: B by scope()
         private val c: C by scope()
         private val z: Z by scope()
     }
 
+    @Suppress("UnusedPrivateMember", "unused")
     class F(scope: InjectionScope) {
         private val a: A by scope()
         private val z: Z by scope()
         private val y: Y by scope()
     }
 
+    @Suppress("UnusedPrivateMember", "unused")
     class G(scope: InjectionScope) {
         private val y: Y by scope()
     }
@@ -70,6 +73,7 @@ class ShedinjaCheckComplete {
             }
         }.assertMessage(
             """
+            'complete' check failed.
             Some dependencies were not found. Make sure they are present within your module definitions.
             --> guru.zoroark.shedinja.test.ShedinjaCheckComplete.Z (<no qualifier>) not found
                 Requested by:
@@ -97,6 +101,7 @@ class ShedinjaCheckComplete {
             }
         }.assertMessage(
             """
+            'complete' check failed.
             Some dependencies were not found. Make sure they are present within your module definitions.
             --> guru.zoroark.shedinja.test.ShedinjaCheckComplete.Z (<no qualifier>) not found
                 Requested by:
@@ -110,8 +115,4 @@ class ShedinjaCheckComplete {
             """.trimIndent()
         )
     }
-}
-
-private fun ShedinjaCheckException.assertMessage(expected: String) {
-    assertEquals(expected, message)
 }

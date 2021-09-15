@@ -1,7 +1,6 @@
 package guru.zoroark.shedinja.environment
 
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope
 
 /**
  * Identifies an injectable component via its type and optionally via other elements called [qualifiers][Qualifier].

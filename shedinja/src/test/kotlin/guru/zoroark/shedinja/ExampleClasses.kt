@@ -27,7 +27,6 @@ class AtoB(scope: InjectionScope) {
     val className = "AtoB"
 
     fun useB() = b.className
-
 }
 
 class BtoA(scope: InjectionScope) {

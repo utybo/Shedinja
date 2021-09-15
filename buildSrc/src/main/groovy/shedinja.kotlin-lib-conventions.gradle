@@ -44,7 +44,14 @@ dokkaHtmlPartial {
 }
 
 detekt {
+    buildUponDefaultConfig = true
     config = files(rootProject.layout.projectDirectory.file("detekt.yaml"))
+}
+
+check.configure {
+    dependsOn = dependsOn.findAll { it.name != 'detekt' }
+    dependsOn += 'detektMain'
+    dependsOn += 'detektTest'
 }
 
 if (project.version.endsWith('-SNAPSHOT') || project.hasProperty('allowNonSnapshotRelease')) {

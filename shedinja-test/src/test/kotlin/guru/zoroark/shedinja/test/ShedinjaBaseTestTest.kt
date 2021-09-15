@@ -154,3 +154,7 @@ class ShedinjaBaseTestTest {
         TestService().`Accepts incoming text properly`()
     }
 }
+
+fun ShedinjaCheckException.assertMessage(expected: String) {
+    assertEquals(expected, message)
+}

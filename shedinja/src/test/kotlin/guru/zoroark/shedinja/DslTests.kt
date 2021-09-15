@@ -74,7 +74,8 @@ class DslTests {
             }
         }
         assertEquals(
-            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but one was already present",
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but " +
+                    "one was already present",
             ex.message
         )
     }
@@ -88,7 +89,8 @@ class DslTests {
             }
         }
         assertEquals(
-            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but one was already present",
+            "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but " +
+                    "one was already present",
             ex.message
         )
     }

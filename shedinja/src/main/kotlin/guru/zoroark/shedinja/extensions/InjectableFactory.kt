@@ -106,8 +106,10 @@ class WrappedReadOnlyProperty<T, V, R>(
  * Similar to `lazy { }` but uses a property instead of a lambda for building. Inspired by the `SYNCHRONIZED` lazy
  * implementation.
  */
-class SynchronizedLazyPropertyWrapper<T, V : Any>(private val wrappedProperty: ReadOnlyProperty<T, V>) : ReadOnlyProperty<T, V> {
-    @Volatile private var value: V? = null
+class SynchronizedLazyPropertyWrapper<T, V : Any>(private val wrappedProperty: ReadOnlyProperty<T, V>) :
+    ReadOnlyProperty<T, V> {
+    @Volatile
+    private var value: V? = null
 
     override fun getValue(thisRef: T, property: KProperty<*>): V {
         val valueNow = value
@@ -124,7 +126,6 @@ class SynchronizedLazyPropertyWrapper<T, V : Any>(private val wrappedProperty: R
                 value = newValue
                 newValue
             }
-
         }
     }
 }

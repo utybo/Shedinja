@@ -1,7 +1,13 @@
 package guru.zoroark.shedinja.koin3
 
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
-import guru.zoroark.shedinja.environment.*
+import guru.zoroark.shedinja.environment.EmptyQualifier
+import guru.zoroark.shedinja.environment.Identifier
+import guru.zoroark.shedinja.environment.InjectableModule
+import guru.zoroark.shedinja.environment.InjectionScope
+import guru.zoroark.shedinja.environment.Injector
+import guru.zoroark.shedinja.environment.NameQualifier
+import guru.zoroark.shedinja.environment.ScopedContext
 import org.koin.core.KoinApplication
 import org.koin.core.definition.BeanDefinition
 import org.koin.core.definition.IndexKey
@@ -14,6 +20,10 @@ import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.StringQualifier
 import org.koin.core.registry.ScopeRegistry
 import org.koin.dsl.module
+import kotlin.collections.HashMap
+import kotlin.collections.forEach
+import kotlin.collections.map
+import kotlin.collections.set
 import kotlin.reflect.KProperty
 
 /**
@@ -112,8 +122,7 @@ private class KoinApplicationBackedScope(private val app: KoinApplication) :
 private class KoinApplicatedBackedInjector<T : Any>(
     private val identifier: Identifier<T>,
     private val app: KoinApplication
-) :
-    Injector<T> {
+) : Injector<T> {
     private val value: T by lazy {
         app.koin.get(identifier.kclass, identifier.qualifier.toKoinQualifier())
     }
@@ -124,5 +133,3 @@ private class KoinApplicatedBackedInjector<T : Any>(
 private inline fun <reified R, reified T> R.reflectiveAccessTo(propertyName: String): T {
     return R::class.java.getMethod(propertyName).invoke(this) as T
 }
-
-
