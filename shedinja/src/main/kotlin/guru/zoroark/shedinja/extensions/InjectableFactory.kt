@@ -75,9 +75,7 @@ val Any.factory
  */
 @ShedinjaDsl
 inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): ReadOnlyProperty<R, T> =
-    SynchronizedLazyPropertyWrapper(
-        scope<InjectableFactory<T>>(outputs(T::class)) wrapIn { it.make(ofObject) }
-    )
+    scope<InjectableFactory<T>>(outputs(T::class)) wrapIn { it.make(ofObject) }
 
 // Utilities
 
@@ -85,22 +83,24 @@ inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): Re
  * Utility function that wraps a given property using the given wrapper. This is useful when you want to transform the
  * output of a property in some way.
  *
- * Note that this doesn't cache the result in any way. The `mapper` is ran every time the property is `get`ed. You may
- * want to wrap it further with [SynchronizedLazyPropertyWrapper] to make it only run once.
+ * This caches the result -- the `mapper` is executed lazily the first time the property is `get`ed.
  */
-infix fun <T, V, R> ReadOnlyProperty<T, V>.wrapIn(mapper: (V) -> R): WrappedReadOnlyProperty<T, V, R> =
-    WrappedReadOnlyProperty(this, mapper)
+inline infix fun <T, V, R : Any> ReadOnlyProperty<T, V>.wrapIn(
+    crossinline mapper: (V) -> R
+): SynchronizedLazyPropertyWrapper<T, R> =
+    SynchronizedLazyPropertyWrapper(WrappedReadOnlyProperty(this, mapper))
 
 /**
  * Wraps a property and maps its result using the given mapper.
  */
-class WrappedReadOnlyProperty<T, V, R>(
-    private val original: ReadOnlyProperty<T, V>,
-    private val mapper: (V) -> R
-) : ReadOnlyProperty<T, R> {
-    override fun getValue(thisRef: T, property: KProperty<*>): R =
+@Suppress("FunctionName")
+inline fun <T, V, R> WrappedReadOnlyProperty(
+    original: ReadOnlyProperty<T, V>,
+    crossinline mapper: (V) -> R
+): ReadOnlyProperty<T, R> =
+    ReadOnlyProperty { thisRef, property ->
         mapper(original.getValue(thisRef, property))
-}
+    }
 
 /**
  * Similar to `lazy { }` but uses a property instead of a lambda for building. Inspired by the `SYNCHRONIZED` lazy

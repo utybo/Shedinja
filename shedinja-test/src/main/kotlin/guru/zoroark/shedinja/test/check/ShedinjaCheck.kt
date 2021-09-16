@@ -82,7 +82,7 @@ private fun ShedinjaCheckDsl.check() {
             shedinjaCheck called without any rule, which checks nothing.
             --> Add rules using +ruleName (for example '+complete', do not forget the +)
             --> If you do not want to run any checks, remove the shedinjaCheck block entirely.
-            For more information, visit https://shedinja.zoroark.guru/Testing?id=check-system
+            For more information, visit https://shedinja.zoroark.guru/ShedinjaCheck
             """.trimIndent()
         )
     } else {

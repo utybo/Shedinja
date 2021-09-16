@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 
 private class CrashOnUseEnvironment(context: EnvironmentContext) : InjectionEnvironment {
     override fun <T : Any> getOrNull(identifier: Identifier<T>): T? {
-        throw ShedinjaCheckException("getOrNull is not implementedd and cannot be used during 'safeInjection' checks.")
+        throw ShedinjaCheckException("getOrNull is not implemented and cannot be used during 'safeInjection' checks.")
     }
 
     companion object : InjectionEnvironmentKind<CrashOnUseEnvironment> {
@@ -38,9 +38,10 @@ private class CrashOnUseEnvironment(context: EnvironmentContext) : InjectionEnvi
         The following injection is done during the instantiation of $currentInstantiation:
             $currentInstantiation
         --> $to
+
         You *must not* actually perform injections during the instantiation of objects.
         If you need to do something on an object provided by an environment before storing it as a property, use ^
-        'wrapInLazy' instead. See the documentation on the 'safeInjection' for more details.
+        'wrapIn' instead. See the documentation on the 'safeInjection' check for more details.
         """.trimIndent().replace("^\n", "")
 
     private inner class TrapInjector<T : Any>(private val target: Identifier<T>) : Injector<T> {

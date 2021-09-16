@@ -72,8 +72,9 @@ class ShedinjaCheckSafeInjection {
             The following injection is done during the instantiation of guru.zoroark.shedinja.test.ShedinjaCheckSafeInjection.D (<no qualifier>):
                 guru.zoroark.shedinja.test.ShedinjaCheckSafeInjection.D (<no qualifier>)
             --> guru.zoroark.shedinja.test.ShedinjaCheckSafeInjection.C (<no qualifier>)
+
             You *must not* actually perform injections during the instantiation of objects.
-            If you need to do something on an object provided by an environment before storing it as a property, use 'wrapInLazy' instead. See the documentation on the 'safeInjection' for more details.
+            If you need to do something on an object provided by an environment before storing it as a property, use 'wrapIn' instead. See the documentation on the 'safeInjection' check for more details.
             """.trimIndent()
         )
     }
