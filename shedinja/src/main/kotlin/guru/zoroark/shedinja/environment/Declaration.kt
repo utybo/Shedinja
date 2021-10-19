@@ -1,5 +1,7 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.extensions.DeclarationTag
+
 /**
  * A declaration within an [EnvironmentContext].
  *
@@ -9,7 +11,12 @@ package guru.zoroark.shedinja.environment
  * @property identifier The identifier for this declaration.
  * @property supplier The supplier for this declaration.
  */
-class Declaration<T : Any>(val identifier: Identifier<T>, val supplier: ScopedSupplier<T>)
+class Declaration<T : Any>(val identifier: Identifier<T>, val supplier: ScopedSupplier<T>) {
+    /**
+     * Tags attached to this declaration.
+     */
+    val tags = mutableListOf<DeclarationTag>()
+}
 
 /**
  * A map that maps identifiers to declarations.

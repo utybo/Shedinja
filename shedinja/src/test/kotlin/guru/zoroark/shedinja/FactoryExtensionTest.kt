@@ -5,9 +5,9 @@ import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.extensions.factory
-import guru.zoroark.shedinja.extensions.from
-import guru.zoroark.shedinja.extensions.putFactory
+import guru.zoroark.shedinja.extensions.factory.factory
+import guru.zoroark.shedinja.extensions.factory.from
+import guru.zoroark.shedinja.extensions.factory.putFactory
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 @Retention(AnnotationRetention.RUNTIME)
 annotation class LoggerName(val name: String)
 
-class PostInjectActionTest {
+class FactoryExtensionTest {
     interface WhatIsYourA {
         val name: String
         fun whatIsYourA(): String

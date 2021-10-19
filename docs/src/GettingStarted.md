@@ -13,7 +13,7 @@ Replace `VERSION` with the version you want. You can choose any version from the
 
 <!-- tabs:start -->
 
-#### **Gradle Groovy DSL**
+### **Gradle Groovy DSL**
 
 ```groovy
 repositories {
@@ -26,7 +26,16 @@ dependencies {
 }
 ```
 
-#### **Gradle Kotlin DSL**
+#### Additional dependencies
+
+The following features require you to add additional dependencies:
+
+* [Services extension](extensions/Services.md)
+```groovy
+implementation 'guru.zoroark.shedinja:shedinja-services:VERSION'
+```
+
+### **Gradle Kotlin DSL**
 
 ```kotlin
 repositories {
@@ -41,7 +50,16 @@ dependencies {
 }
 ```
 
-#### **Maven**
+#### Additional dependencies
+
+The following features require you to add additional dependencies:
+
+* [Services extension](extensions/Services.md)
+```kotlin
+implementation("guru.zoroark.shedinja:shedinja-services:VERSION")
+```
+
+### **Maven**
 
 ```xml
 <!-- Add this to your repositories -->
@@ -60,6 +78,18 @@ dependencies {
 <dependency>
     <groupId>guru.zoroark.shedinja</groupId>
     <artifactId>shedinja</artifactId>
+    <version>VERSION</version>
+</dependency>
+```
+#### Additional dependencies
+
+The following features require you to add additional dependencies:
+
+* [Services extension](extensions/Services.md)
+```xml
+<dependency>
+    <groupId>guru.zoroark.shedinja</groupId>
+    <artifactId>shedinja-services</artifactId>
     <version>VERSION</version>
 </dependency>
 ```

@@ -1,5 +1,9 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.extensions.DefaultExtensibleInjectionEnvironment
+import guru.zoroark.shedinja.extensions.EagerImmutableMetaEnvironment
+import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
+import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironmentKind
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -22,11 +26,17 @@ import kotlin.reflect.KProperty
  * - **Eager object creation**. Objects are created upon construction of this environment.
  * - **Lazy object injection**. Objects are injected upon first use, and are only computed once.
  * - **Idempotent/Immutable**. Objects cannot be replaced, injection methods will always return the same thing.
+ *
+ * Compatible with installable extensions.
  */
-class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironment {
+class MixedImmutableEnvironment(
+    context: ExtensibleEnvironmentContext,
+    metaEnvironmentKind: InjectionEnvironmentKind<*> = EagerImmutableMetaEnvironment
+) : DefaultExtensibleInjectionEnvironment(context, metaEnvironmentKind) {
 
-    companion object : InjectionEnvironmentKind<MixedImmutableEnvironment> {
-        override fun build(context: EnvironmentContext) = MixedImmutableEnvironment(context)
+    companion object : ExtensibleInjectionEnvironmentKind<MixedImmutableEnvironment> {
+        override fun build(context: ExtensibleEnvironmentContext, metaEnvironmentKind: InjectionEnvironmentKind<*>) =
+            MixedImmutableEnvironment(context, metaEnvironmentKind)
     }
 
     private inner class MIEInjector<T : Any>(
@@ -44,6 +54,8 @@ class MixedImmutableEnvironment(context: EnvironmentContext) : InjectionEnvironm
     private val components = context.declarations.mapValues { (_, decl) ->
         decl.supplier(ScopedContext(EnvironmentBasedScope(this)))
     }
+
+    override fun getAllIdentifiers(): Sequence<Identifier<*>> = components.keys.asSequence()
 
     override fun <T : Any> getOrNull(identifier: Identifier<T>): T? =
         components[identifier]?.let { ensureInstance(identifier.kclass, it) }

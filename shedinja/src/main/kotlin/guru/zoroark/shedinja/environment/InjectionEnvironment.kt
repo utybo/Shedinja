@@ -74,8 +74,6 @@ interface InjectionEnvironment {
     /**
      * Creates an [Injector] that can be used as a property delegator, bound against the given identifier.
      *
-     * Using this function directly is not recommended. Use [inject] from within a [SComponent] instead
-     *
      * @param T The injected component's type
      * @param identifier The identifier to create an injector for
      * @param onInjection Callback that must be called whenever the injection occurs. This is used for debugging and
@@ -88,7 +86,18 @@ interface InjectionEnvironment {
 
 /**
  * Gets the component identified by the given type turned into an [Identifier] with an optional [qualifier][Qualifier].
+ * Throws an exception if no component with this identifier exists.
+ *
  * Refer to [InjectionEnvironment.get] for more information.
  */
 inline fun <reified T : Any> InjectionEnvironment.get(qualifier: Qualifier = EmptyQualifier): T =
     get(Identifier(T::class, qualifier))
+
+/**
+ * Gets the component identified by the given type turned into an [Identifier] with an optional [qualifier][Qualifier].
+ * Returns null if no component with this identifier exists.
+ *
+ * Refer to [InjectionEnvironment.getOrNull] for more information.
+ */
+inline fun <reified T : Any> InjectionEnvironment.getOrNull(qualifier: Qualifier = EmptyQualifier): T? =
+    getOrNull(Identifier(T::class, qualifier))

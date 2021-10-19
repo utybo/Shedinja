@@ -55,7 +55,7 @@ The `ShedinjaBaseTest` class is based around the idea of a "test subject" -- tha
         // ...
     }
     ```
-    - By providing a constructor. This is useful if you only need the test subject within your test, and that subject's constructor is simple, similiar to using `put { ... }` versus `put(::...)`. The class is automatically extracted from the function's signature. Note that this approach is more bug-prone and less flexible than the above ones and is therefor not recommended.
+    - By providing a constructor. This is useful if you only need the test subject within your test, and that subject's constructor is simple, similiar to using `put { ... }` versus `put(::...)`. The class is automatically extracted from the function's signature. Note that this approach may be more bug-prone and less flexible than the above ones.
     ```kotlin
     class UserRegistrationServiceTest : ShedinjaBaseTest<UserRegistrationService>(
        ::UserRegistrationService

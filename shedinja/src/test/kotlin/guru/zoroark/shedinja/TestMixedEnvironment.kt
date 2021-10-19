@@ -1,75 +1,43 @@
 package guru.zoroark.shedinja
 
-import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
+import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
-import guru.zoroark.shedinja.environment.ScopedSupplier
 import guru.zoroark.shedinja.environment.get
+import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class TestMixedEnvironment {
-
-    private inline fun <reified T : Any> entryOf(noinline supplier: ScopedSupplier<T>) =
-        Declaration(Identifier(T::class), supplier).let {
-            it.identifier to it
-        }
+    private fun createMIE(context: EnvironmentContext): MixedImmutableEnvironment =
+        MixedImmutableEnvironment.build(ExtensibleEnvironmentContext(context.declarations, EnvironmentContext(mapOf())))
 
     @Test
     fun `Test with single element`() {
-        var element: ElementClass? = null
-        val context = EnvironmentContext(mapOf(entryOf { ElementClass().also { element = it } }))
-        val env = MixedImmutableEnvironment(context)
-        assertSame(element, env.get())
+        EnvironmentTests.singleElement(::createMIE)
     }
 
     @Test
     fun `Test with many elements`() {
-        var element: ElementClass? = null
-        var otherElement: OtherElementClass? = null
-        var anotherElement: AnotherElementClass? = null
-        val context = EnvironmentContext(
-            mapOf(entryOf {
-                assertNull(element, "Called builder twice!")
-                ElementClass().also { element = it }
-            }, entryOf {
-                assertNull(otherElement, "Called builder twice!")
-                OtherElementClass().also { otherElement = it }
-            }, entryOf {
-                assertNull(anotherElement, "Called builder twice!")
-                AnotherElementClass().also { anotherElement = it }
-            })
-        )
-        val env = MixedImmutableEnvironment(context)
-        assertSame(element, env.get())
-        assertSame(otherElement, env.get())
-        assertSame(anotherElement, env.get())
+        EnvironmentTests.multiElements(::createMIE)
+        EnvironmentTests.multiElementsWithInjections(::createMIE)
     }
 
     @Test
     fun `Test object creation is eager`() {
-        var wasFirstBuilt = false
-        var wasSecondBuilt = false
-        val context = EnvironmentContext(mapOf(
-            entryOf { ElementClass().also { wasFirstBuilt = true } },
-            entryOf { OtherElementClass().also { wasSecondBuilt = true } }
-        ))
-        MixedImmutableEnvironment(context)
-        assertTrue(wasFirstBuilt)
-        assertTrue(wasSecondBuilt)
+        EnvironmentTests.eagerCreation(::createMIE)
     }
 
     @Test
     fun `Test object injection is lazy`() {
-        val context = EnvironmentContext(mapOf(
+        val context = ExtensibleEnvironmentContext(mapOf(
             entryOf { ElementClass() },
             entryOf { OtherElementClass() }
-        ))
+        ), EnvironmentContext(mapOf()))
         val env = MixedImmutableEnvironment(context)
         var wasInjected = false
         val inj = env.createInjector(Identifier(ElementClass::class)) { wasInjected = true }
@@ -78,12 +46,36 @@ class TestMixedEnvironment {
         assertTrue(wasInjected)
     }
 
+    class AtoB(scope: InjectionScope) {
+        private val b: BtoA by scope()
+
+        val className = "AtoB"
+
+        fun useB() = b.className
+    }
+
+    class BtoA(scope: InjectionScope) {
+        private val a: AtoB by scope()
+
+        val className = "BtoA"
+
+        fun useA() = a.className
+    }
+
+    class CtoC(scope: InjectionScope) {
+        private val c: CtoC by scope()
+
+        private val className = "CtoC"
+
+        fun useC() = c.className
+    }
+
     @Test
     fun `Test supports cyclic dependencies`() {
-        val context = EnvironmentContext(mapOf(
+        val context = ExtensibleEnvironmentContext(mapOf(
             entryOf { AtoB(scope) },
             entryOf { BtoA(scope) }
-        ))
+        ), EnvironmentContext(mapOf()))
         val env = MixedImmutableEnvironment(context)
         val a = env.get<AtoB>()
         val b = env.get<BtoA>()
@@ -93,9 +85,9 @@ class TestMixedEnvironment {
 
     @Test
     fun `Test supports self injection`() {
-        val context = EnvironmentContext(mapOf(
+        val context = ExtensibleEnvironmentContext(mapOf(
             entryOf { CtoC(scope) }
-        ))
+        ), EnvironmentContext(mapOf()))
         val env = MixedImmutableEnvironment(context)
         val c = env.get<CtoC>()
         assertEquals("CtoC", c.useC())

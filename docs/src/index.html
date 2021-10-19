@@ -62,7 +62,7 @@
         window.$docsify = {
             name: 'Shedinja',
             repo: 'https://github.com/utybo/Shedinja',
-            loadSidebar: true,
+            loadSidebar: '_sidebar.md',
             coverpage: true,
             subMaxLevel: 3,
             routerMode: 'history',
@@ -85,7 +85,10 @@
                         }
                     });
                 }
-            ]
+            ],
+            alias: {
+                '/.*/_sidebar\\.md': '/_sidebar.md'
+            }
         }
     </script>
     <!-- Docsify -->
