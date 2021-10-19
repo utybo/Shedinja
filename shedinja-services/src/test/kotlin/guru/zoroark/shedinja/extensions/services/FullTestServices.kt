@@ -65,7 +65,6 @@ class FullTestServices {
             delay(1000)
             _started = Status.Stopped
         }
-
     }
 
     @Test

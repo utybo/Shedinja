@@ -97,13 +97,13 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
 
     override fun processDeclarations(sequence: Sequence<Declaration<*>>) {
         sequence.forEach { declaration ->
-            val policy = declaration.tags
+            declaration.tags
                 .filterIsInstance<IgnorePolicy>()
+                // Combine all policies into one, see the + operator definition.
                 .fold<IgnorePolicy, IgnorePolicy?>(null) { initial, next ->
                     (initial ?: next) + next
                 }
-            if (policy != null)
-                ignorePolicies[declaration.identifier] = policy
+                ?.let { ignorePolicies[declaration.identifier] = it }
         }
     }
 }
