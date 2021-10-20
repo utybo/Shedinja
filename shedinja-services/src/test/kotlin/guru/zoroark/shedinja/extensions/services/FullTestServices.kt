@@ -2,6 +2,7 @@ package guru.zoroark.shedinja.extensions.services
 
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
+import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.get
 import guru.zoroark.shedinja.environment.named
 import guru.zoroark.shedinja.extensions.with
@@ -50,19 +51,19 @@ class FullTestServices {
         }
     }
 
-    class DelayStartStopService : SuspendShedinjaService {
+    class DelayStartStopService(private val delayMillis: Long) : SuspendShedinjaService {
         val status: Status
             get() = _started
 
         private var _started: Status = Status.Initialized
 
         override suspend fun start() {
-            delay(1000)
+            delay(delayMillis)
             _started = Status.Started
         }
 
         override suspend fun stop() {
-            delay(1000)
+            delay(delayMillis)
             _started = Status.Stopped
         }
     }
@@ -103,7 +104,7 @@ class FullTestServices {
             useServices()
 
             repeat(5) {
-                put(named("$it"), ::DelayStartStopService)
+                put(named("$it")) { DelayStartStopService(1000) }
             }
         }
 
@@ -234,5 +235,34 @@ class FullTestServices {
         assertEquals(Status.Started, yeetService.status)
         assertEquals(Status.Stopped, suspendingService.status)
         assertEquals(Status.Started, suspendingYeetService.status)
+    }
+
+    @Test
+    fun `Component starting time statistics are accurate`() {
+        val times = (0L..3L).toList().map { it * 1000 }
+        val env = shedinja {
+            useServices()
+
+            times.forEach { timeMillis ->
+                put(named(timeMillis.toString())) { DelayStartStopService(timeMillis) }
+            }
+        }
+        val startStats = runBlocking { env.services.startAll() }
+        assertEquals(times.size, startStats.size)
+        times.forEach { time ->
+            assertContains(
+                (time - 200)..(time + 200),
+                startStats[Identifier(DelayStartStopService::class, named(time.toString()))]
+            )
+        }
+
+        val stopStats = runBlocking { env.services.stopAll() }
+        assertEquals(times.size, startStats.size)
+        times.forEach { time ->
+            assertContains(
+                (time - 200)..(time + 200),
+                stopStats[Identifier(DelayStartStopService::class, named(time.toString()))]
+            )
+        }
     }
 }

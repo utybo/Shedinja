@@ -15,6 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlin.reflect.full.isSubclassOf
+import kotlin.system.measureTimeMillis
 
 private enum class OperationType {
     Start,
@@ -40,22 +41,24 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
     private val environment: ExtensibleInjectionEnvironment by scope()
     private val ignorePolicies = mutableMapOf<Identifier<*>, IgnorePolicy>()
 
-    private fun getServices(operationType: OperationType): Sequence<ShedinjaService> =
+    private fun getServices(operationType: OperationType): Sequence<Pair<Identifier<*>, ShedinjaService>> =
         environment.getAllIdentifiers()
             .filter { it.kclass.isSubclassOf(ShedinjaService::class) }
             .filterNot { operationType.isBlockedByPolicy(ignorePolicies[it]) }
             .map {
                 @Suppress("UNCHECKED_CAST")
-                environment.get(it as Identifier<ShedinjaService>)
+                it to environment.get(it as Identifier<ShedinjaService>)
             }
 
-    private fun getSuspendedServices(operationType: OperationType): Sequence<SuspendShedinjaService> =
+    private fun getSuspendedServices(
+        operationType: OperationType
+    ): Sequence<Pair<Identifier<*>, SuspendShedinjaService>> =
         environment.getAllIdentifiers()
             .filter { it.kclass.isSubclassOf(SuspendShedinjaService::class) }
             .filterNot { operationType.isBlockedByPolicy(ignorePolicies[it]) }
             .map {
                 @Suppress("UNCHECKED_CAST")
-                environment.get(it as Identifier<SuspendShedinjaService>)
+                it to environment.get(it as Identifier<SuspendShedinjaService>)
             }
 
     /**
@@ -67,14 +70,25 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
      * This function runs blocking code (i.e. [ShedinjaService.start]) within the [Dispatchers.IO] dispatcher, and runs
      * suspending functions (i.e. [SuspendShedinjaService.start]) asynchronously within the current context.
      */
-    suspend fun startAll(): Unit = coroutineScope {
-        val toAwait = getSuspendedServices(OperationType.Start).map {
-            async { it.start() }
-        }.toList() + getServices(OperationType.Start).map {
+    suspend fun startAll(
+        messageHandler: (String) -> Unit = { /* no-op */ }
+    ): Map<Identifier<*>, Long> = coroutineScope {
+        val toAwait = getSuspendedServices(OperationType.Start).map { (identifier, service) ->
+            async {
+                identifier to measureTimeMillis { service.start() }.also {
+                    messageHandler("Service $identifier started in $it ms")
+                }
+            }
+        }.toList() + getServices(OperationType.Start).map { (identifier, service) ->
             // Offload blocking operation to the IO dispatcher, which is built for that.
-            async(Dispatchers.IO) { it.start() }
+            async(Dispatchers.IO) {
+                identifier to measureTimeMillis { service.start() }.also {
+                    messageHandler("Service $identifier started in $it ms")
+                }
+            }
         }.toList()
-        toAwait.awaitAll()
+        val results = toAwait.awaitAll()
+        results.associateBy({ it.first }) { it.second }
     }
 
     /**
@@ -86,13 +100,24 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
      * This function runs blocking code (i.e. [ShedinjaService.stop]) within the [Dispatchers.IO] dispatcher, and runs
      * suspending functions (i.e. [SuspendShedinjaService.stop]) asynchronously within the current context.
      */
-    suspend fun stopAll(): Unit = coroutineScope {
-        val toAwait = getSuspendedServices(OperationType.Stop).map {
-            async { it.stop() }
-        }.toList() + getServices(OperationType.Stop).map {
-            async(Dispatchers.IO) { it.stop() }
+    suspend fun stopAll(
+        messageHandler: (String) -> Unit = { /* no-op */ }
+    ): Map<Identifier<*>, Long> = coroutineScope {
+        val toAwait = getSuspendedServices(OperationType.Stop).map { (identifier, service) ->
+            async {
+                identifier to measureTimeMillis { service.stop() }.also {
+                    messageHandler("Service $identifier stopped in $it ms")
+                }
+            }
+        }.toList() + getServices(OperationType.Stop).map { (identifier, service) ->
+            async(Dispatchers.IO) {
+                identifier to measureTimeMillis { service.stop() }.also {
+                    messageHandler("Service $identifier stopped in $it ms")
+                }
+            }
         }.toList()
-        toAwait.awaitAll()
+        val result = toAwait.awaitAll()
+        result.associateBy({ it.first }) { it.second }
     }
 
     override fun processDeclarations(sequence: Sequence<Declaration<*>>) {

@@ -35,6 +35,35 @@ Extensions will generally:
 * Get called back by the extension engine when something special happens (e.g. the environment is initialized).
 * Wrap the meta-environment in some way when using them (e.g. when starting all services with the [services extension](extensions/Services.md)).
 
-### DSL conventions for extensions
+### Tags
 
-TODO
+Declarations (`put(...)` calls) can be *tagged* using declaration tags. These declaration tags provide metadata for extensions that would like additional information attached to individual declarations.
+
+```
+shedinja {
+    put(::SomeComponent) with someTag
+}
+```
+
+Tags can be processed by any component installed within the meta-environment of an extensible environment by implemented the `DeclarationsProcessor` interface.
+
+### DSL
+
+For consistency, extensions should use the following entry points:
+
+For installation, provide a `useXXX()` function that is an extension of `ExtensibleContextBuilderDsl` and adds components to the meta-environment using the `meta { }` function.
+
+Tags should either be simple value definitions or a function that only takes a lambda (allowing for additional DSL if required). A possible pattern for extensions that provide a set of tags that do not require additional DSL is to do something similar to the services extension:
+
+```kotlin
+// For use when processing the tags
+enum class MyExtensionTags : DeclarationTag {
+    TagOne,
+    TagTwo,
+}
+
+// For use in the DSL
+val someMoreObviousDslishName = TagOne
+val somethingElse = TagTwo
+```
+
