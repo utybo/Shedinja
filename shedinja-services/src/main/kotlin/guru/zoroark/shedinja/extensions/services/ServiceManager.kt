@@ -14,12 +14,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.full.isSubclassOf
 import kotlin.system.measureTimeMillis
 
-private enum class OperationType {
-    Start,
-    Stop
+private enum class OperationType(val confirmationWord: String, val ingWord: String) {
+    Start("started", "starting"),
+    Stop("stopped", "stopping")
 }
 
 private fun OperationType.isBlockedByPolicy(policy: IgnorePolicy?): Boolean {
@@ -30,6 +32,11 @@ private fun OperationType.isBlockedByPolicy(policy: IgnorePolicy?): Boolean {
         IgnorePolicy.IgnoreStop -> this == OperationType.Stop
     }
 }
+
+/**
+ * Exceptions that occur within the starting or stopping process are wrapped with this type.
+ */
+class ShedinjaServiceException(message: String, cause: Throwable) : Exception(message, cause)
 
 /**
  * Class for the [services extension][useServices] logic.
@@ -72,24 +79,13 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
      */
     suspend fun startAll(
         messageHandler: (String) -> Unit = { /* no-op */ }
-    ): Map<Identifier<*>, Long> = coroutineScope {
-        val toAwait = getSuspendedServices(OperationType.Start).map { (identifier, service) ->
-            async {
-                identifier to measureTimeMillis { service.start() }.also {
-                    messageHandler("Service $identifier started in $it ms")
-                }
-            }
-        }.toList() + getServices(OperationType.Start).map { (identifier, service) ->
-            // Offload blocking operation to the IO dispatcher, which is built for that.
-            async(Dispatchers.IO) {
-                identifier to measureTimeMillis { service.start() }.also {
-                    messageHandler("Service $identifier started in $it ms")
-                }
-            }
-        }.toList()
-        val results = toAwait.awaitAll()
-        results.associateBy({ it.first }) { it.second }
-    }
+    ): Map<Identifier<*>, Long> =
+        doForEachDeclaration(
+            OperationType.Start,
+            messageHandler,
+            { it.start() },
+            { it.start() }
+        )
 
     /**
      * Stops all the [ShedinjaService] and [SuspendShedinjaService] components registered in this environment.
@@ -102,23 +98,13 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
      */
     suspend fun stopAll(
         messageHandler: (String) -> Unit = { /* no-op */ }
-    ): Map<Identifier<*>, Long> = coroutineScope {
-        val toAwait = getSuspendedServices(OperationType.Stop).map { (identifier, service) ->
-            async {
-                identifier to measureTimeMillis { service.stop() }.also {
-                    messageHandler("Service $identifier stopped in $it ms")
-                }
-            }
-        }.toList() + getServices(OperationType.Stop).map { (identifier, service) ->
-            async(Dispatchers.IO) {
-                identifier to measureTimeMillis { service.stop() }.also {
-                    messageHandler("Service $identifier stopped in $it ms")
-                }
-            }
-        }.toList()
-        val result = toAwait.awaitAll()
-        result.associateBy({ it.first }) { it.second }
-    }
+    ): Map<Identifier<*>, Long> =
+        doForEachDeclaration(
+            OperationType.Stop,
+            messageHandler,
+            { it.stop() },
+            { it.stop() }
+        )
 
     override fun processDeclarations(sequence: Sequence<Declaration<*>>) {
         sequence.forEach { declaration ->
@@ -131,6 +117,48 @@ class ServiceManager(scope: InjectionScope) : DeclarationsProcessor {
                 ?.let { ignorePolicies[declaration.identifier] = it }
         }
     }
+
+    private suspend fun doForEachDeclaration(
+        operationType: OperationType,
+        messageHandler: (String) -> Unit,
+        onNonSuspend: suspend (ShedinjaService) -> Unit,
+        onSuspsend: suspend (SuspendShedinjaService) -> Unit
+    ): Map<Identifier<*>, Long> = coroutineScope {
+        val toAwait = getSuspendedServices(operationType).map { (identifier, service) ->
+            async {
+                catching(operationType, identifier) {
+                    val timeTaken = measureTimeMillis { onSuspsend(service) }
+                    messageHandler("Service $identifier ${operationType.confirmationWord} in $timeTaken ms")
+                    identifier to timeTaken
+                }
+            }
+        }.toList() + getServices(operationType).map { (identifier, service) ->
+            async(Dispatchers.IO) {
+                catching(operationType, identifier) {
+                    val timeTaken = measureTimeMillis { onNonSuspend(service) }
+                    messageHandler("Service $identifier ${operationType.confirmationWord} in $timeTaken ms")
+                    identifier to timeTaken
+                }
+            }
+        }.toList()
+        val result = toAwait.awaitAll()
+        result.associateBy({ it.first }) { it.second }
+    }
+
+    @Suppress("TooGenericExceptionCaught") // Kind of the entire point here
+    private inline fun <T> catching(operationType: OperationType, identifier: Identifier<*>, block: () -> T): T {
+        try {
+            return block()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            throw ShedinjaServiceException(
+                "${operationType.ingWord.capitalize()} service $identifier failed", e
+            )
+        }
+    }
+
+    private fun String.capitalize() =
+        replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ENGLISH) else it.toString() }
 }
 
 /**

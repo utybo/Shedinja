@@ -9,6 +9,7 @@ import guru.zoroark.shedinja.extensions.with
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.system.measureTimeMillis
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -65,6 +66,16 @@ class FullTestServices {
         override suspend fun stop() {
             delay(delayMillis)
             _started = Status.Stopped
+        }
+    }
+
+    class CrashingService : ShedinjaService {
+        override fun start() {
+            error("I crash when I start")
+        }
+
+        override fun stop() {
+            error("I crash when I stop")
         }
     }
 
@@ -262,6 +273,46 @@ class FullTestServices {
             assertContains(
                 (time - 200)..(time + 200),
                 stopStats[Identifier(DelayStartStopService::class, named(time.toString()))]
+            )
+        }
+    }
+
+    @Test
+    fun `Component start exception`() {
+        val env = shedinja {
+            useServices()
+
+            put(::SimpleService)
+            put(::CrashingService)
+        }
+        runBlocking {
+            val ex = assertThrows<ShedinjaServiceException> {
+                env.services.startAll()
+            }
+            assertEquals(
+                "Starting service " +
+                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                        "(<no qualifier>) failed", ex.message
+            )
+        }
+    }
+
+    @Test
+    fun `Component stop exception`() {
+        val env = shedinja {
+            useServices()
+
+            put(::SimpleService)
+            put(::CrashingService)
+        }
+        runBlocking {
+            val ex = assertThrows<ShedinjaServiceException> {
+                env.services.stopAll()
+            }
+            assertEquals(
+                "Stopping service " +
+                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                        "(<no qualifier>) failed", ex.message
             )
         }
     }
