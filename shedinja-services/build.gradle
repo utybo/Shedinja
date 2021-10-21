@@ -1,0 +1,9 @@
+plugins {
+    id 'shedinja.kotlin-lib-conventions'
+}
+
+dependencies {
+    api project(":shedinja")
+    api libs.kotlin.coroutines
+    api libs.kotlin.reflect
+}

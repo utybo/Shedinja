@@ -1,20 +1,43 @@
-# Extensions
-
-Shedinja's core APIs are designed to be quite simple yet flexible. In addition to those, Shedinja also provides more advanced features in the form of extension functions that only use Shedinja's public APIs.
-
-Extensions are all located within the `guru.zoroark.shedinja.extensions` package.
-
-## Injection Factories
+# Factories
 
 ?> This extension is experimental.
 
-Many frameworks allow you to either inject a *singleton* (where a single object instance is injected) or a *factory* (where any component that depends on the factory gets its own instance of the object). Factories are very useful for objects like loggers.
+*This is a pure extension that is compatible with all environments.*
+
+Many frameworks allow you to inject two kinds of components:
+
+- *Singletons*, where a single object instance is injected wherever needed
+- *Factories* (also known as transient), where any component that depends on it gets its own instance of the object.
+
+Factories are very useful for objects like loggers or to get more advanced behavior depending on the requesting component.
+
+All injections made within Shedinja are singletons -- there is no such thing as a transient injection. The factory extension provides a wrapper over Shedinja's singleton mechanism to replicate the factory behavior found in other frameworks.
 
 Shedinja factories are an extension of Shedinja's system -- in fact, they are implemented entirely with public APIs from Shedinja's core system!
 
-You can create factories using the `putFactory` method within your environment builder or within a module. Factories are injected using the `factory from scope` syntax.
+## Usage
 
-!> Make sure you do not use `by scope()` to retrieve an object that is supposed to be created by a factory!
+You can create factories using the `putFactory` method within your environment builder or within a module.
+
+```kotlin
+val myModule = shedinjaModule {
+    putFactory { Foo() }
+}
+
+val myEnvironment = shedinja {
+    putFactory { Bar() }
+}
+```
+
+Factories are injected using the `factory from scope` syntax. For example, requesting the `Bar` factory will look like this:
+
+```kotlin
+class INeedBar(scope: InjectionScope) {
+    val bar by factory from scope
+}
+```
+
+Here is a full example using loggers:
 
 ```kotlin
 class Logger {
@@ -52,9 +75,14 @@ environment.get<ServiceA>().doSomething()
 // INFO: Doing something in B...
 ```
 
-### Creating objects based on requester
 
-It is possible to create objects based on which component is requesting them. This is useful for giving a logger a name, for example:
+!> Make sure you do not use `by scope()` to retrieve an object that is supposed to be created by a factory!
+
+### Requestor-dependent object creation
+
+It is possible to create objects based on which component is requesting them. The `putFactory` block gives the requesting object as a parameter, which can then use to do anything.
+
+This is useful for giving a logger a name, for example:
 
 ```kotlin
 class Logger(private val name: String) {
@@ -76,21 +104,25 @@ environment.get<ServiceA>().doSomething()
 // (org.example.ServiceB) INFO: Doing something in B...
 ```
 
-You can go even further with annotations:
+You can go even further with annotations. Here's a fuller example that uses annotations to name loggers, with an additional fallback mechanism:
 
 ```kotlin
+// The annotation's definition
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class LoggerName(val name: String)
 
+// Reflection logic used to retrieve the name the logger of a class.
 private val KClass<*>.loggerName: String
     get() = findAnnotation<LoggerName>()?.name ?: qualifiedName ?: "<anon>"
 
+// Our actual Logger object: nothing really special here...
 class Logger(private val name: String) {
     fun logInfo(message: String) = println("($name) INFO: $message")
     fun logWarn(message: String) = println("($name) WARN: $message")
 }
 
+// Let's give ServiceA a custom name...
 @LoggerName("Custom logger name!")
 class ServiceA(scope: InjectionScope) {
     private val logger by factory from scope
@@ -100,6 +132,7 @@ class ServiceA(scope: InjectionScope) {
     }
 }
 
+// ... but let's also leave ServiceB as is.
 class ServiceB(scope: InjectionScope) {
     private val logger by factory from scope
     private val a by scope()
@@ -110,6 +143,7 @@ class ServiceB(scope: InjectionScope) {
     }
 }
 
+// Let's now create our environment:
 val environment = shedinja {
     putFactory { requester -> Logger(requester::class.loggerName) }
 
@@ -117,14 +151,15 @@ val environment = shedinja {
     put(::ServiceB)
 }
 
+// And test our logger:
 environment.get<ServiceA>().doSomething()
 // (Custom logger name!) INFO: Doing something in A...
 // (org.example.ServiceB) INFO: Doing something in B...
 ```
 
-### How do factories work?
+## Factories under the hood.
 
-In a nutshell, *factories* are injected in the environment, and this factory gets invoked when the object is requested. The factory is injected in the environment as a regular singleton.
+In a nutshell, *factory objects* are injected in the environment, and this factory gets invoked when the object is requested. The factory object is injected in the environment as a regular singleton.
 
 Factories are objects which implement the functional interface `InjectableFactory<T>` (the Kotlin equivalent for SAMs in Java). Its `make(requester: Any): T` function is invoked when an object is requested.
 

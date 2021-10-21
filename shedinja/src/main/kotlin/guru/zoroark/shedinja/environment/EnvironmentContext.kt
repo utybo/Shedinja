@@ -9,4 +9,4 @@ package guru.zoroark.shedinja.environment
  *
  * @property declarations The declarations contained in this context
  */
-data class EnvironmentContext(val declarations: Declarations)
+class EnvironmentContext(val declarations: Declarations)

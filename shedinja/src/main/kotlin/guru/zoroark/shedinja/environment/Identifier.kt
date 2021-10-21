@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import kotlin.reflect.KClass
 
 /**
@@ -60,4 +61,5 @@ data class NameQualifier(val name: String) : Qualifier
 /**
  * Creates a [NameQualifier] with the given name.
  */
+@ShedinjaDsl
 fun named(name: String) = NameQualifier(name)

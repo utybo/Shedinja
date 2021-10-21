@@ -33,11 +33,11 @@ interface ContextBuilderDsl {
  *
  * @param supplier The lambda that will be executed to create an object.
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-inline fun <reified T : Any> ContextBuilderDsl.put(noinline supplier: ScopedSupplier<T>) {
+inline fun <reified T : Any> ContextBuilderDsl.put(noinline supplier: ScopedSupplier<T>) =
     put(T::class, EmptyQualifier, supplier)
-}
 
 /**
  * Add a definition of type [T] with the given qualifier and supplier.
@@ -48,11 +48,11 @@ inline fun <reified T : Any> ContextBuilderDsl.put(noinline supplier: ScopedSupp
  * @param supplier The lambda that will be executed to create an object.
  * @param qualifier The qualifier for the underlying [identifier][Identifier].
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, noinline supplier: ScopedSupplier<T>) {
+inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, noinline supplier: ScopedSupplier<T>) =
     put(T::class, qualifier, supplier)
-}
 
 /**
  * Add a definition of type [T] with the given qualifier and supplier.
@@ -63,15 +63,15 @@ inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, noinlin
  * @param supplier The lambda that will be executed to create an object.
  * @param qualifier The qualifier for the underlying [identifier][Identifier].
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
 fun <T : Any> ContextBuilderDsl.put(
     kclass: KClass<T>,
     qualifier: Qualifier = EmptyQualifier,
     supplier: ScopedSupplier<T>
-) {
-    put(Declaration(Identifier(kclass, qualifier), supplier))
-}
+) = Declaration(Identifier(kclass, qualifier), supplier)
+    .also { put(it) }
 
 /**
  * Add a definition of type [T] with the given constructor.
@@ -80,11 +80,11 @@ fun <T : Any> ContextBuilderDsl.put(
  *
  * @param supplier The constructor for creating an object. This can be passed as a reference, e.g. `::MyClass`.
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-inline fun <reified T : Any> ContextBuilderDsl.put(supplier: KFunction<T>) {
+inline fun <reified T : Any> ContextBuilderDsl.put(supplier: KFunction<T>) =
     put(T::class, EmptyQualifier, supplier)
-}
 
 /**
  * Add a definition of type [T] with the given qualifier and constructor.
@@ -96,11 +96,11 @@ inline fun <reified T : Any> ContextBuilderDsl.put(supplier: KFunction<T>) {
  * @param supplier The constructor for creating an object. This can be passed as a reference, e.g. `::MyClass`.
  * @param qualifier The qualifier for the type.
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, supplier: KFunction<T>) {
+inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, supplier: KFunction<T>) =
     put(T::class, qualifier, supplier)
-}
 
 /**
  * Add a definition of type [T] with the given class and constructor.
@@ -109,11 +109,11 @@ inline fun <reified T : Any> ContextBuilderDsl.put(qualifier: Qualifier, supplie
  * type is already known at compile time, you can remove the `kclass` parameter.
  * @param supplier The constructor for creating an object. This can be passed as a reference, e.g. `::MyClass`.
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, supplier: KFunction<T>) {
+fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, supplier: KFunction<T>) =
     put(kclass, EmptyQualifier, supplier)
-}
 
 /**
  * Add a definition of type [T] with the given class, qualifier and constructor.
@@ -126,9 +126,10 @@ fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, supplier: KFunction<T>) {
  * @param qualifier The qualifier for the type.
  * @param supplier The constructor for creating an object. This can be passed as a reference, e.g. `::MyClass`.
  * @param T The type of the component to add.
+ * @returns The created declaration.
  */
 @ShedinjaDsl
-fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, supplier: KFunction<T>) {
+fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, supplier: KFunction<T>) =
     when {
         supplier.returnType.isMarkedNullable ->
             error("Cannot 'put' a function that has a nullable return type.")
@@ -143,7 +144,6 @@ fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, sup
                         "that is of type 'InjectionScope'. Consider manually instantiating this component instead."
             )
     }
-}
 
 /**
  * Add a module to the current definition. This adds all the declarations within the module to this context.

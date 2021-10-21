@@ -1,4 +1,4 @@
-package guru.zoroark.shedinja.extensions
+package guru.zoroark.shedinja.extensions.factory
 
 import guru.zoroark.shedinja.dsl.ContextBuilderDsl
 import guru.zoroark.shedinja.dsl.ShedinjaDsl

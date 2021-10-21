@@ -1,12 +1,15 @@
 - [Home](/)
-- **Using Shedinja**
+- **Usage**
 - [Getting Started](/GettingStarted.md)
 - [Using Shedinja](/UsingShedinja.md)
-- [Extensions](/Extensions.md)
 - [Koin Integration](/KoinIntegration.md)
-- **Testing Shedinja Apps**
+- **Testing**
 - [Testing Shedinja Code](/Testing.md)
 - [Check System](/ShedinjaCheck.md)
+- **Extensions**
+- [Introduction](extensions/Introduction.md)
+- [Factories](extensions/Factories.md)
+- [Services](extensions/Services.md)
 - **Developing**
 - [Building Shedinja](/Building.md)
 - **External links**
