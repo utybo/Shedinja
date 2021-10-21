@@ -1,7 +1,6 @@
 package guru.zoroark.shedinja.koin2
 
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
-import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectableModule
@@ -110,5 +109,3 @@ private class KoinApplicatedBackedInjector<T : Any>(
 private inline fun <reified R, reified T> R.reflectiveAccessTo(propertyName: String): T {
     return R::class.java.getMethod(propertyName).invoke(this) as T
 }
-
-

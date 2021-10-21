@@ -9,7 +9,6 @@ import guru.zoroark.shedinja.extensions.factory
 import guru.zoroark.shedinja.extensions.from
 import guru.zoroark.shedinja.extensions.putFactory
 import org.junit.jupiter.api.Test
-import kotlin.math.log
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.test.assertEquals
@@ -100,7 +99,6 @@ class PostInjectActionTest {
             repeat(3) {
                 assertEquals(k.whatIsYourA(), v)
             }
-
         }
         assertEquals(
             3,
@@ -135,7 +133,6 @@ class PostInjectActionTest {
             put(::E)
         }
         val env = shedinja { put(module) }
-
 
         assertEquals(0, aFactoryCallCount)
         assertEquals(0, loggerFactoryCallCount)

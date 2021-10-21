@@ -48,7 +48,7 @@ class TestKoinIntegration {
         val identity = "I am KoinComponentA$str"
     }
 
-    class KoinComponentB: KoinComponent, IdentityRetriever {
+    class KoinComponentB : KoinComponent, IdentityRetriever {
         private val koinGetA: KoinGetA by inject()
         private val koinGetA2: KoinGetA by inject(named("GA2"))
         private val koinComponentA: KoinComponentA by inject()
@@ -68,7 +68,7 @@ class TestKoinIntegration {
         val identity = "I am ShedinjaA$str"
     }
 
-    class ShedinjaB(scope: InjectionScope): IdentityRetriever {
+    class ShedinjaB(scope: InjectionScope) : IdentityRetriever {
         private val koinGetA: KoinGetA by scope()
         private val koinGetA2: KoinGetA by scope(guru.zoroark.shedinja.environment.named("GA2"))
         private val koinComponentA: KoinComponentA by scope()
