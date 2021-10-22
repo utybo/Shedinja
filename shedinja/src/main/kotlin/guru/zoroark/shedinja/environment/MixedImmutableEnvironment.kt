@@ -44,7 +44,7 @@ class MixedImmutableEnvironment(
         private val onInjection: (T) -> Unit
     ) : Injector<T> {
         private val value by lazy {
-            val result = components[identifier] ?: error("Component not found: ${identifier.kclass.qualifiedName}.")
+            val result = components[identifier] ?: error("Component not found: $identifier")
             ensureInstance(identifier.kclass, result).also(onInjection)
         }
 

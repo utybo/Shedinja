@@ -14,7 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
         - Extensible injection environments with meta-environments
         - Declaration tags
         - Declaration processors
+    - Added the External Components extension.
     - Added a reified `getOrNull()` function, similar to the existing `get()` function, e.g. `env.getOrNull<MyComponent>()`
+    - Added the `MultiQualifier` class along with a `+` operator for combining multiple qualifiers into one.
+    - Added the `FullTypeQualifier` class. It is a qualifier based on `KType` which you can use in case you need to differentiate generic types within your environment. Other alternatives, like using named qualifiers, still work, this is just another option on top of what is already there.
 - `shedinja-test`
     - Added the `noUnused` check.
     - Added the `safeInjection` check.
@@ -24,10 +27,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - `shedinja` (core)
-    - All `put` DSL functions now return the declaration they created (this is required for the declaration tagging feature to work).
-    - MixedImmutableEnvironment is now an extensible injection environment.
-    - By default, the `shedinja` DSL creates an extensible injection environment.
-    -
+    - **BREAKING CHANGE** `wrapIn` and its classes have been moved to the `guru.zoroark.shedidnja.environment` package.
+    - **BREAKING CHANGE** All `put` DSL functions now return the declaration they created (this is required for the declaration tagging feature to work).
+    - **BREAKING CHANGE** MixedImmutableEnvironment is now an extensible injection environment.
+    - **BREAKING CHANGE** By default, the `shedinja` DSL creates an extensible injection environment.
+    - All "component not found" exception messages now include the full identifier description instead of just the class' qualified name.
 - `shedinja-test`
     - Made the `DependencyTrackingInjectionEnvironment` class public: feel free to use it to analyze component dependencies!
 
