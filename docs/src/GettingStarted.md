@@ -98,7 +98,7 @@ The following features require you to add additional dependencies:
 
 ## Introduction to dependency injection.
 
-Let's imagine that we are making a cooking server where a Chef wants to cook a cake. In order to make a cake, the Chef will need a cupboard, which in turn haas access to an egg provider, a flour provider and some yeast, as well as kitchen tools such as an oven and a cake mold.
+Let's imagine that we are making a cooking server where a Chef wants to cook a cake. In order to make a cake, the Chef will need a cupboard, which in turn has access to an egg provider, a flour provider and some yeast, as well as kitchen tools such as an oven and a cake mold.
 
 We can create the following classes to model our problem:
 
