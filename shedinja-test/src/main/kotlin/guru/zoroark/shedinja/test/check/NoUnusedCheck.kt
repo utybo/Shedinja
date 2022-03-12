@@ -39,9 +39,9 @@ class NoUnusedCheck(private val ignoredValues: Set<Identifier<*>>) : IndividualC
                 if (deps.size == 1) "The following component is not injected anywhere, making it unused."
                 else "The following components are not injected anywhere, making them unused."
             val message = "'noUnused' check failed.\n" +
-                    "$introLine\n" +
-                    deps.joinToString(separator = "\n") { "--> $it" } + "\n\n" +
-                    noUnusedFooterHelp.trimIndent().replace("^\n", "")
+                "$introLine\n" +
+                deps.joinToString(separator = "\n") { "--> $it" } + "\n\n" +
+                noUnusedFooterHelp.trimIndent().replace("^\n", "")
             throw ShedinjaCheckException(message)
         }
     }

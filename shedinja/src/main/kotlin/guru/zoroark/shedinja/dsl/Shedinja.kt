@@ -1,6 +1,5 @@
 package guru.zoroark.shedinja.dsl
 
-import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironmentKind
 import guru.zoroark.shedinja.environment.InjectableModule
 import guru.zoroark.shedinja.environment.InjectionEnvironment
 import guru.zoroark.shedinja.environment.InjectionEnvironmentKind
@@ -8,6 +7,7 @@ import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
 import guru.zoroark.shedinja.extensions.ExtensibleContextBuilderDsl
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContextBuilderDsl
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
+import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironmentKind
 
 /**
  * Entry point for the Shedinja DSL, used to build an injection environment.

@@ -33,9 +33,9 @@ val noCycle = IndividualCheck { modules ->
             trace.push(from)
             throw ShedinjaCheckException(
                 "'noCycle' check failed.\nCyclic dependency found:\n" +
-                        trace.reversed().dropWhile { it != from }
-                            .joinToString(prefix = "    ", separator = "\n--> ", postfix = "\n") +
-                        "Note: --> represents an injection (i.e. A --> B means 'A depends on B')."
+                    trace.reversed().dropWhile { it != from }
+                        .joinToString(prefix = "    ", separator = "\n--> ", postfix = "\n") +
+                    "Note: --> represents an injection (i.e. A --> B means 'A depends on B')."
             )
         }
         trace.push(from)

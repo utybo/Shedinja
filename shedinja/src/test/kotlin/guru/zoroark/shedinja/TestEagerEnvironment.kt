@@ -24,10 +24,12 @@ class TestEagerEnvironment {
 
     @Test
     fun `Test object injection is eager`() {
-        val context = EnvironmentContext(mapOf(
-            entryOf { ElementClass() },
-            entryOf { OtherElementClass() }
-        ))
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { ElementClass() },
+                entryOf { OtherElementClass() }
+            )
+        )
         val env = EagerImmutableMetaEnvironment(context)
         var wasInjected = false
         val inj = env.createInjector(Identifier(ElementClass::class)) { wasInjected = true }

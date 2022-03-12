@@ -1,8 +1,8 @@
 package guru.zoroark.shedinja
 
 import guru.zoroark.shedinja.environment.Identifier
-import guru.zoroark.shedinja.environment.Injector
 import guru.zoroark.shedinja.environment.InjectionScope
+import guru.zoroark.shedinja.environment.Injector
 import guru.zoroark.shedinja.environment.invoke
 
 class ElementClass

@@ -60,7 +60,7 @@ class DslTests {
         }
         assertEquals(
             "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', " +
-                    "but one was already present",
+                "but one was already present",
             ex.message
         )
     }
@@ -75,7 +75,7 @@ class DslTests {
         }
         assertEquals(
             "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but " +
-                    "one was already present",
+                "one was already present",
             ex.message
         )
     }
@@ -90,7 +90,7 @@ class DslTests {
         }
         assertEquals(
             "Duplicate identifier: Tried to put 'guru.zoroark.shedinja.ExampleClass (<no qualifier>)', but " +
-                    "one was already present",
+                "one was already present",
             ex.message
         )
     }
@@ -109,7 +109,8 @@ class DslTests {
         }.build().assertSuccess()
         assertEquals(context.declarations.size, 5)
         assertEquals(
-            context.declarations.keys, setOf(
+            context.declarations.keys,
+            setOf(
                 Identifier(TheClass::class),
                 Identifier(TheClass::class, named("using-ctor")),
                 Identifier(TheClass::class, named("using-lambda")),

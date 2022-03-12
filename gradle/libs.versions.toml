@@ -1,12 +1,13 @@
 [versions]
-kotlin = "1.5.30"
-coroutines = "1.5.2"
-detekt = "1.18.1"
-junit = "5.7.2"
-dokka = "1.5.0"
-mockk = "1.12.0"
+kotlin = "1.6.10"
+coroutines = "1.6.0"
+detekt = "1.19.0"
+junit = "5.8.2"
+dokka = "1.6.10"
+mockk = "1.12.3"
 koin2 = "2.2.3"
-koin3 = "3.1.2"
+koin3 = "3.1.5"
+versions = "0.42.0"
 
 [libraries]
 # Plugins
@@ -14,6 +15,7 @@ koin3 = "3.1.2"
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-dokkaGradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+versionsPlugin-gradle = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versions" }
 
 # Dependencies
 
@@ -23,6 +25,7 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 
 koin-v2 = { module = "io.insert-koin:koin-core", version.ref = "koin2" }
 koin-v3 = { module = "io.insert-koin:koin-core", version.ref = "koin3" }
+
 # Test dependencies
 
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
