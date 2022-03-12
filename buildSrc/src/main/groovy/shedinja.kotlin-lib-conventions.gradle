@@ -2,6 +2,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
+    id 'com.github.ben-manes.versions'
+
     id 'java-library'
     id 'maven-publish'
 }
@@ -96,4 +98,18 @@ if (project.version.endsWith('-SNAPSHOT') || project.hasProperty('allowNonSnapsh
     // At this point, the version string is a snapshot version, but the project set to a release version.
     // This is typically when the snapshot version string was not updated.
     logger.error("Version string is a snapshot version, but property 'allowNonSnapshotRelease' is present.")
+}
+
+// Versions config for the Gradle versions plugin, from the readme
+// https://github.com/ben-manes/gradle-versions-plugin
+def isNonStable = { String version ->
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !(version ==~ regex)
+}
+
+dependencyUpdates {
+    // Reject all non stable versions
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
 }

@@ -138,11 +138,10 @@ fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, sup
         // Requires a scope
         supplier.parameters.size == 1 && supplier.parameters.first().type == InjectionScope::class.createType() ->
             put(kclass, qualifier) { supplier.call(scope) }
-        else ->
-            error(
-                "Cannot 'put' the given function ($supplier). It must take either no arguments or a single argument " +
-                        "that is of type 'InjectionScope'. Consider manually instantiating this component instead."
-            )
+        else -> error(
+            "Cannot 'put' the given function ($supplier). It must take either no arguments or a single argument " +
+                "that is of type 'InjectionScope'. Consider manually instantiating this component instead."
+        )
     }
 
 /**

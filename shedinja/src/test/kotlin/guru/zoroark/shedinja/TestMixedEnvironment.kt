@@ -34,10 +34,13 @@ class TestMixedEnvironment {
 
     @Test
     fun `Test object injection is lazy`() {
-        val context = ExtensibleEnvironmentContext(mapOf(
-            entryOf { ElementClass() },
-            entryOf { OtherElementClass() }
-        ), EnvironmentContext(mapOf()))
+        val context = ExtensibleEnvironmentContext(
+            mapOf(
+                entryOf { ElementClass() },
+                entryOf { OtherElementClass() }
+            ),
+            EnvironmentContext(mapOf())
+        )
         val env = MixedImmutableEnvironment(context)
         var wasInjected = false
         val inj = env.createInjector(Identifier(ElementClass::class)) { wasInjected = true }
@@ -72,10 +75,13 @@ class TestMixedEnvironment {
 
     @Test
     fun `Test supports cyclic dependencies`() {
-        val context = ExtensibleEnvironmentContext(mapOf(
-            entryOf { AtoB(scope) },
-            entryOf { BtoA(scope) }
-        ), EnvironmentContext(mapOf()))
+        val context = ExtensibleEnvironmentContext(
+            mapOf(
+                entryOf { AtoB(scope) },
+                entryOf { BtoA(scope) }
+            ),
+            EnvironmentContext(mapOf())
+        )
         val env = MixedImmutableEnvironment(context)
         val a = env.get<AtoB>()
         val b = env.get<BtoA>()
@@ -85,9 +91,12 @@ class TestMixedEnvironment {
 
     @Test
     fun `Test supports self injection`() {
-        val context = ExtensibleEnvironmentContext(mapOf(
-            entryOf { CtoC(scope) }
-        ), EnvironmentContext(mapOf()))
+        val context = ExtensibleEnvironmentContext(
+            mapOf(
+                entryOf { CtoC(scope) }
+            ),
+            EnvironmentContext(mapOf())
+        )
         val env = MixedImmutableEnvironment(context)
         val c = env.get<CtoC>()
         assertEquals("CtoC", c.useC())

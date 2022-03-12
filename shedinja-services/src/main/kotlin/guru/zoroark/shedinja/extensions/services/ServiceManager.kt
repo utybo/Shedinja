@@ -201,5 +201,5 @@ val ExtensibleInjectionEnvironment.services: ServiceManager
     get() = metaEnvironment.getOrNull()
         ?: error(
             "Services extension is not installed. Install the service manager by adding 'useServices()' in your " +
-                    "'shedinja' block."
+                "'shedinja' block."
         )

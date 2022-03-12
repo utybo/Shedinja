@@ -291,8 +291,9 @@ class FullTestServices {
             }
             assertEquals(
                 "Starting service " +
-                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
-                        "(<no qualifier>) failed", ex.message
+                    "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                    "(<no qualifier>) failed",
+                ex.message
             )
         }
     }
@@ -311,8 +312,9 @@ class FullTestServices {
             }
             assertEquals(
                 "Stopping service " +
-                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
-                        "(<no qualifier>) failed", ex.message
+                    "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                    "(<no qualifier>) failed",
+                ex.message
             )
         }
     }

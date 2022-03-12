@@ -60,24 +60,35 @@ abstract class DefaultExtensibleInjectionEnvironment(
     context: ExtensibleEnvironmentContext,
     metaContextKind: InjectionEnvironmentKind<*> = EagerImmutableMetaEnvironment
 ) : ExtensibleInjectionEnvironment {
-    override val metaEnvironment = metaContextKind.build(context.metaContext.let {
-        // Inject the EIE within the meta-environment
-        val declaration = Declaration(Identifier(ExtensibleInjectionEnvironment::class)) {
-            this@DefaultExtensibleInjectionEnvironment
-        }
-        val newDeclarations = it.declarations.toMutableMap()
-        newDeclarations[declaration.identifier] = declaration
-        EnvironmentContext(newDeclarations)
-    }).also { metaEnvironment ->
+    private fun createMetaEnvironment(
+        context: ExtensibleEnvironmentContext,
+        metaContextKind: InjectionEnvironmentKind<*>
+    ): InjectionEnvironment {
+        val metaEnvironment = metaContextKind.build(
+            context.metaContext.let {
+                // Inject the EIE within the meta-environment
+                val declaration = Declaration(Identifier(ExtensibleInjectionEnvironment::class)) {
+                    this@DefaultExtensibleInjectionEnvironment
+                }
+                val newDeclarations = it.declarations.toMutableMap()
+                newDeclarations[declaration.identifier] = declaration
+                EnvironmentContext(newDeclarations)
+            }
+        )
+
         context.metaContext.declarations.keys.filter {
             it.kclass.isSubclassOf(DeclarationsProcessor::class)
         }.forEach { processorIdentifier ->
             val processor = metaEnvironment.get(processorIdentifier) as? DeclarationsProcessor
                 ?: error(
                     "Internal error: processor has an identifier declaring it is a subclass of " +
-                            "DeclarationsProcessor, but the actual object is not."
+                        "DeclarationsProcessor, but the actual object is not."
                 )
             processor.processDeclarations(context.declarations.values.asSequence())
         }
+
+        return metaEnvironment
     }
+
+    override val metaEnvironment = createMetaEnvironment(context, metaContextKind)
 }

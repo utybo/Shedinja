@@ -30,16 +30,20 @@ object EnvironmentTests {
         var otherElement: OtherElementClass? = null
         var anotherElement: AnotherElementClass? = null
         val context = EnvironmentContext(
-            mapOf(entryOf {
-                assertNull(element, "Called builder twice!")
-                ElementClass().also { element = it }
-            }, entryOf {
-                assertNull(otherElement, "Called builder twice!")
-                OtherElementClass().also { otherElement = it }
-            }, entryOf {
-                assertNull(anotherElement, "Called builder twice!")
-                AnotherElementClass().also { anotherElement = it }
-            })
+            mapOf(
+                entryOf {
+                    assertNull(element, "Called builder twice!")
+                    ElementClass().also { element = it }
+                },
+                entryOf {
+                    assertNull(otherElement, "Called builder twice!")
+                    OtherElementClass().also { otherElement = it }
+                },
+                entryOf {
+                    assertNull(anotherElement, "Called builder twice!")
+                    AnotherElementClass().also { anotherElement = it }
+                }
+            )
         )
         val env = provider(context)
         assertSame(element, env.get())
@@ -63,16 +67,20 @@ object EnvironmentTests {
         var b: B? = null
         var c: C? = null
         val context = EnvironmentContext(
-            mapOf(entryOf {
-                assertNull(a, "Called builder twice!")
-                A(scope).also { a = it }
-            }, entryOf {
-                assertNull(b, "Called builder twice!")
-                B(scope).also { b = it }
-            }, entryOf {
-                assertNull(c, "Called builder twice!")
-                C().also { c = it }
-            })
+            mapOf(
+                entryOf {
+                    assertNull(a, "Called builder twice!")
+                    A(scope).also { a = it }
+                },
+                entryOf {
+                    assertNull(b, "Called builder twice!")
+                    B(scope).also { b = it }
+                },
+                entryOf {
+                    assertNull(c, "Called builder twice!")
+                    C().also { c = it }
+                }
+            )
         )
         val env = provider(context)
         assertSame(a, env.get())
@@ -86,10 +94,12 @@ object EnvironmentTests {
     fun eagerCreation(provider: (EnvironmentContext) -> InjectionEnvironment) {
         var wasFirstBuilt = false
         var wasSecondBuilt = false
-        val context = EnvironmentContext(mapOf(
-            entryOf { ElementClass().also { wasFirstBuilt = true } },
-            entryOf { OtherElementClass().also { wasSecondBuilt = true } }
-        ))
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { ElementClass().also { wasFirstBuilt = true } },
+                entryOf { OtherElementClass().also { wasSecondBuilt = true } }
+            )
+        )
         provider(context)
         assertTrue(wasFirstBuilt)
         assertTrue(wasSecondBuilt)
