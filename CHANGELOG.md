@@ -44,6 +44,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added basic functionality and test facilities
 
 [Unreleased]: https://github.com/utybo/Shedinja/compare/v0.0.3..main
-[0.0.2]: https://github.com/utybo/Shedinja/compare/v0.0.3..v0.0.2
+[0.0.3]: https://github.com/utybo/Shedinja/compare/v0.0.3..v0.0.2
 [0.0.2]: https://github.com/utybo/Shedinja/compare/v0.0.2..v0.0.1
 [0.0.1]: https://github.com/utybo/Shedinja/releases/tag/v0.0.1
