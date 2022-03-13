@@ -110,28 +110,28 @@ class Chef {
 }
 
 class Cupboard {
-    fun get(ingredient: Ingredient): Ingredient {
+    fun get(ingredientKind: IngredientKind): String {
         // ???
     }
 }
 
-enum class Ingredient { Egg, Flour, Yeast }
+enum class IngredientKind { Egg, Flour, Yeast }
 
 class EggProvider {
     fun getEgg(): String {
-        return "egg"
+        return "an egg"
     }
 }
 
 class FlourProvider {
     fun getFlour(): String {
-        return "flour"
+        return "some flour"
     }
 }
 
 class YeastProvider {
     fun getYeast(): String {
-        return "yeast"
+        return "some yeast"
     }
 }
 
@@ -161,9 +161,9 @@ class Chef(scope: InjectionScope) {
     private val cakeMold: CakeMold by scope()
 
     fun makeSomeCake() {
-        val egg = cupboard.get(Ingredient.Egg)
-        val flour = cupboard.get(Ingredient.Flour)
-        val yeast = cupboard.get(Ingredient.Yeast)
+        val egg = cupboard.get(IngredientKind.Egg)
+        val flour = cupboard.get(IngredientKind.Flour)
+        val yeast = cupboard.get(IngredientKind.Yeast)
 
         val filledCakeMold = cakeMold.useCakeMold(egg, flour, yeast)
         oven.useOven(filledCakeMold, 180, 25)
@@ -176,7 +176,7 @@ class Cupboard(scope: InjectionScope) {
     private val flourProvider: FlourProvider by scope()
     private val yeastProvider: YeastProvider by scope()
 
-    fun get(ingredient: Ingredient): Ingredient {
+    fun get(ingredient: IngredientKind): String {
         return when(ingredient) {
             Ingredient.Egg -> eggProvider.getEgg()
             Ingredient.Flour -> flourProvider.getFlour()
