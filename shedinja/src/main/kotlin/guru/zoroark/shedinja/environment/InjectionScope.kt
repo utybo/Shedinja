@@ -18,6 +18,18 @@ interface InjectionScope {
      * @return A read-only property which, on `get`, returns the relevant object.
      */
     fun <T : Any> inject(what: Identifier<T>): Injector<T>
+
+    /**
+     * Create an injector for the given identifier. Unlike `inject`, this function pulls the component from the *meta*
+     * environment and not the current environment.
+     *
+     * Throws an exception if the current environment does not have a meta-environment.
+     *
+     * @param what The identifier to use for finding the relevant element.
+     * @param T The type of the element to retrieve.
+     * @return A read-only property which, on `get`, returns the relevant object.
+     */
+    fun <T : Any> meta(what: Identifier<T>): Injector<T>
 }
 
 /**
@@ -47,3 +59,11 @@ inline operator fun <reified T : Any> InjectionScope.invoke(
  */
 operator fun <T : Any> InjectionScope.invoke(identifier: Identifier<T>): ReadOnlyProperty<Any?, T> =
     inject(identifier)
+
+/**
+ * Create an injector for the given class, turned to an identifier, and an optional [qualifier][Qualifier], which is
+ * then matched against the *meta* environment. See [InjectionScope.meta] for more information.
+ */
+inline fun <reified T : Any> InjectionScope.meta(
+    qualifier: Qualifier = EmptyQualifier
+): ReadOnlyProperty<Any?, T> = meta(Identifier(T::class, qualifier))

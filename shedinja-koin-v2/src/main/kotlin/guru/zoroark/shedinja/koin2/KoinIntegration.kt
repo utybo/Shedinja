@@ -92,6 +92,10 @@ private fun guru.zoroark.shedinja.environment.Qualifier.toKoinQualifier(): Quali
 private class KoinApplicationBackedScope(private val app: KoinApplication) : InjectionScope {
     override fun <T : Any> inject(what: Identifier<T>): Injector<T> =
         KoinApplicatedBackedInjector(what, app)
+
+    override fun <T : Any> meta(what: Identifier<T>): Injector<T> {
+        error("Injections from meta environments are not supported in Koin applications.")
+    }
 }
 
 private class KoinApplicatedBackedInjector<T : Any>(
