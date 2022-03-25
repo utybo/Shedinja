@@ -1,3 +1,7 @@
+plugins {
+    id 'base'
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://gitlab.com/api/v4/projects/29365238/packages/maven' }
@@ -24,7 +28,9 @@ def buildDocsTask = tasks.register("buildDocs", Copy) {
     }
 }
 
-def serveDocsTask = tasks.register("serveDocs", JavaExec) {
+tasks.getByName("assemble") dependsOn buildDocsTask
+
+def serveDocsTask = tasks.register("serve", JavaExec) {
     main = "guru.zoroark.servine.app.AppKt"
     classpath = configurations.servine
 

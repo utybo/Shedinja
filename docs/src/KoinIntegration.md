@@ -1,6 +1,6 @@
 # Koin Integration
 
-Shedinja allows you to embed Shedinja modules within [Koin v2](https://insert-koin.io/) application. It is compatible both ways: you can inject components from Koin into Shedinja and vice-versa.
+Shedinja allows you to embed Shedinja modules within [Koin v2/v3](https://insert-koin.io/) applications. It is compatible both ways: you can inject components from Koin into Shedinja and vice-versa.
 
 !> This functionality abuses internal `@PublishedApi` mechanisms and is experimental.
 

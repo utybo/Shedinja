@@ -1,10 +1,9 @@
 package guru.zoroark.shedinja.extensions.external
 
-import guru.zoroark.shedinja.environment.EmptyQualifier
-import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
-import guru.zoroark.shedinja.environment.Qualifier
+import guru.zoroark.shedinja.extensions.injectors.ComponentInjectionCreator
+import guru.zoroark.shedinja.extensions.injectors.InjectionCreator
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -29,11 +28,12 @@ import kotlin.reflect.KProperty
 class ExternalComponentWrapper<T : Any>(
     scope: InjectionScope,
     private val constructor: KFunction<T>,
-    qualifiers: Map<Int, Qualifier>
+    injectionCreators: Map<Int, InjectionCreator<*>>
 ) : ReadOnlyProperty<Any, T> {
     private val injectors: Map<KParameter, Injector<*>> = constructor.parameters.withIndex()
         .associateBy({ it.value }) { (index, it) ->
-            scope.inject(it.identifyWith(qualifiers[index] ?: EmptyQualifier))
+            val creator = (injectionCreators[index] ?: ComponentInjectionCreator<Any>()) as InjectionCreator<*>
+            creator.typelessCreateInjector(scope, it.type.classifier as KClass<*>)
         }
 
     private val dummyProperty = Any()
@@ -50,5 +50,12 @@ class ExternalComponentWrapper<T : Any>(
     override fun getValue(thisRef: Any, property: KProperty<*>): T = value
 }
 
-private fun KParameter.identifyWith(qualifier: Qualifier) =
-    Identifier(this.type.classifier as KClass<*>, qualifier)
+// TODO For some reason, a <T> is still required due to generic weirdness, hence this extra function.
+private fun <T : Any> InjectionCreator<T>.typelessCreateInjector(
+    scope: InjectionScope,
+    kclass: KClass<*>
+): Injector<T> {
+    @Suppress("UNCHECKED_CAST")
+    val actual = kclass as KClass<T>
+    return createInjector(scope, actual)
+}

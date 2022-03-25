@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Added the External Components extension.
     - Added a reified `getOrNull()` function, similar to the existing `get()` function, e.g. `env.getOrNull<MyComponent>()`
     - Added the `MultiQualifier` class along with a `+` operator for combining multiple qualifiers into one.
-    - Added the `FullTypeQualifier` class. It is a qualifier based on `KType` which you can use in case you need to differentiate generic types within your environment. Other alternatives, like using named qualifiers, still work, this is just another option on top of what is already there.
+    - Added the `FullTypeQualifier` class. It is a qualifier based on `KType` which you can use in case you need to differentiate generic types within your environment. Other alternatives, like using named qualifiers, still work, this is just another option on top of what is already there.*
 - `shedinja-test`
     - Added the `noUnused` check.
     - Added the `safeInjection` check.

@@ -6,7 +6,7 @@ REPO="https://oauth2:${GITLAB_SITE_PUSH_TOKEN}@${REPO_URL}"
 set -e
 
 echo "Publishing website to $REPO_URL"
-./gradlew buildDocs
+./gradlew :docs:build
 mkdir /tmp/publish-site-to-gitlab
 cp -r docs/build/docs /tmp/publish-site-to-gitlab/public
 cat > /tmp/publish-site-to-gitlab/.gitlab-ci.yml <<EOF

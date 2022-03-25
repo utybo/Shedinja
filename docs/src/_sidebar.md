@@ -9,6 +9,7 @@
 - **Extensions**
 - [Introduction](extensions/Introduction.md)
 - [Factories](extensions/Factories.md)
+- [External](extensions/External.md)
 - [Services](extensions/Services.md)
 - **Developing**
 - [Building Shedinja](/Building.md)

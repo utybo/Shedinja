@@ -8,6 +8,8 @@ import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Qualifier
 import guru.zoroark.shedinja.environment.plus
 import guru.zoroark.shedinja.extensions.factory.outputs
+import guru.zoroark.shedinja.extensions.injectors.InjectionCreator
+import guru.zoroark.shedinja.extensions.injectors.ParameterQualifiableInjectionCreatorBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -20,11 +22,9 @@ import kotlin.reflect.KFunction
  */
 @ShedinjaDsl
 inline fun <reified T : Any> ContextBuilderDsl.putExternal(
-    constructor: KFunction<T>,
-    parameterQualifiers: Map<Int, Qualifier> = mapOf()
+    constructor: KFunction<T>, vararg injectionCreators: ParameterQualifiableInjectionCreatorBuilder<*>
 ): Declaration<ExternalComponentWrapper<T>> =
-    // EmptyQualifier because the subsequent putExternal call will add the outputs() for us
-    putExternal(EmptyQualifier, constructor, parameterQualifiers)
+    putExternal(T::class, EmptyQualifier, constructor, injectionCreators.build())
 
 /**
  * Add a definition for an external component of type `T` with the given qualifier, constructor and parameter
@@ -38,8 +38,9 @@ inline fun <reified T : Any> ContextBuilderDsl.putExternal(
 inline fun <reified T : Any> ContextBuilderDsl.putExternal(
     qualifier: Qualifier,
     constructor: KFunction<T>,
-    parameterQualifiers: Map<Int, Qualifier> = mapOf()
-) = put(qualifier + outputs(T::class)) { ExternalComponentWrapper(scope, constructor, parameterQualifiers) }
+    vararg injectionCreators: ParameterQualifiableInjectionCreatorBuilder<*>
+): Declaration<ExternalComponentWrapper<T>> =
+    putExternal(T::class, qualifier, constructor, injectionCreators.build())
 
 /**
  * Add a definition for an external component of type `T` with the given type, constructor and parameter qualifiers.
@@ -52,8 +53,9 @@ inline fun <reified T : Any> ContextBuilderDsl.putExternal(
 fun <T : Any> ContextBuilderDsl.putExternal(
     kclass: KClass<T>,
     constructor: KFunction<T>,
-    parameterQualifiers: Map<Int, Qualifier> = mapOf()
-) = put(outputs(kclass)) { ExternalComponentWrapper(scope, constructor, parameterQualifiers) }
+    vararg injectionCreators: ParameterQualifiableInjectionCreatorBuilder<*>
+): Declaration<ExternalComponentWrapper<T>> =
+    putExternal(kclass, EmptyQualifier, constructor, injectionCreators.build())
 
 /**
  * Add a definition for an external component of type `T` with the given type, constructor and parameter qualifiers.
@@ -67,5 +69,25 @@ fun <T : Any> ContextBuilderDsl.putExternal(
     kclass: KClass<T>,
     qualifier: Qualifier,
     constructor: KFunction<T>,
-    parameterQualifiers: Map<Int, Qualifier> = mapOf()
-) = put(qualifier + outputs(kclass)) { ExternalComponentWrapper(scope, constructor, parameterQualifiers) }
+    vararg injectionCreators: ParameterQualifiableInjectionCreatorBuilder<*>
+): Declaration<ExternalComponentWrapper<T>> =
+    putExternal(kclass, qualifier, constructor, injectionCreators.build())
+
+/**
+ * Add a definition for an external component of type `T` with the given type, constructor and parameter qualifiers,
+ * passed as a map.
+ *
+ * This overload requires you to provide the class of T via the `kclass` parameter.
+ *
+ * See the documentation on the External Components Extension for more information.
+ */
+@ShedinjaDsl
+fun <T : Any> ContextBuilderDsl.putExternal(
+    kclass: KClass<T>, qualifier: Qualifier, constructor: KFunction<T>, injectionCreators: Map<Int, InjectionCreator<*>>
+): Declaration<ExternalComponentWrapper<T>> = put(qualifier + outputs(kclass)) {
+    ExternalComponentWrapper(scope, constructor, injectionCreators)
+}
+
+@PublishedApi
+internal fun <T : ParameterQualifiableInjectionCreatorBuilder<*>> Array<T>.build() =
+    associateBy({ it.parameter }) { it.build() }
