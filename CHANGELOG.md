@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Added the ability to inject meta-environment components into regular components via the `scope.meta` property.
     - Added the ability to combine qualifiers to create a `MultiQualifier`.
     - Added optional injections (`scope.optional()`).
+- `shedinja-services`
+    - Added the `installShutdownHook` function, which sets up a shutdown hook that stsops all services when the JVM shuts down.
 - All
     - (Internal) Added `jacoco` plugin for code coverage. This does not impact builds depending on Shedinja with CodeCov on the repository.
     - (Internal) Drastically improved code coverage across the entire code base.
