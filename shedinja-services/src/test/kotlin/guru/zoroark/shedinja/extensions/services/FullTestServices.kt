@@ -5,7 +5,7 @@ import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.meta
+import guru.zoroark.shedinja.environment.invoke
 import guru.zoroark.shedinja.environment.named
 import guru.zoroark.shedinja.extensions.with
 import kotlinx.coroutines.delay
@@ -301,8 +301,8 @@ class FullTestServices {
             }
             assertEquals(
                 "Starting service " +
-                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
-                        "(<no qualifier>) failed",
+                    "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                    "(<no qualifier>) failed",
                 ex.message
             )
         }
@@ -322,8 +322,8 @@ class FullTestServices {
             }
             assertEquals(
                 "Stopping service " +
-                        "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
-                        "(<no qualifier>) failed",
+                    "guru.zoroark.shedinja.extensions.services.FullTestServices.CrashingService " +
+                    "(<no qualifier>) failed",
                 ex.message
             )
         }

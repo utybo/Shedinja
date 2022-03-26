@@ -3,6 +3,7 @@ package guru.zoroark.shedinja
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
+import guru.zoroark.shedinja.environment.MetalessInjectionScope
 import guru.zoroark.shedinja.environment.invoke
 
 class ElementClass
@@ -17,6 +18,9 @@ object FakeComponent : InjectionScope {
     override fun <T : Any> inject(what: Identifier<T>): Injector<T> {
         error("Cannot inject on fake component")
     }
+
+    override val meta: MetalessInjectionScope
+        get() = error("Cannot get meta scope on fake component")
 
     val fakeProperty: Any? = null
 }

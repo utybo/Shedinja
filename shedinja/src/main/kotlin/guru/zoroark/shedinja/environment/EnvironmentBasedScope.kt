@@ -13,9 +13,8 @@ class SimpleEnvironmentBasedScope(private val env: InjectionEnvironment) : Injec
         return env.createInjector(what)
     }
 
-    override fun <T : Any> meta(what: Identifier<T>): Injector<T> {
-        error("This environment does not have a meta-environment")
-    }
+    override val meta
+        get() = error("This environment does not have a meta-environment")
 }
 
 /**
@@ -29,9 +28,7 @@ class ExtensibleEnvironmentBasedScope(private val env: ExtensibleInjectionEnviro
         return env.createInjector(what)
     }
 
-    override fun <T : Any> meta(what: Identifier<T>): Injector<T> {
-        return env.metaEnvironment.createInjector(what)
-    }
+    override val meta: MetalessInjectionScope = SimpleEnvironmentBasedScope(env.metaEnvironment)
 }
 
 /**

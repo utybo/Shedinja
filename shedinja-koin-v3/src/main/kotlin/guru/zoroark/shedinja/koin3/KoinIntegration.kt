@@ -6,6 +6,7 @@ import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectableModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
+import guru.zoroark.shedinja.environment.MetalessInjectionScope
 import guru.zoroark.shedinja.environment.NameQualifier
 import guru.zoroark.shedinja.environment.ScopedContext
 import org.koin.core.KoinApplication
@@ -20,9 +21,6 @@ import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.StringQualifier
 import org.koin.core.registry.ScopeRegistry
 import org.koin.dsl.module
-import kotlin.collections.HashMap
-import kotlin.collections.forEach
-import kotlin.collections.map
 import kotlin.collections.set
 import kotlin.reflect.KProperty
 
@@ -117,6 +115,9 @@ private class KoinApplicationBackedScope(private val app: KoinApplication) :
     InjectionScope {
     override fun <T : Any> inject(what: Identifier<T>): Injector<T> =
         KoinApplicatedBackedInjector(what, app)
+
+    override val meta: MetalessInjectionScope
+        get() = error("Injections from meta environments are not supported in Koin applications.")
 }
 
 private class KoinApplicatedBackedInjector<T : Any>(
