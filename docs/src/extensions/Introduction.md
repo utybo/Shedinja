@@ -39,7 +39,7 @@ Extensions will generally:
 
 Declarations (`put(...)` calls) can be *tagged* using declaration tags. These declaration tags provide metadata for extensions that would like additional information attached to individual declarations.
 
-```
+```kotlin
 shedinja {
     put(::SomeComponent) with someTag
 }

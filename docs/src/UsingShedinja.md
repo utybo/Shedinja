@@ -39,6 +39,31 @@ class AuthService(scope: InjectionScope) {
 }
 ```
 
+### Meta-environment injections
+
+?> Meta-environment injections require being in an extensible environment. See [here](extensions/Introduction.md#meta-environment) for more information.
+
+Some extensions inject components within the meta-environments. These components can be useful to get in your own components (outside of the meta-environment). For example, a typical use case may be a Ktor application that has a special shutdown endpoint that you wish to use to trigger a `stopAll` call on the [services extension](extensions/Services.md).
+
+You can do this via the `meta` property on the `scope`, e.g.
+
+```kotlin
+class SomeEndpoint(scope: InjectionScope) {
+    private val services: ServicesManager by scope.meta()
+
+    fun Application.install() {
+        routing {
+            get("/_example/shutdown") {
+                services.stopAll()
+                call.respond("OK")
+            }
+        }
+    }
+}
+```
+
+Note that `meta` actually just returns an injection scope bound to the meta-environment: you can use any scope operation on `.meta` as you would on `scope` (except that you cannot call `.meta.meta` as meta-environments cannot have meta-environments of their own).
+
 ## Environment
 
 An environment is a manager for multiple components that can inject one another. They are created using the `shedinja` DSL function, onto which you can call `put` functions to add components:
