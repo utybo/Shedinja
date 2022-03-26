@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (0.0.4)
 
+### Added
+
+- `shedinja` (core)
+    - Added the ability to inject meta-environment components into regular components via the `scope.meta` property.
+
 ## [0.0.3] - 2022-03-12
 
 ### Added
