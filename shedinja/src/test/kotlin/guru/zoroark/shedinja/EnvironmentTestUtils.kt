@@ -1,21 +1,61 @@
 package guru.zoroark.shedinja
 
+import guru.zoroark.shedinja.environment.ComponentNotFoundException
 import guru.zoroark.shedinja.environment.Declaration
+import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionEnvironment
 import guru.zoroark.shedinja.environment.InjectionScope
+import guru.zoroark.shedinja.environment.Qualifier
 import guru.zoroark.shedinja.environment.ScopedSupplier
 import guru.zoroark.shedinja.environment.get
 import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.environment.named
+import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
-inline fun <reified T : Any> entryOf(noinline supplier: ScopedSupplier<T>) =
-    Declaration(Identifier(T::class), supplier).let {
+inline fun <reified T : Any> entryOf(qualifier: Qualifier = EmptyQualifier, noinline supplier: ScopedSupplier<T>) =
+    Declaration(Identifier(T::class, qualifier), supplier).let {
         it.identifier to it
     }
+
+@Suppress("UnnecessaryAbstractClass")
+abstract class EnvironmentBaseTest(private val provider: (EnvironmentContext) -> InjectionEnvironment) {
+    @Test
+    fun `(Basic) Put and get a single element`() { EnvironmentTests.singleElement(provider) }
+
+    @Test
+    fun `(Basic) Put and get multiple elements`() { EnvironmentTests.multiElements(provider) }
+
+    @Test
+    fun `(Basic) Put, get and inject multiple elements`() { EnvironmentTests.multiElementsWithInjections(provider) }
+
+    @Test
+    fun `(Basic) Put, get and inject multiple elements with qualifiers`() {
+        EnvironmentTests.multiElementsWithInjectionsAndQualifiers(provider)
+    }
+
+    @Test
+    fun `(Basic) Objects are created eagerly`() { EnvironmentTests.eagerCreation(provider) }
+
+    @Test
+    fun `(Basic) Getting unknown component should fail`() {
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { ElementClass() }
+            )
+        )
+        val env = provider(context)
+        assertThrows<ComponentNotFoundException> {
+            env.get<OtherElementClass>()
+        }
+    }
+}
 
 object EnvironmentTests {
     fun singleElement(provider: (EnvironmentContext) -> InjectionEnvironment) {
@@ -89,6 +129,71 @@ object EnvironmentTests {
         assertSame(b, env.get())
         assertSame(b?.c, env.get())
         assertSame(c, env.get())
+    }
+
+    class D(scope: InjectionScope) {
+        val e: E by scope()
+        val eBis: E by scope(named("eBis"))
+    }
+
+    class E(scope: InjectionScope) {
+        val f1: F by scope(Identifier(F::class, named("f1")))
+        val f2: F by scope(named("f2"))
+    }
+
+    class F
+
+    fun multiElementsWithInjectionsAndQualifiers(provider: (EnvironmentContext) -> InjectionEnvironment) {
+        var d: D? = null
+        var e: E? = null
+        var eBis: E? = null
+        var f1: F? = null
+        var f2: F? = null
+
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf {
+                    assertNull(d, "Called builder twice!")
+                    D(scope).also { d = it }
+                },
+                entryOf(named("f1")) {
+                    assertNull(f1, "Called builder twice!")
+                    F().also { f1 = it }
+                },
+                entryOf(named("f2")) {
+                    assertNull(f2, "Called builder twice!")
+                    F().also { f2 = it }
+                },
+                entryOf {
+                    assertNull(e, "Called builder twice!")
+                    E(scope).also { e = it }
+                },
+                entryOf(named("eBis")) {
+                    assertNull(eBis, "Called builder twice!")
+                    E(scope).also { eBis = it }
+                }
+            )
+        )
+        val env = provider(context)
+        assertNotNull(f1)
+        assertNotNull(f2)
+        assertNotNull(e)
+        assertNotNull(eBis)
+
+        assertSame(d, env.get<D>())
+        assertSame(f1, env.get<F>(named("f1")))
+        assertSame(f2, env.get<F>(named("f2")))
+        assertSame(e, env.get<E>())
+        assertSame(eBis, env.get<E>(named("eBis")))
+
+        assertSame(d?.e, e)
+        assertSame(d?.eBis, eBis)
+
+        assertSame(e?.f1, f1)
+        assertSame(e?.f2, f2)
+
+        assertSame(eBis?.f1, f1)
+        assertSame(eBis?.f2, f2)
     }
 
     fun eagerCreation(provider: (EnvironmentContext) -> InjectionEnvironment) {

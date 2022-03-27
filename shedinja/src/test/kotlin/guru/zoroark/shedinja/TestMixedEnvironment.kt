@@ -12,26 +12,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TestMixedEnvironment {
-    private fun createMIE(context: EnvironmentContext): MixedImmutableEnvironment =
-        MixedImmutableEnvironment.build(ExtensibleEnvironmentContext(context.declarations, EnvironmentContext(mapOf())))
-
-    @Test
-    fun `Test with single element`() {
-        EnvironmentTests.singleElement(::createMIE)
-    }
-
-    @Test
-    fun `Test with many elements`() {
-        EnvironmentTests.multiElements(::createMIE)
-        EnvironmentTests.multiElementsWithInjections(::createMIE)
-    }
-
-    @Test
-    fun `Test object creation is eager`() {
-        EnvironmentTests.eagerCreation(::createMIE)
-    }
-
+class TestMixedEnvironment : EnvironmentBaseTest({
+    MixedImmutableEnvironment.build(ExtensibleEnvironmentContext(it.declarations, EnvironmentContext(mapOf())))
+}) {
     @Test
     fun `Test object injection is lazy`() {
         val context = ExtensibleEnvironmentContext(
