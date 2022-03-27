@@ -28,7 +28,7 @@ def serveDocsTask = tasks.register("serveDocs", JavaExec) {
     main = "guru.zoroark.servine.app.AppKt"
     classpath = configurations.servine
 
-    def params = [project.layout.buildDirectory.dir("docs").get().toString()]
+    def params = [project.layout.buildDirectory.dir("docs").get().toString(), "-r"]
     args(params)
 
     dependsOn buildDocsTask

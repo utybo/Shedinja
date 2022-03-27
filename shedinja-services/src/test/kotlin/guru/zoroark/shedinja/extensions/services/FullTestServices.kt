@@ -3,7 +3,9 @@ package guru.zoroark.shedinja.extensions.services
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.environment.Identifier
+import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
+import guru.zoroark.shedinja.environment.invoke
 import guru.zoroark.shedinja.environment.named
 import guru.zoroark.shedinja.extensions.with
 import kotlinx.coroutines.delay
@@ -79,14 +81,22 @@ class FullTestServices {
         }
     }
 
+    class StopperService(scope: InjectionScope) {
+        private val serviceManager: ServiceManager by scope.meta()
+
+        fun doStop() {
+            runBlocking { serviceManager.stopAll() }
+        }
+    }
+
     @Test
     fun `Test simple non-suspending service start stop`() {
         val env = shedinja {
             useServices()
 
-            put(::SuspendingService)
+            put(::SimpleService)
         }
-        val service = env.get<SuspendingService>()
+        val service = env.get<SimpleService>()
         assertEquals(Status.Initialized, service.status)
         runBlocking { env.services.startAll() }
         assertEquals(Status.Started, service.status)
@@ -316,6 +326,24 @@ class FullTestServices {
                     "(<no qualifier>) failed",
                 ex.message
             )
+        }
+    }
+
+    @Test
+    fun `Stop everything from a component`() {
+        val env = shedinja {
+            useServices()
+
+            put(::SimpleService)
+            put(::StopperService)
+        }
+        runBlocking {
+            val service = env.get<SimpleService>()
+            assertEquals(Status.Initialized, service.status)
+            runBlocking { env.services.startAll() }
+            assertEquals(Status.Started, service.status)
+            runBlocking { env.get<StopperService>().doStop() }
+            assertEquals(Status.Stopped, service.status)
         }
     }
 }

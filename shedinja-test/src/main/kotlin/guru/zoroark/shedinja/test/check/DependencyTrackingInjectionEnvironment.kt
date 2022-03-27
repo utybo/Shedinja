@@ -1,11 +1,12 @@
 package guru.zoroark.shedinja.test.check
 
-import guru.zoroark.shedinja.environment.EnvironmentBasedScope
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionEnvironment
 import guru.zoroark.shedinja.environment.InjectionEnvironmentKind
+import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
+import guru.zoroark.shedinja.environment.MetalessInjectionScope
 import guru.zoroark.shedinja.environment.ScopedContext
 import kotlin.reflect.KProperty
 
@@ -38,7 +39,7 @@ class DependencyTrackingInjectionEnvironment(context: EnvironmentContext) : Inje
      */
     val dependencies = context.declarations.mapValues { (_, v) ->
         currentInjections.clear()
-        v.supplier(ScopedContext(EnvironmentBasedScope(this)))
+        v.supplier(ScopedContext(EnvironmentBasedIgnoringMetaScope(this)))
         currentInjections.toList()
     }
 
@@ -46,4 +47,19 @@ class DependencyTrackingInjectionEnvironment(context: EnvironmentContext) : Inje
         currentInjections += identifier
         return FakeInjector()
     }
+}
+
+private class EnvironmentBasedIgnoringMetaScope(
+    private val environment: InjectionEnvironment
+) : InjectionScope {
+    override fun <T : Any> inject(what: Identifier<T>): Injector<T> {
+        return environment.createInjector(what)
+    }
+
+    override val meta: MetalessInjectionScope
+        get() = FakeMetalessInjectionScope()
+}
+
+private class FakeMetalessInjectionScope : MetalessInjectionScope {
+    override fun <T : Any> inject(what: Identifier<T>): Injector<T> = FakeInjector()
 }
