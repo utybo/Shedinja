@@ -6,6 +6,7 @@ plugins {
 
     id 'java-library'
     id 'maven-publish'
+    id 'jacoco'
 }
 
 repositories {
@@ -34,6 +35,7 @@ java {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
