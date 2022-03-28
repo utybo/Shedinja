@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TestMixedEnvironment : EnvironmentBaseTest({
-    MixedImmutableEnvironment.build(ExtensibleEnvironmentContext(it.declarations, EnvironmentContext(mapOf())))
+class TestMixedEnvironment : ExtensibleEnvironmentBaseTest({
+    MixedImmutableEnvironment.build(it)
 }) {
     @Test
     fun `Test object injection is lazy`() {

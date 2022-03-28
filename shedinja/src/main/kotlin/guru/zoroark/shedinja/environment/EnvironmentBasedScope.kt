@@ -14,7 +14,7 @@ class SimpleEnvironmentBasedScope(private val env: InjectionEnvironment) : Injec
     }
 
     override val meta
-        get() = error("This environment does not have a meta-environment")
+        get() = throw NotExtensibleException("This environment does not have a meta-environment")
 }
 
 /**

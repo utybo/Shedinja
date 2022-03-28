@@ -6,7 +6,7 @@ import guru.zoroark.shedinja.extensions.EagerImmutableMetaEnvironment
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class TestEagerEnvironment : EnvironmentBaseTest(::EagerImmutableMetaEnvironment) {
+class TestEagerEnvironment : NotExtensibleEnvironmentBaseTest(::EagerImmutableMetaEnvironment) {
     @Test
     fun `Test object injection is eager`() {
         val context = EnvironmentContext(
