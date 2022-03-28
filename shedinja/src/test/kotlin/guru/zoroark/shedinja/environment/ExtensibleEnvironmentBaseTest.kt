@@ -1,6 +1,8 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.entryOf
+import guru.zoroark.shedinja.extensions.DeclarationsProcessor
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
 import org.junit.jupiter.api.Test
@@ -66,5 +68,31 @@ abstract class ExtensibleEnvironmentBaseTest(
         )
         val env = provider(ctx)
         assertEquals(expectedIdentifiers, env.getAllIdentifiers().toSet())
+    }
+
+    @Test
+    fun `(Extension) Environment injects itself within meta environment`() {
+        val env = provider(ExtensibleEnvironmentContext(mapOf(), EnvironmentContext(mapOf())))
+        assertSame(env, env.metaEnvironment.get<ExtensibleInjectionEnvironment>())
+    }
+
+    @Test
+    fun `(Extension) Environment calls declaration processors`() {
+        val processed = mutableListOf<Declaration<*>>()
+        val processor = object : DeclarationsProcessor {
+            override fun processDeclarations(sequence: Sequence<Declaration<*>>) {
+                processed.addAll(sequence)
+            }
+        }
+        val env = provider(
+            ExtensibleEnvironmentContext(
+                mapOf(entryOf { "Hello" }),
+                EnvironmentContext(
+                    mapOf(entryOf { processor })
+                )
+            )
+        )
+        assertEquals(1, processed.size)
+        assertEquals(Identifier(String::class), processed[0].identifier)
     }
 }
