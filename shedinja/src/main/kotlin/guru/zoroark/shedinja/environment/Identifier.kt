@@ -1,6 +1,5 @@
 package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import kotlin.reflect.KClass
 
 /**
