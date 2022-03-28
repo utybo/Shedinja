@@ -1,6 +1,5 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.named
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

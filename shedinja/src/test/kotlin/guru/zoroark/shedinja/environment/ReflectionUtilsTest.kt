@@ -1,6 +1,5 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.ensureInstance
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test

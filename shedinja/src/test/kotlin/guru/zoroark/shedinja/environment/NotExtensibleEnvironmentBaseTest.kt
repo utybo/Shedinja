@@ -1,10 +1,6 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.EnvironmentContext
-import guru.zoroark.shedinja.environment.InjectionEnvironment
-import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.NotExtensibleException
-import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.entryOf
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 

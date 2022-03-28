@@ -1,7 +1,9 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.EnvironmentContext
-import guru.zoroark.shedinja.environment.Identifier
+import guru.zoroark.shedinja.ElementClass
+import guru.zoroark.shedinja.FakeComponent
+import guru.zoroark.shedinja.OtherElementClass
+import guru.zoroark.shedinja.entryOf
 import guru.zoroark.shedinja.extensions.EagerImmutableMetaEnvironment
 import kotlin.test.Test
 import kotlin.test.assertTrue

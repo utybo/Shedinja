@@ -1,7 +1,7 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.dsl
 
-import guru.zoroark.shedinja.dsl.put
-import guru.zoroark.shedinja.dsl.shedinjaModule
+import guru.zoroark.shedinja.ExampleClass
+import guru.zoroark.shedinja.ExampleClass2
 import guru.zoroark.shedinja.environment.Identifier
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

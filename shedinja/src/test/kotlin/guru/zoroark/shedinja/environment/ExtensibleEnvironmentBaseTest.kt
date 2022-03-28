@@ -1,11 +1,6 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.EnvironmentContext
-import guru.zoroark.shedinja.environment.Identifier
-import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.invoke
-import guru.zoroark.shedinja.environment.named
+import guru.zoroark.shedinja.entryOf
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
 import org.junit.jupiter.api.Test

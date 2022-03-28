@@ -1,13 +1,11 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.ComponentNotFoundException
-import guru.zoroark.shedinja.environment.EnvironmentContext
-import guru.zoroark.shedinja.environment.Identifier
-import guru.zoroark.shedinja.environment.InjectionEnvironment
-import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.invoke
-import guru.zoroark.shedinja.environment.named
+import guru.zoroark.shedinja.AnotherElementClass
+import guru.zoroark.shedinja.AtoB
+import guru.zoroark.shedinja.BtoA
+import guru.zoroark.shedinja.ElementClass
+import guru.zoroark.shedinja.OtherElementClass
+import guru.zoroark.shedinja.entryOf
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -1,7 +1,5 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.EmptyQualifier
-import guru.zoroark.shedinja.environment.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -14,7 +12,7 @@ class IdentifierTest {
     @Test
     fun `toString, non-anonymous object`() {
         val identifier = Identifier(IdentifierTest::class)
-        assertEquals("guru.zoroark.shedinja.IdentifierTest (<no qualifier>)", identifier.toString())
+        assertEquals("guru.zoroark.shedinja.environment.IdentifierTest (<no qualifier>)", identifier.toString())
     }
 
     @Test
