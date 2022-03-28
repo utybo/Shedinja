@@ -42,7 +42,7 @@ fun <E : InjectionEnvironment> shedinja(
     builder: ContextBuilderDsl.() -> Unit
 ): E {
     val res = EnvironmentContextBuilderDsl().apply(builder).build()
-    return environmentKind.build(res.getOrThrow())
+    return environmentKind.build(res)
 }
 
 /**
@@ -64,7 +64,7 @@ fun <E : ExtensibleInjectionEnvironment> shedinja(
     builder: ExtensibleContextBuilderDsl.() -> Unit
 ): E {
     val res = ExtensibleEnvironmentContextBuilderDsl().apply(builder).build()
-    return environmentKind.build(res.getOrThrow())
+    return environmentKind.build(res)
 }
 
 /**
@@ -73,4 +73,4 @@ fun <E : ExtensibleInjectionEnvironment> shedinja(
  */
 @ShedinjaDsl
 fun shedinjaModule(name: String = "<unnamed module>", builder: ContextBuilderDsl.() -> Unit): InjectableModule =
-    ModuleBuilderDsl(name).apply(builder).build().getOrThrow()
+    ModuleBuilderDsl(name).apply(builder).build()

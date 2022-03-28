@@ -14,6 +14,6 @@ class ModuleBuilderDsl(private val name: String) : ContextBuilderDsl, Buildable<
         declarations += declaration
     }
 
-    override fun build(): BuildResult<InjectableModule> =
-        BuildResult.Success(InjectableModule(name, declarations))
+    override fun build(): InjectableModule =
+        InjectableModule(name, declarations)
 }

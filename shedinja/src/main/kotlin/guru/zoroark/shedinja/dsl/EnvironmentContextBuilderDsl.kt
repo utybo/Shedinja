@@ -22,8 +22,8 @@ class EnvironmentContextBuilderDsl : Buildable<EnvironmentContext>, ContextBuild
         declaredComponents.add(declaration)
     }
 
-    override fun build(): BuildResult<EnvironmentContext> {
+    override fun build(): EnvironmentContext {
         val results = declaredComponents.associateBy { it.identifier }
-        return BuildResult.Success(EnvironmentContext(results))
+        return EnvironmentContext(results)
     }
 }
