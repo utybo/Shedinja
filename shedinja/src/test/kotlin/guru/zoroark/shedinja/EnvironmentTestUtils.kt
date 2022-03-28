@@ -14,6 +14,7 @@ import guru.zoroark.shedinja.environment.invoke
 import guru.zoroark.shedinja.environment.named
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertSame
@@ -27,13 +28,19 @@ inline fun <reified T : Any> entryOf(qualifier: Qualifier = EmptyQualifier, noin
 @Suppress("UnnecessaryAbstractClass")
 abstract class EnvironmentBaseTest(private val provider: (EnvironmentContext) -> InjectionEnvironment) {
     @Test
-    fun `(Basic) Put and get a single element`() { EnvironmentTests.singleElement(provider) }
+    fun `(Basic) Put and get a single element`() {
+        EnvironmentTests.singleElement(provider)
+    }
 
     @Test
-    fun `(Basic) Put and get multiple elements`() { EnvironmentTests.multiElements(provider) }
+    fun `(Basic) Put and get multiple elements`() {
+        EnvironmentTests.multiElements(provider)
+    }
 
     @Test
-    fun `(Basic) Put, get and inject multiple elements`() { EnvironmentTests.multiElementsWithInjections(provider) }
+    fun `(Basic) Put, get and inject multiple elements`() {
+        EnvironmentTests.multiElementsWithInjections(provider)
+    }
 
     @Test
     fun `(Basic) Put, get and inject multiple elements with qualifiers`() {
@@ -41,7 +48,9 @@ abstract class EnvironmentBaseTest(private val provider: (EnvironmentContext) ->
     }
 
     @Test
-    fun `(Basic) Objects are created eagerly`() { EnvironmentTests.eagerCreation(provider) }
+    fun `(Basic) Objects are created eagerly`() {
+        EnvironmentTests.eagerCreation(provider)
+    }
 
     @Test
     fun `(Basic) Getting unknown component should fail`() {
@@ -51,9 +60,25 @@ abstract class EnvironmentBaseTest(private val provider: (EnvironmentContext) ->
             )
         )
         val env = provider(context)
-        assertThrows<ComponentNotFoundException> {
+        val ex = assertThrows<ComponentNotFoundException> {
             env.get<OtherElementClass>()
         }
+        assertEquals(Identifier(OtherElementClass::class), ex.notFound)
+    }
+
+    @Test
+    fun `(Basic) Injecting unknown component should fail`() {
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { AtoB(scope) }
+            )
+        )
+        val ex = assertThrows<ComponentNotFoundException> {
+            val env = provider(context) // Eager envs will fail here
+            val aToB = env.get<AtoB>()
+            aToB.useB() // Lazy envs will fail here
+        }
+        assertEquals(Identifier(BtoA::class), ex.notFound)
     }
 }
 

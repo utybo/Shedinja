@@ -63,7 +63,7 @@ interface InjectionEnvironment {
      * idempotent, depending on the actual implementation.
      */
     fun <T : Any> get(identifier: Identifier<T>): T =
-        getOrNull(identifier) ?: throw ComponentNotFoundException("No component found for $identifier")
+        getOrNull(identifier) ?: throw ComponentNotFoundException(identifier)
 
     /**
      * Gets the component identified by the given identifier, or null if no such component exists. No guarantees are
