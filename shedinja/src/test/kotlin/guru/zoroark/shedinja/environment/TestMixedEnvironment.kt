@@ -1,37 +1,18 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.environment.EnvironmentContext
-import guru.zoroark.shedinja.environment.Identifier
-import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.MixedImmutableEnvironment
-import guru.zoroark.shedinja.environment.get
-import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.ElementClass
+import guru.zoroark.shedinja.FakeComponent
+import guru.zoroark.shedinja.OtherElementClass
+import guru.zoroark.shedinja.entryOf
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TestMixedEnvironment {
-    private fun createMIE(context: EnvironmentContext): MixedImmutableEnvironment =
-        MixedImmutableEnvironment.build(ExtensibleEnvironmentContext(context.declarations, EnvironmentContext(mapOf())))
-
-    @Test
-    fun `Test with single element`() {
-        EnvironmentTests.singleElement(::createMIE)
-    }
-
-    @Test
-    fun `Test with many elements`() {
-        EnvironmentTests.multiElements(::createMIE)
-        EnvironmentTests.multiElementsWithInjections(::createMIE)
-    }
-
-    @Test
-    fun `Test object creation is eager`() {
-        EnvironmentTests.eagerCreation(::createMIE)
-    }
-
+class TestMixedEnvironment : ExtensibleEnvironmentBaseTest({
+    MixedImmutableEnvironment.build(it)
+}) {
     @Test
     fun `Test object injection is lazy`() {
         val context = ExtensibleEnvironmentContext(

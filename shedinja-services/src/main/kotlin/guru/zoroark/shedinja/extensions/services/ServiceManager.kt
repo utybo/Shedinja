@@ -1,5 +1,7 @@
 package guru.zoroark.shedinja.extensions.services
 
+import guru.zoroark.shedinja.ExtensionNotInstalledException
+import guru.zoroark.shedinja.ShedinjaException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.environment.Declaration
@@ -36,7 +38,7 @@ private fun OperationType.isBlockedByPolicy(policy: IgnorePolicy?): Boolean {
 /**
  * Exceptions that occur within the starting or stopping process are wrapped with this type.
  */
-class ShedinjaServiceException(message: String, cause: Throwable) : Exception(message, cause)
+class ShedinjaServiceException(message: String, cause: Throwable) : ShedinjaException(message, cause)
 
 /**
  * Class for the [services extension][useServices] logic.
@@ -199,7 +201,7 @@ fun ExtensibleContextBuilderDsl.useServices() {
  */
 val ExtensibleInjectionEnvironment.services: ServiceManager
     get() = metaEnvironment.getOrNull()
-        ?: error(
+        ?: throw ExtensionNotInstalledException(
             "Services extension is not installed. Install the service manager by adding 'useServices()' in your " +
                 "'shedinja' block."
         )

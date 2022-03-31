@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.NotExtensibleException
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
 
 /**
@@ -14,7 +15,7 @@ class SimpleEnvironmentBasedScope(private val env: InjectionEnvironment) : Injec
     }
 
     override val meta
-        get() = error("This environment does not have a meta-environment")
+        get() = throw NotExtensibleException("This environment does not have a meta-environment")
 }
 
 /**

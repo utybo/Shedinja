@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.extensions.DeclarationTag
 
 /**
@@ -33,7 +34,8 @@ typealias Declarations = Map<Identifier<*>, Declaration<*>>
  * validity or coherence of the returned declaration.
  */
 inline fun <reified T : Any> Declarations.get(): Declaration<T> {
-    val found = this[Identifier(T::class)] ?: error("Type not found: ${T::class.qualifiedName ?: "(anonymous)"}")
+    val identifier = Identifier(T::class)
+    val found = this[identifier] ?: throw ComponentNotFoundException(identifier)
     @Suppress("UNCHECKED_CAST")
     return found as Declaration<T>
 }

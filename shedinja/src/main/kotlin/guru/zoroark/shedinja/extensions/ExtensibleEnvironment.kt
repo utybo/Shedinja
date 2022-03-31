@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.extensions
 
+import guru.zoroark.shedinja.InternalErrorException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
@@ -80,7 +81,7 @@ abstract class DefaultExtensibleInjectionEnvironment(
             it.kclass.isSubclassOf(DeclarationsProcessor::class)
         }.forEach { processorIdentifier ->
             val processor = metaEnvironment.get(processorIdentifier) as? DeclarationsProcessor
-                ?: error(
+                ?: throw InternalErrorException(
                     "Internal error: processor has an identifier declaring it is a subclass of " +
                         "DeclarationsProcessor, but the actual object is not."
                 )

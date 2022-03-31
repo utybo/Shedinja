@@ -6,10 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (0.0.4)
 
+**Note:** This release is not ABI-compatible with the previous release.
+
 ### Added
 
 - `shedinja` (core)
     - Added the ability to inject meta-environment components into regular components via the `scope.meta` property.
+- All
+    - (Internal) Added `jacoco` plugin for code coverage. This does not impact builds depending on Shedinja.
+    - (Internal) Drastically improved code coverage across the entire code base.
+
+### Changed
+
+- All
+    - All modules now use `ShedinjaException` subclasses for reporting exceptions.
+- `shedinja`
+    - Split `Qualifier` classes and functions into multiple files (ABI-breaking change!).
+
+### Removed
+
+- `shedinja` (core)
+    - Removed `BuildResult<T>` and related symbols. They were never used anywhere other than to signal a successful build, making them useless.
 
 ## [0.0.3] - 2022-03-12
 

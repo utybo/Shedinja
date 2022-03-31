@@ -1,10 +1,10 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.extensions.DefaultExtensibleInjectionEnvironment
 import guru.zoroark.shedinja.extensions.EagerImmutableMetaEnvironment
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironmentKind
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 /**
@@ -44,7 +44,7 @@ class MixedImmutableEnvironment(
         private val onInjection: (T) -> Unit
     ) : Injector<T> {
         private val value by lazy {
-            val result = components[identifier] ?: error("Component not found: ${identifier.kclass.qualifiedName}.")
+            val result = components[identifier] ?: throw ComponentNotFoundException(identifier)
             ensureInstance(identifier.kclass, result).also(onInjection)
         }
 
@@ -65,21 +65,4 @@ class MixedImmutableEnvironment(
         onInjection: (T) -> Unit
     ): Injector<T> =
         MIEInjector(identifier, onInjection)
-}
-
-/**
- * Utility function - asserts that [obj] is an instance of [kclass]. Throws an exception if it is not or returns
- * [obj] cast to [T] on success.
- *
- * @param kclass The KClass of the expected type of [obj].
- * @param obj The object that should be tested.
- * @param T The expected type of [obj].
- */
-fun <T : Any> ensureInstance(kclass: KClass<T>, obj: Any): T {
-    require(kclass.isInstance(obj)) {
-        "Object does not correspond to expected type. Expected type ${kclass.qualifiedName} " +
-            "but got ${obj.javaClass.name}."
-    }
-    @Suppress("UNCHECKED_CAST") // The isInstance check is effectively the cast check
-    return obj as T
 }

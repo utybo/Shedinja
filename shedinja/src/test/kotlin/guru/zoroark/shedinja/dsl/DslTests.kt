@@ -1,17 +1,19 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.dsl
 
-import guru.zoroark.shedinja.dsl.BuildResult
-import guru.zoroark.shedinja.dsl.EnvironmentContextBuilderDsl
-import guru.zoroark.shedinja.dsl.put
+import guru.zoroark.shedinja.ExampleClass
+import guru.zoroark.shedinja.ExampleClass2
+import guru.zoroark.shedinja.InvalidDeclarationException
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.ScopedContext
 import guru.zoroark.shedinja.environment.get
 import guru.zoroark.shedinja.environment.named
 import org.junit.jupiter.api.assertThrows
+import kotlin.reflect.KFunction
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
-import kotlin.test.fail
+import kotlin.test.assertNotNull
 
 class DslTests {
     @Test
@@ -20,7 +22,7 @@ class DslTests {
         val env = EnvironmentContextBuilderDsl().apply {
             put(supplier)
         }
-        val built = env.build().assertSuccess()
+        val built = env.build()
         assertEquals(1, built.declarations.size)
         assertEquals(Identifier(ExampleClass::class), built.declarations.get<ExampleClass>().identifier)
     }
@@ -33,7 +35,7 @@ class DslTests {
             put(supplier)
             put(supplier2)
         }
-        val built = env.build().assertSuccess()
+        val built = env.build()
         assertEquals(2, built.declarations.size)
         assertEquals(Identifier(ExampleClass::class), built.declarations.get<ExampleClass>().identifier)
         assertEquals(Identifier(ExampleClass2::class), built.declarations.get<ExampleClass2>().identifier)
@@ -47,12 +49,12 @@ class DslTests {
         EnvironmentContextBuilderDsl().apply {
             put(::NoConstructor)
             put(::GoodConstructor)
-        }.build().assertSuccess()
+        }.build()
     }
 
     @Test
     fun `Duplicate via inferred type put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put { ExampleClass() }
                 put { ExampleClass() }
@@ -67,7 +69,7 @@ class DslTests {
 
     @Test
     fun `Duplicate via class put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass() }
                 put(ExampleClass::class) { ExampleClass() }
@@ -82,7 +84,7 @@ class DslTests {
 
     @Test
     fun `Duplicate via class and inferred type put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass() }
                 put { ExampleClass() }
@@ -106,7 +108,7 @@ class DslTests {
             put(named("using-lambda")) { TheClass() }
             put(TheSuperclass::class, named("using-ctor-and-kclass"), ::TheClass)
             put(TheSuperclass::class, named("using-lambda-and-kclass")) { TheClass() }
-        }.build().assertSuccess()
+        }.build()
         assertEquals(context.declarations.size, 5)
         assertEquals(
             context.declarations.keys,
@@ -119,10 +121,49 @@ class DslTests {
             )
         )
     }
-}
 
-private fun <T> BuildResult<T>.assertSuccess(): T = when (this) {
-    is BuildResult.Success -> this.result
-    is BuildResult.SuccessWithWarnings -> fail("Expected a success, but got warnings:\n${warnings.joinToString("\n")}")
-    is BuildResult.Failure -> fail("Expected a success, but failed with errors:\n${errors.joinToString("\n")}")
+    @Suppress("RedundantNullableReturnType")
+    fun noArgButReturnsNullable(): String? = error("hello")
+
+    @Test
+    fun `Invalid put function reference (nullable return type)`() {
+        val ex = assertThrows<InvalidDeclarationException> {
+            @Suppress("UNCHECKED_CAST")
+            val function: KFunction<String> = ::noArgButReturnsNullable as KFunction<String>
+            shedinja {
+                put(String::class, function)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "nullable return type")
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun oneArgNotScope(str: String): String = error("That shouldn't happen")
+
+    @Test
+    fun `Invalid put function reference (invalid single argument)`() {
+
+        val ex = assertThrows<InvalidDeclarationException> {
+            shedinja {
+                put(String::class, ::oneArgNotScope)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "must take either no arguments")
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun twoArgs(scope: InjectionScope, str: String): String = error("That shouldn't happen")
+
+    @Test
+    fun `Invalid put function reference (too many arguments)`() {
+        val ex = assertThrows<InvalidDeclarationException> {
+            shedinja {
+                put(String::class, ::twoArgs)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "must take either no arguments")
+    }
 }

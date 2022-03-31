@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.extensions
 
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.Declarations
 import guru.zoroark.shedinja.environment.EnvironmentBasedScope
@@ -69,11 +70,11 @@ class EagerImmutableMetaEnvironment(context: EnvironmentContext) : InjectionEnvi
             return StaticInjector(
                 initializeComponent(
                     info.componentsBeingBuilt,
-                    (info.declarations[identifier] ?: error("Component not found: $identifier")) as Declaration<T>
+                    (info.declarations[identifier] ?: throw ComponentNotFoundException(identifier)) as Declaration<T>
                 ).also(onInjection)
             )
         } else {
-            val value = getOrNull(identifier) ?: error("Component not found: $identifier")
+            val value = getOrNull(identifier) ?: throw ComponentNotFoundException(identifier)
             onInjection(value)
             return StaticInjector(value)
         }

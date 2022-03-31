@@ -1,6 +1,6 @@
 package guru.zoroark.shedinja.dsl
 
-import guru.zoroark.shedinja.ShedinjaException
+import guru.zoroark.shedinja.InvalidDeclarationException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EnvironmentContext
 
@@ -15,15 +15,15 @@ class EnvironmentContextBuilderDsl : Buildable<EnvironmentContext>, ContextBuild
     @ShedinjaDsl
     override fun <T : Any> put(declaration: Declaration<T>) {
         if (declaredComponents.any { it.identifier == declaration.identifier }) {
-            throw ShedinjaException(
+            throw InvalidDeclarationException(
                 "Duplicate identifier: Tried to put '${declaration.identifier}', but one was already present"
             )
         }
         declaredComponents.add(declaration)
     }
 
-    override fun build(): BuildResult<EnvironmentContext> {
+    override fun build(): EnvironmentContext {
         val results = declaredComponents.associateBy { it.identifier }
-        return BuildResult.Success(EnvironmentContext(results))
+        return EnvironmentContext(results)
     }
 }

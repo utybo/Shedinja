@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.test.check
 
+import guru.zoroark.shedinja.InternalErrorException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
@@ -66,7 +67,7 @@ val safeInjection = IndividualCheck { modules ->
         }
     } catch (ex: InvocationTargetException) {
         val original = ex.getUpperCause<ShedinjaCheckException>()
-        throw original ?: throw IllegalStateException("Unexpected error in 'safeInjection' check", ex)
+        throw original ?: throw InternalErrorException("Unexpected error in 'safeInjection' check", ex)
     }
 }
 
