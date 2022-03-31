@@ -37,3 +37,8 @@ class InvalidDeclarationException(message: String) : ShedinjaException(message)
  * thanks!
  */
 class InternalErrorException(message: String, throwable: Throwable? = null) : ShedinjaException(message, throwable)
+
+/**
+ * Thrown when an extension that needs to be installed was attempted to be used without being installed first.
+ */
+class ExtensionNotInstalledException(message: String) : ShedinjaException(message)

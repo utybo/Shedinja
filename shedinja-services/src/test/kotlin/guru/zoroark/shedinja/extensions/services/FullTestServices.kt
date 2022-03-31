@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.extensions.services
 
+import guru.zoroark.shedinja.ExtensionNotInstalledException
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.environment.Identifier
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.system.measureTimeMillis
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class FullTestServices {
 
@@ -345,5 +347,17 @@ class FullTestServices {
             runBlocking { env.get<StopperService>().doStop() }
             assertEquals(Status.Stopped, service.status)
         }
+    }
+
+    @Test
+    fun `Fail cleanly when attempting to get services when not installed`() {
+        val env = shedinja {
+            put { "Enorme ratio" }
+        }
+        val ex = assertThrows<ExtensionNotInstalledException> {
+            env.services
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "Services extension is not installed")
     }
 }

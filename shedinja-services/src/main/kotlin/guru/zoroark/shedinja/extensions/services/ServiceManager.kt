@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.extensions.services
 
+import guru.zoroark.shedinja.ExtensionNotInstalledException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.environment.Declaration
@@ -199,7 +200,7 @@ fun ExtensibleContextBuilderDsl.useServices() {
  */
 val ExtensibleInjectionEnvironment.services: ServiceManager
     get() = metaEnvironment.getOrNull()
-        ?: error(
+        ?: throw ExtensionNotInstalledException(
             "Services extension is not installed. Install the service manager by adding 'useServices()' in your " +
                 "'shedinja' block."
         )
