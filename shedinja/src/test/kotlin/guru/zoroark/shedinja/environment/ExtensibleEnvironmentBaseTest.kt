@@ -84,7 +84,7 @@ abstract class ExtensibleEnvironmentBaseTest(
                 processed.addAll(sequence)
             }
         }
-        val env = provider(
+        provider(
             ExtensibleEnvironmentContext(
                 mapOf(entryOf { "Hello" }),
                 EnvironmentContext(

@@ -47,6 +47,10 @@ class ShedinjaCheckComplete {
     class Y
     class Z
 
+    class MetaUserA(scope: InjectionScope) {
+        private val y: Y by scope.meta()
+    }
+
     @Test
     fun `Test OK case`() {
         val module = shedinjaModule {
@@ -118,5 +122,20 @@ class ShedinjaCheckComplete {
                 --> guru.zoroark.shedinja.test.ShedinjaCheckComplete.G (<no qualifier>)
             """.trimIndent()
         )
+    }
+
+    @Test
+    fun `Test meta-environment dependencies are ignored`() {
+        val module = shedinjaModule {
+            put(::A)
+            put(::B)
+            put(::MetaUserA)
+        }
+        assertDoesNotThrow {
+            shedinjaCheck {
+                modules(module)
+                +complete
+            }
+        }
     }
 }

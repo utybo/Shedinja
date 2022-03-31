@@ -4,6 +4,7 @@ import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
+import guru.zoroark.shedinja.environment.getOrNull
 import guru.zoroark.shedinja.environment.invoke
 import io.mockk.every
 import io.mockk.just
@@ -12,6 +13,7 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 interface ServiceContract {
@@ -38,6 +40,21 @@ class ShedinjaBaseTestTest {
                 put<ServiceContract>(::ServiceImpl)
 
                 assertEquals("<html>Hello there!</html>", subject.htmlThing())
+                wasHit = true
+            }
+        }
+
+        Test().myTest()
+        assertTrue(wasHit)
+    }
+
+    @Test
+    fun `Test getting unknown component`() {
+        var wasHit = false
+        class SubjectUnderTest
+        class Test : ShedinjaBaseTest<SubjectUnderTest>(SubjectUnderTest::class, { put(::SubjectUnderTest) }) {
+            fun myTest() = test {
+                assertNull(getOrNull<String>())
                 wasHit = true
             }
         }
