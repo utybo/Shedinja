@@ -1,6 +1,7 @@
 package guru.zoroark.shedinja.koin3
 
 import guru.zoroark.shedinja.InvalidDeclarationException
+import guru.zoroark.shedinja.NotExtensibleException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Identifier
@@ -118,7 +119,9 @@ private class KoinApplicationBackedScope(private val app: KoinApplication) :
         KoinApplicatedBackedInjector(what, app)
 
     override val meta: MetalessInjectionScope
-        get() = error("Injections from meta environments are not supported in Koin applications.")
+        get() = throw NotExtensibleException(
+            "Injections from meta environments are not supported in Koin applications."
+        )
 }
 
 private class KoinApplicatedBackedInjector<T : Any>(

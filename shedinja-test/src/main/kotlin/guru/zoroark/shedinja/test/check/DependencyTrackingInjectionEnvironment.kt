@@ -8,11 +8,12 @@ import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.Injector
 import guru.zoroark.shedinja.environment.MetalessInjectionScope
 import guru.zoroark.shedinja.environment.ScopedContext
+import guru.zoroark.shedinja.test.NotAvailableInTestEnvironmentException
 import kotlin.reflect.KProperty
 
 private class FakeInjector<T : Any> : Injector<T> {
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        error("Not available")
+        throw NotAvailableInTestEnvironmentException("Not available")
     }
 }
 
@@ -29,7 +30,7 @@ class DependencyTrackingInjectionEnvironment(context: EnvironmentContext) : Inje
     }
 
     override fun <T : Any> getOrNull(identifier: Identifier<T>): T? {
-        error("Not available on this kind of environment")
+        throw NotAvailableInTestEnvironmentException("Not available on this kind of environment")
     }
 
     private val currentInjections = mutableListOf<Identifier<*>>()
