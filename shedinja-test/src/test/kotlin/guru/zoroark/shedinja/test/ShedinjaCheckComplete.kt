@@ -47,6 +47,7 @@ class ShedinjaCheckComplete {
     class Y
     class Z
 
+    @Suppress("UnusedPrivateMember", "unused")
     class MetaUserA(scope: InjectionScope) {
         private val y: Y by scope.meta()
     }

@@ -40,11 +40,4 @@ val complete = IndividualCheck { modules ->
             }
         throw ShedinjaCheckException(message)
     }
-    val message = deps.mapValues { (_, v) -> v.filter { requirement -> !deps.containsKey(requirement) } }
-        .filterValues { it.isNotEmpty() }
-        .takeIf { it.isNotEmpty() }
-        ?.entries?.joinToString(prefix = "'complete' check failed.\nSome dependencies were not found.\n") { (k, v) ->
-            "${v.joinToString()} not found (required by $k)"
-        }
-    if (message != null) throw ShedinjaCheckException(message)
 }
