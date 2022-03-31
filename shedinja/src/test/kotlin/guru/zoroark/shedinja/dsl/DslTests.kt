@@ -9,8 +9,11 @@ import guru.zoroark.shedinja.environment.ScopedContext
 import guru.zoroark.shedinja.environment.get
 import guru.zoroark.shedinja.environment.named
 import org.junit.jupiter.api.assertThrows
+import kotlin.reflect.KFunction
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class DslTests {
     @Test
@@ -117,5 +120,50 @@ class DslTests {
                 Identifier(TheSuperclass::class, named("using-lambda-and-kclass"))
             )
         )
+    }
+
+    @Suppress("RedundantNullableReturnType")
+    fun noArgButReturnsNullable(): String? = error("hello")
+
+    @Test
+    fun `Invalid put function reference (nullable return type)`() {
+        val ex = assertThrows<InvalidDeclarationException> {
+            @Suppress("UNCHECKED_CAST")
+            val function: KFunction<String> = ::noArgButReturnsNullable as KFunction<String>
+            shedinja {
+                put(String::class, function)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "nullable return type")
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun oneArgNotScope(str: String): String = error("That shouldn't happen")
+
+    @Test
+    fun `Invalid put function reference (invalid single argument)`() {
+
+        val ex = assertThrows<InvalidDeclarationException> {
+            shedinja {
+                put(String::class, ::oneArgNotScope)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "must take either no arguments")
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun twoArgs(scope: InjectionScope, str: String): String = error("That shouldn't happen")
+
+    @Test
+    fun `Invalid put function reference (too many arguments)`() {
+        val ex = assertThrows<InvalidDeclarationException> {
+            shedinja {
+                put(String::class, ::twoArgs)
+            }
+        }
+        val message = assertNotNull(ex.message)
+        assertContains(message, "must take either no arguments")
     }
 }
