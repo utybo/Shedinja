@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.dsl
 
+import guru.zoroark.shedinja.InvalidDeclarationException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Identifier
@@ -132,13 +133,13 @@ fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, supplier: KFunction<T>) =
 fun <T : Any> ContextBuilderDsl.put(kclass: KClass<T>, qualifier: Qualifier, supplier: KFunction<T>) =
     when {
         supplier.returnType.isMarkedNullable ->
-            error("Cannot 'put' a function that has a nullable return type.")
+            throw InvalidDeclarationException("Cannot 'put' a function that has a nullable return type.")
         supplier.parameters.isEmpty() ->
             put(kclass, qualifier) { supplier.call() }
         // Requires a scope
         supplier.parameters.size == 1 && supplier.parameters.first().type == InjectionScope::class.createType() ->
             put(kclass, qualifier) { supplier.call(scope) }
-        else -> error(
+        else -> throw InvalidDeclarationException(
             "Cannot 'put' the given function ($supplier). It must take either no arguments or a single argument " +
                 "that is of type 'InjectionScope'. Consider manually instantiating this component instead."
         )

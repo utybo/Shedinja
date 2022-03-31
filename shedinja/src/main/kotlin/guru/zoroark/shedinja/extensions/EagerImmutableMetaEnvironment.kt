@@ -1,6 +1,6 @@
 package guru.zoroark.shedinja.extensions
 
-import guru.zoroark.shedinja.environment.ComponentNotFoundException
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.environment.Declaration
 import guru.zoroark.shedinja.environment.Declarations
 import guru.zoroark.shedinja.environment.EnvironmentBasedScope

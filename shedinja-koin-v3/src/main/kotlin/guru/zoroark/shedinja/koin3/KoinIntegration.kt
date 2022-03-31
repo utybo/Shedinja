@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.koin3
 
+import guru.zoroark.shedinja.InvalidDeclarationException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.environment.EmptyQualifier
 import guru.zoroark.shedinja.environment.Identifier
@@ -103,7 +104,7 @@ private fun guru.zoroark.shedinja.environment.Qualifier.toKoinQualifier(): Quali
         is KoinCompatibleQualifier -> toKoinQualifier()
         EmptyQualifier -> null
         is NameQualifier -> StringQualifier(name)
-        else -> error(
+        else -> throw InvalidDeclarationException(
             """
             The following Shedinja qualifier cannot be converted to Koin's qualifier type: ${this.javaClass.name}.
             You can resolve this by making ${this.javaClass.name} implement the 'KoinCompatibleQualifier` interface.

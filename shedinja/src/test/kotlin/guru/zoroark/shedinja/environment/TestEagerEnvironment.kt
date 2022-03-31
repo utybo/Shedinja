@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.ElementClass
 import guru.zoroark.shedinja.FakeComponent
 import guru.zoroark.shedinja.OtherElementClass

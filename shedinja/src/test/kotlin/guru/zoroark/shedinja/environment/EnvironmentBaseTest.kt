@@ -3,6 +3,7 @@ package guru.zoroark.shedinja.environment
 import guru.zoroark.shedinja.AnotherElementClass
 import guru.zoroark.shedinja.AtoB
 import guru.zoroark.shedinja.BtoA
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.ElementClass
 import guru.zoroark.shedinja.OtherElementClass
 import guru.zoroark.shedinja.entryOf

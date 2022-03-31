@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.NotExtensibleException
 import guru.zoroark.shedinja.entryOf
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test

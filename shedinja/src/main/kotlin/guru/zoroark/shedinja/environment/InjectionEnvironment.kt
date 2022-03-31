@@ -1,5 +1,7 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.ComponentNotFoundException
+
 /**
  * An injection environment is, in a nutshell, a container for injectable components. These injectable components can be
  * retrieved in two ways:

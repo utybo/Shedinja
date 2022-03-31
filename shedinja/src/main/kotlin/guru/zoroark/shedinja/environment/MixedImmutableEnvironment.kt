@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.ComponentNotFoundException
 import guru.zoroark.shedinja.extensions.DefaultExtensibleInjectionEnvironment
 import guru.zoroark.shedinja.extensions.EagerImmutableMetaEnvironment
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext

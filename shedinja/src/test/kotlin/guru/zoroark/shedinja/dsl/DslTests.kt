@@ -2,7 +2,7 @@ package guru.zoroark.shedinja.dsl
 
 import guru.zoroark.shedinja.ExampleClass
 import guru.zoroark.shedinja.ExampleClass2
-import guru.zoroark.shedinja.ShedinjaException
+import guru.zoroark.shedinja.InvalidDeclarationException
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.ScopedContext
@@ -51,7 +51,7 @@ class DslTests {
 
     @Test
     fun `Duplicate via inferred type put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put { ExampleClass() }
                 put { ExampleClass() }
@@ -66,7 +66,7 @@ class DslTests {
 
     @Test
     fun `Duplicate via class put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass() }
                 put(ExampleClass::class) { ExampleClass() }
@@ -81,7 +81,7 @@ class DslTests {
 
     @Test
     fun `Duplicate via class and inferred type put should throw error`() {
-        val ex = assertThrows<ShedinjaException> {
+        val ex = assertThrows<InvalidDeclarationException> {
             EnvironmentContextBuilderDsl().apply {
                 put(ExampleClass::class) { ExampleClass() }
                 put { ExampleClass() }

@@ -1,5 +1,6 @@
 package guru.zoroark.shedinja.environment
 
+import guru.zoroark.shedinja.NotExtensibleException
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
 
 /**
