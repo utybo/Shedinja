@@ -29,11 +29,11 @@ val myEnvironment = shedinja {
 }
 ```
 
-Factories are injected using the `factory from scope` syntax. For example, requesting the `Bar` factory will look like this:
+Factories are injected using the `scope.factory()` syntax. For example, requesting the `Bar` factory will look like this:
 
 ```kotlin
 class INeedBar(scope: InjectionScope) {
-    val bar by factory from scope
+    val bar: Bar by scope.factory()
 }
 ```
 
@@ -46,7 +46,7 @@ class Logger {
 }
 
 class ServiceA(scope: InjectionScope) {
-    private val logger by factory from scope
+    private val logger: Logger by scope.factory()
 
     fun doSomething() {
         logger.logInfo("Doing something in A...")
@@ -54,8 +54,8 @@ class ServiceA(scope: InjectionScope) {
 }
 
 class ServiceB(scope: InjectionScope) {
-    private val logger by factory from scope
-    private val a by scope()
+    private val logger: Logger by scope.factory()
+    private val a: ServiceA by scope()
 
     fun doSomething() {
         a.doSomething()
@@ -125,7 +125,7 @@ class Logger(private val name: String) {
 // Let's give ServiceA a custom name...
 @LoggerName("Custom logger name!")
 class ServiceA(scope: InjectionScope) {
-    private val logger by factory from scope
+    private val logger by scope.factory()
 
     fun doSomething() {
         logger.logInfo("Doing something in A...")
@@ -134,7 +134,7 @@ class ServiceA(scope: InjectionScope) {
 
 // ... but let's also leave ServiceB as is.
 class ServiceB(scope: InjectionScope) {
-    private val logger by factory from scope
+    private val logger by scope.factory()
     private val a by scope()
 
     fun doSomething() {
@@ -167,4 +167,4 @@ Factories are injected with an additional qualifier. Because of its generic typi
 
 The `putFactory` method is in charge of the entire injection process: creating the factory with the correct qualifier and injecting it within a simple `put` call.
 
-On the injection side, the only change is that a wrapper is put around the `scope()` call: instead of the actual type being requested, the corresponding factory is requested when using `factory from scope`. It is then wrapped using the `WrappedReadOnlyProperty` class which executes the factory's `make` method and wrapped *again* within a `SynchronizedLazyPropertyWrapper`. As such, the factory's method is only called once and only when necessary.
+On the injection side, the only change is that a wrapper is put around the `scope()` call: instead of the actual type being requested, the corresponding factory is requested when using `scope.factory()`. It is then wrapped using the `WrappedReadOnlyProperty` class which executes the factory's `make` method and wrapped *again* within a `SynchronizedLazyPropertyWrapper`. As such, the factory's method is only called once and only when necessary.
