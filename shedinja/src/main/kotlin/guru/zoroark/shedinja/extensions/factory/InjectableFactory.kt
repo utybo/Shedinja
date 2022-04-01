@@ -4,10 +4,9 @@ import guru.zoroark.shedinja.dsl.ContextBuilderDsl
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.environment.InjectionScope
-import guru.zoroark.shedinja.environment.Qualifier
 import guru.zoroark.shedinja.environment.invoke
+import guru.zoroark.shedinja.environment.typed
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 /**
@@ -20,26 +19,6 @@ fun interface InjectableFactory<T : Any> {
     fun make(requester: Any): T
 }
 
-// Environment management
-
-/**
- * Qualifier specifically designed for [InjectableFactory]. Due to type erasure, all injectable factories are identified
- * as `InjectableFactory` by default, without any type parameter, leading to duplication errors since their identifiers
- * would all be the same. This qualifier lifts this ambiguity by providing the actual type of the output for
- * identification purposes.
- *
- * @property outputs The output type of this factory, i.e. the generic type of [InjectableFactory].
- */
-data class InjectableFactoryOutputTypeQualifier(val outputs: KClass<*>) : Qualifier {
-    override fun toString(): String = "Factory with output $outputs"
-}
-
-/**
- * Creates an [InjectableFactoryOutputTypeQualifier] with the given output as a parameter.
- */
-@ShedinjaDsl
-fun outputs(output: KClass<*>) = InjectableFactoryOutputTypeQualifier(output)
-
 // Creation in module
 
 /**
@@ -50,7 +29,7 @@ fun outputs(output: KClass<*>) = InjectableFactoryOutputTypeQualifier(output)
  */
 @ShedinjaDsl
 inline fun <reified T : Any> ContextBuilderDsl.putFactory(crossinline block: (Any) -> T) {
-    put(outputs(T::class)) { InjectableFactory { block(it) } }
+    put(typed<T>()) { InjectableFactory { block(it) } }
 }
 
 /**
@@ -58,7 +37,7 @@ inline fun <reified T : Any> ContextBuilderDsl.putFactory(crossinline block: (An
  */
 @ShedinjaDsl
 inline fun <R : Any, reified T : Any> InjectionScope.factory(): ReadOnlyProperty<R, T> =
-    this<InjectableFactory<T>>(outputs(T::class)) wrapInWithThisRef { thisRef, value -> value.make(thisRef as Any) }
+    this<InjectableFactory<T>>(typed<T>()) wrapInWithThisRef { thisRef, value -> value.make(thisRef as Any) }
 
 // Utilities
 

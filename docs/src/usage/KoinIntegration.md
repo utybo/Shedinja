@@ -6,7 +6,7 @@ Shedinja allows you to embed Shedinja modules within [Koin v2](https://insert-ko
 
 ## Dependency
 
-You will first need to add a dependency on the `shedinja-koin-v2` or `shedinja-koin-v3` module depending of which versino of Koin you want to integrate with. Make sure you also [have the `shedinja` dependency](/GettingStarted.md#adding-shedinja) as well as [Koin's own dependencies](https://insert-koin.io/docs/setup/v2). Shedinja only requires the `koin-core` module for the integration to work.
+You will first need to add a dependency on the `shedinja-koin-v2` or `shedinja-koin-v3` module depending of which versino of Koin you want to integrate with. Make sure you also [have the `shedinja` dependency](/usage/GettingStarted.md#adding-shedinja) as well as [Koin's own dependencies](https://insert-koin.io/docs/setup/v2). Shedinja only requires the `koin-core` module for the integration to work.
 
 
 ### Koin 2
@@ -97,4 +97,4 @@ val koinApp = startKoin {
 }
 ```
 
-!> It is not currently possible to add Koin modules to Shedinja environments. If you wish to migrate from Koin to Shedinja, you should do it by progressively turning your Koin modules into Shedinja modules and, once all of your modules have become Shedinja modules, use Shedinja's [environment builders](UsingShedinja.md#environment) and [test facilities](Testing.md).
+!> It is not currently possible to add Koin modules to Shedinja environments. If you wish to migrate from Koin to Shedinja, you should do it by progressively turning your Koin modules into Shedinja modules and, once all of your modules have become Shedinja modules, use Shedinja's [environment builders](Environment.md) and [test facilities](Testing.md).

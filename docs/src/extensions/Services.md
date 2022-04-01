@@ -10,7 +10,7 @@ It is somewhat equivalent to [hosted services on ASP.NET Core](https://docs.micr
 
 ## Usage
 
-Note that this extension is not included in the base release of Shedinja due to its use of coroutines. You need to add `guru.zoroark.shedinja:shedinja-services` in your dependencies: see the [Getting Started](GettingStarted.md) page for more information.
+Note that this extension is not included in the base release of Shedinja due to its use of coroutines. You need to add `guru.zoroark.shedinja:shedinja-services` in your dependencies: see the [Getting Started](/usage/GettingStarted.md) page for more information.
 
 ### Installation
 

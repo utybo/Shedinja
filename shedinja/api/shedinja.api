@@ -96,6 +96,21 @@ public final class guru/zoroark/shedinja/environment/ExtensibleEnvironmentBasedS
 	public fun inject (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
 }
 
+public final class guru/zoroark/shedinja/environment/FullTypeQualifier : guru/zoroark/shedinja/environment/Qualifier {
+	public fun <init> (Lkotlin/reflect/KType;)V
+	public final fun component1 ()Lkotlin/reflect/KType;
+	public final fun copy (Lkotlin/reflect/KType;)Lguru/zoroark/shedinja/environment/FullTypeQualifier;
+	public static synthetic fun copy$default (Lguru/zoroark/shedinja/environment/FullTypeQualifier;Lkotlin/reflect/KType;ILjava/lang/Object;)Lguru/zoroark/shedinja/environment/FullTypeQualifier;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getType ()Lkotlin/reflect/KType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class guru/zoroark/shedinja/environment/FullTypeQualifierKt {
+	public static final fun typed (Lkotlin/reflect/KType;)Lguru/zoroark/shedinja/environment/FullTypeQualifier;
+}
+
 public final class guru/zoroark/shedinja/environment/Identifier {
 	public fun <init> (Lkotlin/reflect/KClass;Lguru/zoroark/shedinja/environment/Qualifier;)V
 	public synthetic fun <init> (Lkotlin/reflect/KClass;Lguru/zoroark/shedinja/environment/Qualifier;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -281,20 +296,8 @@ public abstract interface class guru/zoroark/shedinja/extensions/factory/Injecta
 
 public final class guru/zoroark/shedinja/extensions/factory/InjectableFactoryKt {
 	public static final fun WrappedReadOnlyProperty (Lkotlin/properties/ReadOnlyProperty;Lkotlin/jvm/functions/Function2;)Lkotlin/properties/ReadOnlyProperty;
-	public static final fun outputs (Lkotlin/reflect/KClass;)Lguru/zoroark/shedinja/extensions/factory/InjectableFactoryOutputTypeQualifier;
 	public static final fun wrapIn (Lkotlin/properties/ReadOnlyProperty;Lkotlin/jvm/functions/Function1;)Lguru/zoroark/shedinja/extensions/factory/SynchronizedLazyPropertyWrapper;
 	public static final fun wrapInWithThisRef (Lkotlin/properties/ReadOnlyProperty;Lkotlin/jvm/functions/Function2;)Lguru/zoroark/shedinja/extensions/factory/SynchronizedLazyPropertyWrapper;
-}
-
-public final class guru/zoroark/shedinja/extensions/factory/InjectableFactoryOutputTypeQualifier : guru/zoroark/shedinja/environment/Qualifier {
-	public fun <init> (Lkotlin/reflect/KClass;)V
-	public final fun component1 ()Lkotlin/reflect/KClass;
-	public final fun copy (Lkotlin/reflect/KClass;)Lguru/zoroark/shedinja/extensions/factory/InjectableFactoryOutputTypeQualifier;
-	public static synthetic fun copy$default (Lguru/zoroark/shedinja/extensions/factory/InjectableFactoryOutputTypeQualifier;Lkotlin/reflect/KClass;ILjava/lang/Object;)Lguru/zoroark/shedinja/extensions/factory/InjectableFactoryOutputTypeQualifier;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getOutputs ()Lkotlin/reflect/KClass;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class guru/zoroark/shedinja/extensions/factory/SynchronizedLazyPropertyWrapper : kotlin/properties/ReadOnlyProperty {
