@@ -1,4 +1,4 @@
-package guru.zoroark.shedinja
+package guru.zoroark.shedinja.extensions
 
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
@@ -6,7 +6,6 @@ import guru.zoroark.shedinja.dsl.shedinjaModule
 import guru.zoroark.shedinja.environment.InjectionScope
 import guru.zoroark.shedinja.environment.get
 import guru.zoroark.shedinja.extensions.factory.factory
-import guru.zoroark.shedinja.extensions.factory.from
 import guru.zoroark.shedinja.extensions.factory.putFactory
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
@@ -40,8 +39,8 @@ class FactoryExtensionTest {
     class B(scope: InjectionScope) : WhatIsYourA, WhatIsYourLogger {
         override val name = "B"
         override val loggerName = "log.B"
-        private val a: A by factory from scope
-        private val logger: Logger by factory from scope
+        private val a: A by scope.factory()
+        private val logger: Logger by scope.factory()
 
         override fun whatIsYourA(): String = "My A is ${a.identity}"
         override fun whatIsYourLogger(): String =
@@ -52,8 +51,8 @@ class FactoryExtensionTest {
     class C(scope: InjectionScope) : WhatIsYourA, WhatIsYourLogger {
         override val name = "C"
         override val loggerName = "log.C"
-        private val a: A by factory from scope
-        private val logger: Logger by factory from scope
+        private val a: A by scope.factory()
+        private val logger: Logger by scope.factory()
 
         override fun whatIsYourA(): String = "My A is ${a.identity}"
         override fun whatIsYourLogger(): String =
@@ -62,7 +61,7 @@ class FactoryExtensionTest {
 
     class D(scope: InjectionScope) : WhatIsYourA {
         override val name = "D"
-        private val a: A by factory from scope
+        private val a: A by scope.factory()
 
         override fun whatIsYourA(): String = "My A is ${a.identity}"
     }
@@ -70,7 +69,7 @@ class FactoryExtensionTest {
     @LoggerName("Markiplier") // Yeah, it's a dead meme, I know.
     class E(scope: InjectionScope) : WhatIsYourLogger {
         override val loggerName = "log.E"
-        private val logger: Logger by factory from scope
+        private val logger: Logger by scope.factory()
 
         override fun whatIsYourLogger(): String =
             "My Logger is ${logger.identity}"

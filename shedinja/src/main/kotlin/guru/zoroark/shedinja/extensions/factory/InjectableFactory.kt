@@ -53,29 +53,12 @@ inline fun <reified T : Any> ContextBuilderDsl.putFactory(crossinline block: (An
     put(outputs(T::class)) { InjectableFactory { block(it) } }
 }
 
-// Injection DSL
-
-/**
- * Initial DSL marker object for creating factory injection sites.
- *
- * @property ofObject The original caller for the factory creation. This is then passed in [InjectableFactory.make]'s
- * argument.
- */
-class FactoryDsl(val ofObject: Any)
-
-/**
- * Initiates the DSL for injecting factory-made objects. Usage is `factory from scope`.
- */
-@ShedinjaDsl
-val Any.factory
-    get() = FactoryDsl(this)
-
 /**
  * DSL for injecting factory-made objects. Usage is `factory from scope`.
  */
 @ShedinjaDsl
-inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): ReadOnlyProperty<R, T> =
-    scope<InjectableFactory<T>>(outputs(T::class)) wrapIn { it.make(ofObject) }
+inline fun <R : Any, reified T : Any> InjectionScope.factory(): ReadOnlyProperty<R, T> =
+    this<InjectableFactory<T>>(outputs(T::class)) wrapInWithThisRef { thisRef, value -> value.make(thisRef as Any) }
 
 // Utilities
 
@@ -88,6 +71,14 @@ inline infix fun <R, reified T : Any> FactoryDsl.from(scope: InjectionScope): Re
 inline infix fun <T, V, R : Any> ReadOnlyProperty<T, V>.wrapIn(
     crossinline mapper: (V) -> R
 ): SynchronizedLazyPropertyWrapper<T, R> =
+    SynchronizedLazyPropertyWrapper(WrappedReadOnlyProperty(this) { _, value -> mapper(value) })
+
+/**
+ * Identical to [wrapIn], but also gives you access to the object the property is owned by in the [mapper] lambda.
+ */
+inline infix fun <T, V, R : Any> ReadOnlyProperty<T, V>.wrapInWithThisRef(
+    crossinline mapper: (T, V) -> R
+): SynchronizedLazyPropertyWrapper<T, R> =
     SynchronizedLazyPropertyWrapper(WrappedReadOnlyProperty(this, mapper))
 
 /**
@@ -96,10 +87,10 @@ inline infix fun <T, V, R : Any> ReadOnlyProperty<T, V>.wrapIn(
 @Suppress("FunctionName")
 inline fun <T, V, R> WrappedReadOnlyProperty(
     original: ReadOnlyProperty<T, V>,
-    crossinline mapper: (V) -> R
+    crossinline mapper: (T, V) -> R
 ): ReadOnlyProperty<T, R> =
     ReadOnlyProperty { thisRef, property ->
-        mapper(original.getValue(thisRef, property))
+        mapper(thisRef, original.getValue(thisRef, property))
     }
 
 /**
