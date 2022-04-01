@@ -315,7 +315,7 @@ class ServiceB(scope: InjectionScope) {
 }
 ```
 
-Note that while the injection may be done eagerly, lazily or actively, **the wrapping step is always done lazily**. The lambda is only executed once, and the value can no longer be changed, similar to how `lazy` from the standard library works. If you need more fine-grained control over the injection method (especially if you need the entire injection + transformation pipeline to be active), you should directly inject the object you are interested in within the environment. You can use [name qualifiers](/UsingShedinja.md#qualifiers) to differentiate between components of the same type.
+Note that while the injection may be done eagerly, lazily or actively, **the wrapping step is always done lazily**. The lambda is only executed once, and the value can no longer be changed, similar to how `lazy` from the standard library works. If you need more fine-grained control over the injection method (especially if you need the entire injection + transformation pipeline to be active), you should directly inject the object you are interested in within the environment. You can use [name qualifiers](/usage/Qualifiers.md) to differentiate between components of the same type.
 
 ### No unused component
 

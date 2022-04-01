@@ -1,8 +1,11 @@
 - [Home](/)
 - **Usage**
-- [Getting Started](/GettingStarted.md)
-- [Using Shedinja](/UsingShedinja.md)
-- [Koin Integration](/KoinIntegration.md)
+- [Getting Started](usage/GettingStarted.md)
+- [Environment](usage/Environment.md)
+- [Injection](usage/Injection.md)
+- [Qualifiers](usage/Qualifiers.md)
+- [Modules](usage/Modules.md)
+- [Koin Integration](usage/KoinIntegration.md)
 - **Testing**
 - [Testing Shedinja Code](/Testing.md)
 - [Check System](/ShedinjaCheck.md)

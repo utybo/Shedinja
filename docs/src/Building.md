@@ -24,7 +24,7 @@ $ ./gradlew build
 
 This will run all the tests, code analysis tools and produce JAR files that you can then ingest. 
 
-?> We recommend using [our pre-built JAR files](GettingStarted.md#adding-shedinja) instead of compiling Shedinja yourself.
+?> We recommend using [our pre-built JAR files](/usage/GettingStarted.md#adding-shedinja) instead of compiling Shedinja yourself.
 
 Shedinja is organized in modules. Each module provides either specific functionality (like Koin integration) or can be 
 more complex (like the `shedinja` module, which provides most of the core classes).
