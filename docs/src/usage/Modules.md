@@ -36,3 +36,7 @@ val environment = shedinja {
     put(messageModule)
 }
 ```
+
+Modules are created using `shedinjaModule` followed by a module builder block, in which you can `put` components like you would in a regular component. However, you cannot affect the meta-environment from within a module, meaning that you cannot use a `meta` block, nor can you install extensions (e.g. `useServices` from the [services extension](/extensions/Services.md)).
+
+?> The reason for this limitation is that modules are not necessarily always injected into extensible environments (i.e. modules may be injected in environments that do not have a meta-environment).
