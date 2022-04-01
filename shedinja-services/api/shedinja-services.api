@@ -1,0 +1,42 @@
+public final class guru/zoroark/shedinja/extensions/services/IgnorePolicy : java/lang/Enum, guru/zoroark/shedinja/extensions/DeclarationTag {
+	public static final field IgnoreAll Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static final field IgnoreStart Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static final field IgnoreStop Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static fun valueOf (Ljava/lang/String;)Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static fun values ()[Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+}
+
+public final class guru/zoroark/shedinja/extensions/services/IgnorePolicyKt {
+	public static final fun getNoService ()Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static final fun getNoServiceStart ()Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+	public static final fun getNoServiceStop ()Lguru/zoroark/shedinja/extensions/services/IgnorePolicy;
+}
+
+public final class guru/zoroark/shedinja/extensions/services/ServiceManager : guru/zoroark/shedinja/extensions/DeclarationsProcessor {
+	public fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;)V
+	public fun processDeclarations (Lkotlin/sequences/Sequence;)V
+	public final fun startAll (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun startAll$default (Lguru/zoroark/shedinja/extensions/services/ServiceManager;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun stopAll (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun stopAll$default (Lguru/zoroark/shedinja/extensions/services/ServiceManager;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class guru/zoroark/shedinja/extensions/services/ServiceManagerKt {
+	public static final fun getServices (Lguru/zoroark/shedinja/extensions/ExtensibleInjectionEnvironment;)Lguru/zoroark/shedinja/extensions/services/ServiceManager;
+	public static final fun useServices (Lguru/zoroark/shedinja/extensions/ExtensibleContextBuilderDsl;)V
+}
+
+public abstract interface class guru/zoroark/shedinja/extensions/services/ShedinjaService {
+	public abstract fun start ()V
+	public abstract fun stop ()V
+}
+
+public final class guru/zoroark/shedinja/extensions/services/ShedinjaServiceException : guru/zoroark/shedinja/ShedinjaException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public abstract interface class guru/zoroark/shedinja/extensions/services/SuspendShedinjaService {
+	public abstract fun start (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

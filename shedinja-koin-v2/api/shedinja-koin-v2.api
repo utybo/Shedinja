@@ -1,0 +1,9 @@
+public abstract interface class guru/zoroark/shedinja/koin2/KoinCompatibleQualifier : guru/zoroark/shedinja/environment/Qualifier {
+	public abstract fun toKoinQualifier ()Lorg/koin/core/qualifier/Qualifier;
+}
+
+public final class guru/zoroark/shedinja/koin2/KoinIntegrationKt {
+	public static final fun shedinjaModules (Lorg/koin/core/KoinApplication;[Lguru/zoroark/shedinja/environment/InjectableModule;)V
+	public static final fun toKoinModule (Lguru/zoroark/shedinja/environment/InjectableModule;Lorg/koin/core/KoinApplication;)Lorg/koin/core/module/Module;
+}
+

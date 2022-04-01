@@ -1,0 +1,91 @@
+public final class guru/zoroark/shedinja/test/NotAvailableInTestEnvironmentException : guru/zoroark/shedinja/ShedinjaException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public class guru/zoroark/shedinja/test/ShedinjaBaseTest {
+	public fun <init> (Lkotlin/reflect/KClass;Lguru/zoroark/shedinja/environment/InjectableModule;)V
+	public fun <init> (Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
+	public fun <init> (Lkotlin/reflect/KFunction;)V
+	public final fun getSubject (Lguru/zoroark/shedinja/test/UnsafeMutableEnvironment;)Ljava/lang/Object;
+	public final fun test (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun test$default (Lguru/zoroark/shedinja/test/ShedinjaBaseTest;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class guru/zoroark/shedinja/test/UnsafeMutableEnvironment : guru/zoroark/shedinja/dsl/ContextBuilderDsl, guru/zoroark/shedinja/environment/InjectionEnvironment {
+	public static final field Companion Lguru/zoroark/shedinja/test/UnsafeMutableEnvironment$Companion;
+	public fun <init> (Lguru/zoroark/shedinja/environment/EnvironmentContext;)V
+	public fun createInjector (Lguru/zoroark/shedinja/environment/Identifier;Lkotlin/jvm/functions/Function1;)Lguru/zoroark/shedinja/environment/Injector;
+	public fun get (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
+	public fun getOrNull (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
+	public fun put (Lguru/zoroark/shedinja/environment/Declaration;)V
+}
+
+public final class guru/zoroark/shedinja/test/UnsafeMutableEnvironment$Companion : guru/zoroark/shedinja/environment/InjectionEnvironmentKind {
+	public synthetic fun build (Lguru/zoroark/shedinja/environment/EnvironmentContext;)Lguru/zoroark/shedinja/environment/InjectionEnvironment;
+	public fun build (Lguru/zoroark/shedinja/environment/EnvironmentContext;)Lguru/zoroark/shedinja/test/UnsafeMutableEnvironment;
+}
+
+public final class guru/zoroark/shedinja/test/check/CompleteCheckKt {
+	public static final fun getComplete ()Lguru/zoroark/shedinja/test/check/IndividualCheck;
+}
+
+public final class guru/zoroark/shedinja/test/check/DependencyTrackingInjectionEnvironment : guru/zoroark/shedinja/environment/InjectionEnvironment {
+	public static final field Companion Lguru/zoroark/shedinja/test/check/DependencyTrackingInjectionEnvironment$Companion;
+	public fun <init> (Lguru/zoroark/shedinja/environment/EnvironmentContext;)V
+	public fun createInjector (Lguru/zoroark/shedinja/environment/Identifier;Lkotlin/jvm/functions/Function1;)Lguru/zoroark/shedinja/environment/Injector;
+	public fun get (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
+	public final fun getDependencies ()Ljava/util/Map;
+	public fun getOrNull (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
+}
+
+public final class guru/zoroark/shedinja/test/check/DependencyTrackingInjectionEnvironment$Companion : guru/zoroark/shedinja/environment/InjectionEnvironmentKind {
+	public synthetic fun build (Lguru/zoroark/shedinja/environment/EnvironmentContext;)Lguru/zoroark/shedinja/environment/InjectionEnvironment;
+	public fun build (Lguru/zoroark/shedinja/environment/EnvironmentContext;)Lguru/zoroark/shedinja/test/check/DependencyTrackingInjectionEnvironment;
+}
+
+public abstract interface class guru/zoroark/shedinja/test/check/IndividualCheck {
+	public abstract fun check (Ljava/util/List;)V
+}
+
+public final class guru/zoroark/shedinja/test/check/NoCycleCheckKt {
+	public static final fun getNoCycle ()Lguru/zoroark/shedinja/test/check/IndividualCheck;
+}
+
+public final class guru/zoroark/shedinja/test/check/NoUnusedCheck : guru/zoroark/shedinja/test/check/IndividualCheck {
+	public fun <init> (Ljava/util/Set;)V
+	public fun check (Ljava/util/List;)V
+}
+
+public final class guru/zoroark/shedinja/test/check/NoUnusedCheckDsl {
+	public fun <init> ()V
+	public final fun build ()Lguru/zoroark/shedinja/test/check/NoUnusedCheck;
+	public final fun exclude (Lguru/zoroark/shedinja/environment/Identifier;)V
+}
+
+public final class guru/zoroark/shedinja/test/check/NoUnusedCheckKt {
+	public static final fun exclude (Lguru/zoroark/shedinja/test/check/NoUnusedCheckDsl;Lkotlin/reflect/KClass;Lguru/zoroark/shedinja/environment/Qualifier;)V
+	public static synthetic fun exclude$default (Lguru/zoroark/shedinja/test/check/NoUnusedCheckDsl;Lkotlin/reflect/KClass;Lguru/zoroark/shedinja/environment/Qualifier;ILjava/lang/Object;)V
+	public static final fun getNoUnused ()Lguru/zoroark/shedinja/test/check/NoUnusedCheck;
+	public static final fun noUnused (Lkotlin/jvm/functions/Function1;)Lguru/zoroark/shedinja/test/check/NoUnusedCheck;
+}
+
+public final class guru/zoroark/shedinja/test/check/SafeInjectionCheckKt {
+	public static final fun getSafeInjection ()Lguru/zoroark/shedinja/test/check/IndividualCheck;
+}
+
+public final class guru/zoroark/shedinja/test/check/ShedinjaCheckDsl {
+	public fun <init> ()V
+	public final fun getChecks ()Ljava/util/List;
+	public final fun getModules ()Ljava/util/List;
+	public final fun unaryPlus (Lguru/zoroark/shedinja/test/check/IndividualCheck;)V
+}
+
+public final class guru/zoroark/shedinja/test/check/ShedinjaCheckException : guru/zoroark/shedinja/ShedinjaException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class guru/zoroark/shedinja/test/check/ShedinjaCheckKt {
+	public static final fun modules (Lguru/zoroark/shedinja/test/check/ShedinjaCheckDsl;[Lguru/zoroark/shedinja/environment/InjectableModule;)V
+	public static final fun shedinjaCheck (Lkotlin/jvm/functions/Function1;)V
+}
+
