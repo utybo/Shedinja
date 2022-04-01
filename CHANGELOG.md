@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (0.0.4)
 
-**Note:** This release is not ABI-compatible with the previous release.
+**Warning:** This release contains breaking changes with the previous release (noted as **BREAKS API** or **BREAKS ABI**).
 
 ### Added
 
@@ -21,7 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - All
     - All modules now use `ShedinjaException` subclasses for reporting exceptions.
 - `shedinja`
-    - Split `Qualifier` classes and functions into multiple files (ABI-breaking change!).
+    - Split `Qualifier` classes and functions into multiple files (**BREAKS ABI**).
+    - Removed the `factory from scope` syntax and use `scope.factory()` instead (**BREAKS API**).
 
 ### Removed
 

@@ -64,6 +64,8 @@ class SomeEndpoint(scope: InjectionScope) {
 
 Note that `meta` actually just returns an injection scope bound to the meta-environment: you can use any scope operation on `.meta` as you would on `scope` (except that you cannot call `.meta.meta` as meta-environments cannot have meta-environments of their own).
 
+!> Unless otherwise noted, meta-injections are ignored in [Shedinja checks](ShedinjaCheck.md) and will not raise errors.
+
 ## Environment
 
 An environment is a manager for multiple components that can inject one another. They are created using the `shedinja` DSL function, onto which you can call `put` functions to add components:

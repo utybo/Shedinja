@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
     id 'com.github.ben-manes.versions'
+    id 'com.adarshr.test-logger'
 
     id 'java-library'
     id 'maven-publish'
@@ -36,6 +37,10 @@ java {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+
+    testlogger {
+        theme 'standard-parallel' // task level
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {

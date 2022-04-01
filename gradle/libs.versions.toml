@@ -8,6 +8,7 @@ mockk = "1.12.3"
 koin2 = "2.2.3"
 koin3 = "3.1.5"
 versions = "0.42.0"
+gradleTestLogger = "3.2.0"
 
 [libraries]
 # Plugins
@@ -16,6 +17,7 @@ kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 kotlin-dokkaGradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 versionsPlugin-gradle = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versions" }
+gradleTestLogger = { module = "com.adarshr:gradle-test-logger-plugin", version.ref = "gradleTestLogger" }
 
 # Dependencies
 
