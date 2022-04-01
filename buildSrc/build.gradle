@@ -12,4 +12,5 @@ dependencies {
     implementation libs.detekt.gradle
     implementation libs.versionsPlugin.gradle
     implementation libs.gradleTestLogger
+    implementation libs.kotlin.bcv
 }

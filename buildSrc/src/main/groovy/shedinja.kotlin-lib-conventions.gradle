@@ -4,6 +4,7 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
     id 'com.github.ben-manes.versions'
     id 'com.adarshr.test-logger'
+    id 'org.jetbrains.kotlinx.binary-compatibility-validator'
 
     id 'java-library'
     id 'maven-publish'
