@@ -96,6 +96,21 @@ class A(scope: InjectionScope) {
 
 Note that the `typed` qualifier does not actually check whether the value is of the correct type. It is only useful for "tagging" the component and claim that it is of the specified type, which is used "as-is".
 
+## Combining qualifiers
+
+You can combine multiple qualifiers using the `+` operator.
+
+```kotlin
+put<List<Int>>(named("digits") + typed<List<Int>>()) { listOf(1, 2, 3) }
+put<List<Int>>(named("tens") + typed<List<Int>>()) { listOf(10, 20, 30) }
+put(::Example)
+
+class Example(scope: InjectionScope) {
+    private val digits: List<Int> by scope(named("digits") + typed<List<Int>>())
+    private val tens: List<Int> by scope(named("tens") + typed<List<Int>>())
+}
+```
+
 ## Custom qualifiers
 
 You can create your own qualifiers if you wish. Qualifiers are just objects that:
