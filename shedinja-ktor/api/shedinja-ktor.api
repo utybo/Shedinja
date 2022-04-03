@@ -1,0 +1,48 @@
+public abstract class guru/zoroark/shedinja/ktor/KtorApplication : guru/zoroark/shedinja/extensions/services/ShedinjaService {
+	public fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;Ljava/lang/String;)V
+	public synthetic fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAppName ()Ljava/lang/String;
+	public abstract fun getSettings ()Lguru/zoroark/shedinja/ktor/KtorApplicationSettings;
+	public abstract fun setup (Lio/ktor/application/Application;)V
+	public fun start ()V
+	public fun stop ()V
+}
+
+public final class guru/zoroark/shedinja/ktor/KtorApplicationSettings {
+	public fun <init> (Lio/ktor/server/engine/ApplicationEngineFactory;ILjava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lio/ktor/server/engine/ApplicationEngineFactory;ILjava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun embeddedServerFromSettings (Lkotlin/jvm/functions/Function1;)Lio/ktor/server/engine/ApplicationEngine;
+}
+
+public abstract class guru/zoroark/shedinja/ktor/KtorController : guru/zoroark/shedinja/ktor/KtorModule {
+	public fun <init> ()V
+	public fun <init> (ILjava/lang/String;)V
+	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun installController (Lio/ktor/routing/Routing;)V
+	public fun installModule (Lio/ktor/application/Application;)V
+}
+
+public final class guru/zoroark/shedinja/ktor/KtorExtension : guru/zoroark/shedinja/extensions/DeclarationsProcessor {
+	public fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;)V
+	public final fun getModulesForAppName (Ljava/lang/String;)Ljava/util/List;
+	public fun processDeclarations (Lkotlin/sequences/Sequence;)V
+}
+
+public final class guru/zoroark/shedinja/ktor/KtorExtensionKt {
+	public static final fun useKtor (Lguru/zoroark/shedinja/extensions/ExtensibleContextBuilderDsl;)V
+}
+
+public abstract class guru/zoroark/shedinja/ktor/KtorModule {
+	public static final field Companion Lguru/zoroark/shedinja/ktor/KtorModule$Companion;
+	public static final field DEFAULT_PRIORITY I
+	public fun <init> ()V
+	public fun <init> (ILjava/lang/String;)V
+	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getModuleInstallationPriority ()I
+	public final fun getRestrictToAppName ()Ljava/lang/String;
+	public abstract fun installModule (Lio/ktor/application/Application;)V
+}
+
+public final class guru/zoroark/shedinja/ktor/KtorModule$Companion {
+}
+

@@ -1,0 +1,16 @@
+plugins {
+    id 'shedinja.kotlin-lib-conventions'
+}
+
+dependencies {
+    api project(":shedinja")
+    api project(":shedinja-services")
+    api libs.ktor.server.core
+    api libs.ktor.server.host
+
+    testImplementation libs.ktor.server.netty
+    testImplementation libs.ktor.server.jackson
+    testImplementation libs.ktor.client.core
+    testImplementation libs.ktor.client.java
+    testImplementation libs.ktor.client.jackson
+}

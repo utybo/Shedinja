@@ -1,2 +1,11 @@
 rootProject.name = 'Shedinja'
-include('shedinja', 'shedinja-test', 'shedinja-koin-v2', 'shedinja-koin-v3', 'shedinja-services', 'docs')
+
+include(
+        'shedinja',
+        'shedinja-test',
+        'shedinja-koin-v2',
+        'shedinja-koin-v3',
+        'shedinja-ktor',
+        'shedinja-services',
+        'docs'
+)
