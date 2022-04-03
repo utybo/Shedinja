@@ -14,7 +14,6 @@ import guru.zoroark.shedinja.ktor.useKtor
 import io.ktor.application.Application
 import io.ktor.server.netty.Netty
 import kotlinx.coroutines.runBlocking
-import javax.swing.plaf.nimbus.State
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -30,8 +30,6 @@ private const val MULTI_APP_TEST_PORT_1 = 28821
 private const val MULTI_APP_TEST_PORT_2 = 28822
 private const val MULTI_APP_TEST_PORT_3 = 28823
 
-//#region App 1
-
 class ControllerOne : KtorController(restrictToAppName = "one") {
     override fun Routing.installController() {
         get("/one") {
@@ -43,12 +41,10 @@ class ControllerOne : KtorController(restrictToAppName = "one") {
 class AppOne(scope: InjectionScope) : KtorApplication(scope, "one") {
     override val settings get() = KtorApplicationSettings(Netty, MULTI_APP_TEST_PORT_1)
 
-    override fun Application.setup() {}
+    override fun Application.setup() {
+        // no-op
+    }
 }
-
-//#endregion
-
-//#region App 2
 
 class ControllerTwo : KtorController(restrictToAppName = "two") {
     override fun Routing.installController() {
@@ -61,12 +57,10 @@ class ControllerTwo : KtorController(restrictToAppName = "two") {
 class AppTwo(scope: InjectionScope) : KtorApplication(scope, "two") {
     override val settings get() = KtorApplicationSettings(Netty, MULTI_APP_TEST_PORT_2)
 
-    override fun Application.setup() {}
+    override fun Application.setup() {
+        // no-op
+    }
 }
-
-//#endregion
-
-//#region three
 
 class ControllerThree : KtorController(restrictToAppName = "three") {
     override fun Routing.installController() {
@@ -79,10 +73,10 @@ class ControllerThree : KtorController(restrictToAppName = "three") {
 class AppThree(scope: InjectionScope) : KtorApplication(scope, "three") {
     override val settings get() = KtorApplicationSettings(Netty, MULTI_APP_TEST_PORT_3)
 
-    override fun Application.setup() {}
+    override fun Application.setup() {
+        // no-op
+    }
 }
-
-//#endregion
 
 class MultiAppTest {
     @Test
