@@ -8,6 +8,8 @@ import guru.zoroark.shedinja.InvalidDeclarationException
  *
  * Note that multi-qualifier accepts all elements within its set *except* other multi-qualifiers (nesting is not
  * supported and multi-qualifiers should be "flat") or empty qualifiers (which do not contribute any information).
+ *
+ * @property qualifiers The qualifiers represented by this MultiQualifier.
  */
 class MultiQualifier(val qualifiers: Set<Qualifier>) : Qualifier {
     init {
@@ -33,6 +35,12 @@ class MultiQualifier(val qualifiers: Set<Qualifier>) : Qualifier {
     override fun hashCode(): Int = qualifiers.hashCode()
 }
 
+/**
+ * Combines this qualifier with the other.
+ *
+ * If neither of the operands are [EmptyQualifier], returns a [MultiQualifier]. If one or the other is an
+ * [EmptyQualifier], returns the non-empty qualifier. If both are empty qualifiers, returns [EmptyQualifier].
+ */
 operator fun Qualifier.plus(other: Qualifier): Qualifier = when {
     // EmptyQualifier does not contribute anything and needs to be filtered out.
     // (first case also handles the case where this *and* other are EmptyQualifier)
