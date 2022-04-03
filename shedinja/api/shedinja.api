@@ -94,6 +94,7 @@ public final class guru/zoroark/shedinja/environment/ExtensibleEnvironmentBasedS
 	public fun <init> (Lguru/zoroark/shedinja/extensions/ExtensibleInjectionEnvironment;)V
 	public fun getMeta ()Lguru/zoroark/shedinja/environment/MetalessInjectionScope;
 	public fun inject (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
+	public fun optional (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
 }
 
 public final class guru/zoroark/shedinja/environment/FullTypeQualifier : guru/zoroark/shedinja/environment/Qualifier {
@@ -150,6 +151,10 @@ public abstract interface class guru/zoroark/shedinja/environment/InjectionScope
 	public abstract fun getMeta ()Lguru/zoroark/shedinja/environment/MetalessInjectionScope;
 }
 
+public final class guru/zoroark/shedinja/environment/InjectionScope$DefaultImpls {
+	public static fun optional (Lguru/zoroark/shedinja/environment/InjectionScope;Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
+}
+
 public final class guru/zoroark/shedinja/environment/InjectionScopeKt {
 	public static final fun invoke (Lguru/zoroark/shedinja/environment/InjectionScope;Lguru/zoroark/shedinja/environment/Identifier;)Lkotlin/properties/ReadOnlyProperty;
 }
@@ -159,6 +164,11 @@ public abstract interface class guru/zoroark/shedinja/environment/Injector : kot
 
 public abstract interface class guru/zoroark/shedinja/environment/MetalessInjectionScope {
 	public abstract fun inject (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
+	public abstract fun optional (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
+}
+
+public final class guru/zoroark/shedinja/environment/MetalessInjectionScope$DefaultImpls {
+	public static fun optional (Lguru/zoroark/shedinja/environment/MetalessInjectionScope;Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
 }
 
 public final class guru/zoroark/shedinja/environment/MixedImmutableEnvironment : guru/zoroark/shedinja/extensions/DefaultExtensibleInjectionEnvironment {
@@ -225,6 +235,7 @@ public final class guru/zoroark/shedinja/environment/SimpleEnvironmentBasedScope
 	public synthetic fun getMeta ()Lguru/zoroark/shedinja/environment/MetalessInjectionScope;
 	public fun getMeta ()Ljava/lang/Void;
 	public fun inject (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
+	public fun optional (Lguru/zoroark/shedinja/environment/Identifier;)Lguru/zoroark/shedinja/environment/Injector;
 }
 
 public abstract interface class guru/zoroark/shedinja/extensions/DeclarationTag {

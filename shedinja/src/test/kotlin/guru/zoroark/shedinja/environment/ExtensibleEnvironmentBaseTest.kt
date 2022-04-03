@@ -1,12 +1,12 @@
 package guru.zoroark.shedinja.environment
 
-import guru.zoroark.shedinja.dsl.shedinja
 import guru.zoroark.shedinja.entryOf
 import guru.zoroark.shedinja.extensions.DeclarationsProcessor
 import guru.zoroark.shedinja.extensions.ExtensibleEnvironmentContext
 import guru.zoroark.shedinja.extensions.ExtensibleInjectionEnvironment
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 
@@ -24,6 +24,11 @@ abstract class ExtensibleEnvironmentBaseTest(
     class D
     class E
     class F
+
+    class OptionalA
+    class OptionalB(scope: InjectionScope) {
+        val a: OptionalA? by scope.meta.optional()
+    }
 
     @Test
     fun `(Extension) Injection pass-through to meta-environment`() {
@@ -94,5 +99,34 @@ abstract class ExtensibleEnvironmentBaseTest(
         )
         assertEquals(1, processed.size)
         assertEquals(Identifier(String::class), processed[0].identifier)
+    }
+
+    @Test
+    fun `(Extension) Optional meta injection with present component should work`() {
+        val context = ExtensibleEnvironmentContext(
+            mapOf(
+                entryOf { OptionalB(scope) }
+            ),
+            EnvironmentContext(
+                mapOf(
+                    entryOf { OptionalA() }
+                )
+            )
+        )
+        val env = provider(context)
+        val aFromEnv = assertNotNull(env.get<OptionalB>().a)
+        assertSame(env.metaEnvironment.get<OptionalA>(), aFromEnv)
+    }
+
+    @Test
+    fun `(Extension) Optional meta injection with absent component should work`() {
+        val context = ExtensibleEnvironmentContext(
+            mapOf(
+                entryOf { OptionalB(scope) }
+            ),
+            EnvironmentContext(mapOf())
+        )
+        val env = provider(context)
+        assertNull(env.get<OptionalB>().a)
     }
 }
