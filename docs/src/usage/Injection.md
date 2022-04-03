@@ -57,3 +57,43 @@ class SomeEndpoint(scope: InjectionScope) {
 Note that `meta` actually just returns an injection scope bound to the meta-environment: you can use any scope operation on `.meta` as you would on `scope` (except that you cannot call `.meta.meta` as meta-environments cannot have meta-environments of their own).
 
 !> Unless otherwise noted, meta-injections are ignored in [Shedinja checks](ShedinjaCheck.md) and will not raise errors.
+
+## Optional injections
+
+By default, injections will throw a `ComponentNotFoundException` if you try to inject a component that does not exist. If you wish to instead get a null value, you can use `optional` injections.
+
+Use `scope.optional()` (or `scope.meta.optional()` for optional [meta-environment injections](#meta-environment-injections)) to do this. Just like regular injections, you can add qualifiers between the brackets (`scope.optional(named("hello"))` or `scope.meta.optional(named("hi"))` for example).
+
+```kotlin
+class AmIHere {
+    fun hello() {
+        println("Hello!")
+    }
+}
+
+class PresenceChecker(scope: InjectionScope) {
+    private val other: AmIHere? by scope.optional()
+    
+    fun isItHere(): Boolean {
+        if (other == null) {
+            println("It is not here :(")
+        } else {
+            print("It is here :) -> ")
+            other.hello()
+        }
+    }
+}
+
+val env = shedinja {
+    put(::PresenceChecker)
+} 
+
+env.get<PresenceChecker>().isItHere() // It is not here :(
+
+val env2 = shedinja {
+    put(::AmIHere)
+    put(::PresenceChecker)
+}
+
+env2.get<PresenceChecker>().isItHere() // It is here :) -> Hello!
+```

@@ -202,4 +202,33 @@ abstract class EnvironmentBaseTest(private val provider: (EnvironmentContext) ->
         }
         assertEquals(Identifier(BtoA::class), ex.notFound)
     }
+
+    class OptionalA
+    class OptionalB(scope: InjectionScope) {
+        val a: OptionalA? by scope.optional()
+    }
+
+    @Test
+    fun `(Basic) Optional injection with present component should work`() {
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { OptionalA() },
+                entryOf { OptionalB(scope) }
+            )
+        )
+        val env = provider(context)
+        val aFromEnv = assertNotNull(env.get<OptionalB>().a)
+        assertSame(env.get<OptionalA>(), aFromEnv)
+    }
+
+    @Test
+    fun `(Basic) Optional injection with absent component should work`() {
+        val context = EnvironmentContext(
+            mapOf(
+                entryOf { OptionalB(scope) }
+            )
+        )
+        val env = provider(context)
+        assertNull(env.get<OptionalB>().a)
+    }
 }
