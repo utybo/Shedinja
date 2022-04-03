@@ -34,6 +34,10 @@ The following features require you to add additional dependencies:
 ```groovy
 implementation 'guru.zoroark.shedinja:shedinja-services:VERSION'
 ```
+* [Ktor extension](extensions/Ktor.md)
+```groovy
+implementation 'guru.zoroark.shedinja:shedinja-ktor:VERSION'
+```
 
 ### **Gradle Kotlin DSL**
 
@@ -57,6 +61,10 @@ The following features require you to add additional dependencies:
 * [Services extension](extensions/Services.md)
 ```kotlin
 implementation("guru.zoroark.shedinja:shedinja-services:VERSION")
+```
+* [Ktor extension](extensions/Ktor.md)
+```kotlin
+implementation("guru.zoroark.shedinja:shedinja-ktor:VERSION")
 ```
 
 ### **Maven**
@@ -90,6 +98,14 @@ The following features require you to add additional dependencies:
 <dependency>
     <groupId>guru.zoroark.shedinja</groupId>
     <artifactId>shedinja-services</artifactId>
+    <version>VERSION</version>
+</dependency>
+```
+* [Ktor extension](extensions/Ktor.md)
+```xml
+<dependency>
+    <groupId>guru.zoroark.shedinja</groupId>
+    <artifactId>shedinja-ktor</artifactId>
     <version>VERSION</version>
 </dependency>
 ```

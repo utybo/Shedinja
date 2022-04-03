@@ -32,7 +32,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -55,7 +55,16 @@ jacocoTestReport {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
         freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        jvmTarget = "11"
     }
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    jvmTarget = "11"
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    jvmTarget = "11"
 }
 
 dokkaHtmlPartial {
@@ -70,6 +79,7 @@ dokkaHtmlPartial {
 detekt {
     buildUponDefaultConfig = true
     config = files(rootProject.layout.projectDirectory.file("detekt.yaml"))
+
 }
 
 check.configure {

@@ -13,6 +13,7 @@
 - [Introduction](extensions/Introduction.md)
 - [Factories](extensions/Factories.md)
 - [Services](extensions/Services.md)
+- [Ktor](extensions/Ktor.md)
 - **Developing**
 - [Building Shedinja](/Building.md)
 - **External links**

@@ -7,6 +7,7 @@ dokka = "1.6.10"
 mockk = "1.12.3"
 koin2 = "2.2.3"
 koin3 = "3.1.5"
+ktor = "1.6.8"
 versions = "0.42.0"
 gradleTestLogger = "3.2.0"
 kotlinBcv = "0.8.0"
@@ -29,6 +30,15 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 
 koin-v2 = { module = "io.insert-koin:koin-core", version.ref = "koin2" }
 koin-v3 = { module = "io.insert-koin:koin-core", version.ref = "koin3" }
+
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-host = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-jackson = { module = "io.ktor:ktor-jackson", version.ref = "ktor" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
+ktor-client-jackson = { module = "io.ktor:ktor-client-jackson", version.ref = "ktor" }
 
 # Test dependencies
 
