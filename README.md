@@ -1,6 +1,6 @@
 # [![Shedinja](https://img.pokemondb.net/sprites/black-white/anim/normal/shedinja.gif)](http://pokemondb.net/pokedex/shedinja) Shedinja
 
-[**Documentation**](https://shedinja.zoroark.guru) | [**Packages**](https://gitlab.com/utybo/packages/-/packages?search[]=guru%2Fzoroark%2Fshedinja)
+[![Documentation](https://img.shields.io/badge/Documentation-Click%20Here!-b5945a?style=for-the-badge)](https://shedinja.zoroark.guru) [![Packages](https://img.shields.io/github/v/release/utybo/Shedinja?label=packages&logo=gitlab&style=for-the-badge)](https://gitlab.com/utybo/packages/-/packages?search[]=guru%2Fzoroark%2Fshedinja) [![MIT license](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE.md) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/utybo/Shedinja/Tests?logo=github&style=for-the-badge)](https://github.com/utybo/Shedinja/actions/workflows/tests.yaml) [![Codecov](https://img.shields.io/codecov/c/github/utybo/Shedinja?style=for-the-badge&logo=codecov)](https://codecov.io/gh/utybo/Shedinja)
 
 Inspired by [Koin](https://insert-koin.io), Shedinja is a simple, safe and easy-to-use dependency injection library with extremely flexible internals.
 
