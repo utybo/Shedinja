@@ -26,13 +26,14 @@ interface MetalessInjectionScope {
      * The default implementation only catches [ComponentNotFoundException]s that are thrown by the underlying [inject]
      * call.
      */
+    @Suppress("SwallowedException")
     fun <T : Any> optional(what: Identifier<T>): Injector<T?> {
         return try {
             val baseInjector = inject(what)
             Injector<T?> { thisRef, value ->
                 try {
                     baseInjector.getValue(thisRef, value)
-                } catch(ex: ComponentNotFoundException) {
+                } catch (ex: ComponentNotFoundException) {
                     null
                 }
             }
