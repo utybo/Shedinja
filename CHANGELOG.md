@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] (0.0.4)
+## [0.0.4] - 2022-04-04
 
 **Warning:** This release contains breaking changes with the previous release (noted as **BREAKS API** or **BREAKS ABI**).
 
@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `shedinja-ktor` ✨ **New module** ✨
     - Added the `shedinja-ktor` module with basic functionality.
 - All
+    - Source JARs are now published alongside binary JARs.
     - (Internal) Added `jacoco` plugin for code coverage. This does not impact builds depending on Shedinja with CodeCov on the repository.
     - (Internal) Drastically improved code coverage across the entire code base.
     - (Internal) Added binary compatibility validator.
@@ -73,7 +74,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Added basic functionality and test facilities
 
-[Unreleased]: https://github.com/utybo/Shedinja/compare/v0.0.3..main
+[Unreleased]: https://github.com/utybo/Shedinja/compare/v0.0.4..main
+[0.0.4]: https://github.com/utybo/Shedinja/compare/v0.0.4..v0.0.3
 [0.0.3]: https://github.com/utybo/Shedinja/compare/v0.0.3..v0.0.2
 [0.0.2]: https://github.com/utybo/Shedinja/compare/v0.0.2..v0.0.1
 [0.0.1]: https://github.com/utybo/Shedinja/releases/tag/v0.0.1
