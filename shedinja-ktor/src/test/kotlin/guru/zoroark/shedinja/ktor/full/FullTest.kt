@@ -27,7 +27,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private const val TEST_PORT = 28899
+private const val FULL_TEST_PORT = 28810
 private const val TEST_NAME = "MyApp"
 
 data class ResponseData(val endpoint: String, val message: String)
@@ -49,7 +49,7 @@ class SecondController : KtorController(restrictToAppName = TEST_NAME) {
 }
 
 class App(scope: InjectionScope) : KtorApplication(scope, TEST_NAME) {
-    override val settings get() = KtorApplicationSettings(Netty, port = TEST_PORT)
+    override val settings get() = KtorApplicationSettings(Netty, port = FULL_TEST_PORT)
 
     override fun Application.setup() {
         install(ContentNegotiation) { jackson() }
@@ -72,9 +72,9 @@ class FullTest {
             val client = HttpClient(Java) {
                 install(JsonFeature) { serializer = JacksonSerializer() }
             }
-            val result = client.get<ResponseData>("http://localhost:$TEST_PORT/test/one")
+            val result = client.get<ResponseData>("http://localhost:$FULL_TEST_PORT/test/one")
             assertEquals(ResponseData("one", "One!"), result)
-            val result2 = client.get<ResponseData>("http://localhost:$TEST_PORT/test/two")
+            val result2 = client.get<ResponseData>("http://localhost:$FULL_TEST_PORT/test/two")
             assertEquals(ResponseData("two", "Two!!"), result2)
             env.services.stopAll(::println)
         }
