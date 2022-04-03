@@ -24,6 +24,7 @@ dependencies {
     testImplementation libs.kotlin.test.common
     testImplementation libs.kotlin.test.junit5
     testImplementation libs.junit.jupiterApi
+    testImplementation libs.junit.jupiterParams
     testRuntimeOnly libs.junit.jupiterEngine
 
     detektPlugins libs.detekt.formatting
