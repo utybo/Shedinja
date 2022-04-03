@@ -38,6 +38,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-jupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 
 # Detekt plugins
 
