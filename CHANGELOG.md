@@ -8,8 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- `shedinja` (core)
+    - Extracted the meta-environment creation logic from `DefaultExtensibleInjectionEnvironment` into a separate function. You no longer have to subclass the `DEIE` class to create a meta-environment, you can just create it via the new `createMetaEnvironment` function.
 - `shedinja-test`
-    - `UnsafeMutableEnvironment.components` is now public instead of private. Very useful for more advanced use cases. 
+    - `UnsafeMutableEnvironment.components` is now public instead of private. Very useful for more advanced use cases.
+- `shedinja-ktor`
+    - Made the `KtorApplication`'s `setup` function a very high priority module instead of being a special case. It is now treated as just a regular module.
 
 ## [0.0.4] - 2022-04-04
 
