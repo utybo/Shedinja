@@ -15,6 +15,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `shedinja-ktor`
     - Made the `KtorApplication`'s `setup` function a very high priority module instead of being a special case. It is now treated as just a regular module.
 
+### Fixed
+
+- `shedinja-test`
+    - Fix `safeInjection` crashing when encountering a `scope.meta()` injection.
+
 ## [0.0.4] - 2022-04-04
 
 **Warning:** This release contains breaking changes with the previous release (noted as **BREAKS API** or **BREAKS ABI**).
