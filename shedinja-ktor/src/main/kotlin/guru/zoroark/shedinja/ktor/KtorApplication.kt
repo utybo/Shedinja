@@ -20,7 +20,7 @@ abstract class KtorApplication(
      * default value and does not have any specific meaning (it does NOT mean "put this module everywhere").
      */
     val appName: String? = null
-) : ShedinjaService {
+) : ShedinjaService, KtorModule(Int.MAX_VALUE, appName) {
     private val ktorExtension: KtorExtension by scope.meta()
 
     /**
@@ -37,10 +37,10 @@ abstract class KtorApplication(
      */
     abstract fun Application.setup()
 
+    override fun Application.installModule() { setup() }
+
     override fun start() {
         val app = settings.embeddedServerFromSettings {
-            setup()
-
             ktorExtension.getModulesForAppName(appName).forEach {
                 with(it) { installModule() }
             }
