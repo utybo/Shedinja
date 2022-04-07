@@ -16,6 +16,7 @@ public final class guru/zoroark/shedinja/test/UnsafeMutableEnvironment : guru/zo
 	public fun <init> (Lguru/zoroark/shedinja/environment/EnvironmentContext;)V
 	public fun createInjector (Lguru/zoroark/shedinja/environment/Identifier;Lkotlin/jvm/functions/Function1;)Lguru/zoroark/shedinja/environment/Injector;
 	public fun get (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
+	public final fun getComponents ()Ljava/util/Map;
 	public fun getOrNull (Lguru/zoroark/shedinja/environment/Identifier;)Ljava/lang/Object;
 	public fun put (Lguru/zoroark/shedinja/environment/Declaration;)V
 }

@@ -47,7 +47,11 @@ class UnsafeMutableEnvironment(baseContext: EnvironmentContext) : InjectionEnvir
         }
     }
 
-    private val components = baseContext.declarations.mapValues { (_, decl) ->
+    /**
+     * The internal components map used by this environment. You can use it to directly manipulate and retrieve
+     * components stored in this environment.
+     */
+    val components = baseContext.declarations.mapValues { (_, decl) ->
         decl.supplier(ScopedContext(EnvironmentBasedScope(this)))
     }.toMutableMap()
 
