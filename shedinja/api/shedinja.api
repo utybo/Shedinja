@@ -296,6 +296,10 @@ public final class guru/zoroark/shedinja/extensions/ExtensibleEnvironmentContext
 	public fun put (Lguru/zoroark/shedinja/environment/Declaration;)V
 }
 
+public final class guru/zoroark/shedinja/extensions/ExtensibleEnvironmentKt {
+	public static final fun createMetaEnvironment (Lguru/zoroark/shedinja/extensions/ExtensibleInjectionEnvironment;Lguru/zoroark/shedinja/extensions/ExtensibleEnvironmentContext;Lguru/zoroark/shedinja/environment/InjectionEnvironmentKind;)Lguru/zoroark/shedinja/environment/InjectionEnvironment;
+}
+
 public abstract interface class guru/zoroark/shedinja/extensions/ExtensibleInjectionEnvironment : guru/zoroark/shedinja/environment/InjectionEnvironment {
 	public abstract fun getAllIdentifiers ()Lkotlin/sequences/Sequence;
 	public abstract fun getMetaEnvironment ()Lguru/zoroark/shedinja/environment/InjectionEnvironment;

@@ -1,8 +1,9 @@
-public abstract class guru/zoroark/shedinja/ktor/KtorApplication : guru/zoroark/shedinja/extensions/services/ShedinjaService {
+public abstract class guru/zoroark/shedinja/ktor/KtorApplication : guru/zoroark/shedinja/ktor/KtorModule, guru/zoroark/shedinja/extensions/services/ShedinjaService {
 	public fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;Ljava/lang/String;)V
 	public synthetic fun <init> (Lguru/zoroark/shedinja/environment/InjectionScope;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getAppName ()Ljava/lang/String;
 	public abstract fun getSettings ()Lguru/zoroark/shedinja/ktor/KtorApplicationSettings;
+	public fun installModule (Lio/ktor/application/Application;)V
 	public abstract fun setup (Lio/ktor/application/Application;)V
 	public fun start ()V
 	public fun stop ()V
