@@ -50,7 +50,7 @@ class DependencyTrackingInjectionEnvironment(context: EnvironmentContext) : Inje
     }
 }
 
-private class EnvironmentBasedIgnoringMetaScope(
+internal class EnvironmentBasedIgnoringMetaScope(
     private val environment: InjectionEnvironment
 ) : InjectionScope {
     override fun <T : Any> inject(what: Identifier<T>): Injector<T> {

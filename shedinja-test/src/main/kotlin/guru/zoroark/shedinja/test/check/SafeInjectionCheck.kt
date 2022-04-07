@@ -4,7 +4,6 @@ import guru.zoroark.shedinja.InternalErrorException
 import guru.zoroark.shedinja.dsl.ShedinjaDsl
 import guru.zoroark.shedinja.dsl.put
 import guru.zoroark.shedinja.dsl.shedinja
-import guru.zoroark.shedinja.environment.EnvironmentBasedScope
 import guru.zoroark.shedinja.environment.EnvironmentContext
 import guru.zoroark.shedinja.environment.Identifier
 import guru.zoroark.shedinja.environment.InjectionEnvironment
@@ -29,7 +28,7 @@ private class CrashOnUseEnvironment(context: EnvironmentContext) : InjectionEnvi
     init {
         context.declarations.forEach { (i, v) ->
             currentInstantiation = i
-            v.supplier(ScopedContext(EnvironmentBasedScope(this)))
+            v.supplier(ScopedContext(EnvironmentBasedIgnoringMetaScope(this)))
         }
     }
 
