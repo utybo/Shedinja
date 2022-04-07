@@ -64,6 +64,11 @@ abstract class DefaultExtensibleInjectionEnvironment(
     override val metaEnvironment = createMetaEnvironment(context, metaContextKind)
 }
 
+/**
+ * Performs the internal logic required for setting up a meta-environment. When creating extensible environments, you
+ * should either call this function to create your meta environment, or subclass [DefaultExtensibleInjectionEnvironment]
+ * which will do it for you.
+ */
 fun ExtensibleInjectionEnvironment.createMetaEnvironment(
     context: ExtensibleEnvironmentContext,
     metaContextKind: InjectionEnvironmentKind<*>
