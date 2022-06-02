@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Injection
 
 Injections are performed via an `InjectionScope` object, which provides a delegation mechanism for properties. This is the main recommended way of getting your dependencies:

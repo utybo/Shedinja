@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Qualifiers
 
 Components must be uniquely identified. By default, components are identified by their type. However, you can add qualifiers to your components to distinguish them if they have the same type.

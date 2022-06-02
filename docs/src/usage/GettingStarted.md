@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Getting Started
 
 Shedinja is made of two libraries: a main library and a test library.

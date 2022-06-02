@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Modules
 
 Shedinja provides a module system that allows you to define your environment in multiple, smaller bits. For example:

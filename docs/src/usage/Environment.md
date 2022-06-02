@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Environment
 
 An environment is a manager for multiple components that can inject one another. They are created using the `shedinja` DSL function, onto which you can call `put` functions to add components:
