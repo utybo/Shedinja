@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Ktor
 
 Shedinja provides integrations with Ktor in the form of the `shedinja-ktor` extension. This extension is completely optional, and you can use Shedinja and Ktor without it, but it makes developing Shedinja-backed Ktor applications easier.
