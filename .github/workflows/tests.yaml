@@ -32,7 +32,6 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ github.token }}
           GITLAB_DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
-      - run: rm -rf /tmp/publish-site-to-gitlab
       - name: Publish dev website
         if: "github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')"
         run: ci/publish-dev-site-to-gitlab.sh
@@ -40,6 +39,7 @@ jobs:
           GITLAB_SITE_PUSH_TOKEN: ${{ secrets.GITLAB_SITE_PUSH_TOKEN }}
       
       # NOTE: added for the deprecation announcement things
+      - run: rm -rf /tmp/publish-site-to-gitlab
       - name: Publish production website
         run: ci/publish-prod-site-to-gitlab.sh
         env:
