@@ -1,3 +1,5 @@
+!> **Shedinja is deprecated.** Shedinja has been moved to the [Tegral project](https://tegral.zoroark.guru) under the name Tegral DI. Check it out [here](https://tegral.zoroark.guru/docs/core/di)!
+
 # Testing Shedinja code
 
 Shedinja provides easy-to-use testing facilities for applications that use it as a dependency injection framework. This comes in two parts:
