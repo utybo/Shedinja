@@ -32,6 +32,7 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ github.token }}
           GITLAB_DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+      - run: rm -rf /tmp/publish-site-to-gitlab
       - name: Publish dev website
         if: "github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')"
         run: ci/publish-dev-site-to-gitlab.sh
